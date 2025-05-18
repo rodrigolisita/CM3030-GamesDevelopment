@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
 
+    public ParticleSystem explosionParticle;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -39,6 +41,19 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("Shooting sound not assigned in the Inspector for " + gameObject.name +
                              ", and no default clip on AudioSource. Please ensure a sound is set if you want shooting sounds.", gameObject);
+        }
+
+        // Check if the explosion particle system has been assigned
+        if (explosionParticle == null)
+        {
+            Debug.LogError("Explosion Particle System not assigned in the Inspector for " + gameObject.name + ". Please assign it. It will be triggered by other scripts (e.g., Enemy).", gameObject);
+        }
+        else
+        {
+            // Ensure the particle system doesn't play on awake by default
+            // You might have already set this in the Inspector, but it's good practice.
+            var main = explosionParticle.main;
+            main.playOnAwake = false;
         }
     }
 
@@ -82,4 +97,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    
 }
