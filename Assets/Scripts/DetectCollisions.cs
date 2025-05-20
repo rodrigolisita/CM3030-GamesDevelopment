@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections; // Required for IEnumerator and StartCoroutine
 
 // Require an AudioSource component to be attached to the same GameObject.
-// This will automatically add an AudioSource if one doesn't exist when you add the script.
+// This will automatically add an AudioSource if one doesn't exist when the script is added.
 [RequireComponent(typeof(AudioSource))]
 public class DetectCollisions : MonoBehaviour
 {
@@ -11,13 +11,13 @@ public class DetectCollisions : MonoBehaviour
     // Public variable to assign the particle system for the enemy's own hit/destruction effect
     public ParticleSystem enemyHitParticle;
     // Public variable to define how many points this enemy is worth
-    public int pointsAwarded; // Points do add to the score
+    public int pointsAwarded = 10; 
 
 
     // Private variable to hold the AudioSource component
     private AudioSource audioSource;
 
-    // Define the tag for projectiles - ensure your projectile prefabs have this tag
+    // Define the tag for projectiles - ensure the projectile prefabs have this tag
     private const string ProjectileTag = "Projectile";
     private const string PlayerTag = "Player";
 
@@ -59,7 +59,7 @@ public class DetectCollisions : MonoBehaviour
             }
         }
 
-        // You can add any initialization for the enemy here if needed
+        // Add any initialization for the enemy here if needed
         if (GetComponent<Collider>() == null)
         {
             Debug.LogError("Enemy prefab is missing a Collider component!", gameObject);
@@ -135,7 +135,19 @@ public class DetectCollisions : MonoBehaviour
         // Handle specific game logic based on collision type
         if (isPlayerCollision)
         {
-            Debug.Log("Enemy collided with Player. Attempting to trigger Player's explosion particle.");
+            Debug.Log("Enemy collided with Player. Attempting to trigger Player's explosion particle and reduce life.");
+
+            // --- Reduce Player's Life ---
+            if (PlayerStatsManager.Instance != null)
+            {
+                PlayerStatsManager.Instance.LoseLife();
+            }
+            else
+            {
+                Debug.LogError("PlayerStatsManager.Instance is null! Cannot call LoseLife(). Ensure PlayerStatsManager is in the scene and correctly initialized.");
+            }
+            // --- End of Reduce Player's Life ---
+
 
             // Attempt to find the PlayerController script on the player GameObject
             PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
@@ -161,19 +173,17 @@ public class DetectCollisions : MonoBehaviour
                 Debug.LogWarning("PlayerController script not found on the collided Player object (it might have been destroyed or is missing the script).", other.gameObject);
             }
 
-            // Original "Game Over" log
-            Debug.Log("Game Over from enemy collision with player.");
-            
             // IMPORTANT: Player Destruction Logic & Enemy Destruction Logic
             // This script currently DOES NOT destroy the player OR THE ENEMY when colliding with the player.
-            // If the enemy should be destroyed after colliding with the player, you'd add that here.
+            // The PlayerStatsManager should handle what happens when lives reach zero (e.g., destroying the player, showing game over screen).
+            // If the enemy should be destroyed after colliding with the player (regardless of player lives), add that logic here.
             // For example, after playing its sound and particle:
             // float enemyDestructionDelayPlayerCollision = soundLength;
             // if (enemyHitParticle != null && enemyHitParticle.main.duration > soundLength)
             // {
             //     enemyDestructionDelayPlayerCollision = enemyHitParticle.main.duration;
             // }
-            // Destroy(gameObject, enemyDestructionDelayPlayerCollision);
+            // Destroy(gameObject, enemyDestructionDelayPlayerCollision); // Example: Destroy this enemy
         }
         else if (isProjectileCollision)
         {
@@ -183,7 +193,7 @@ public class DetectCollisions : MonoBehaviour
              // --- Score Update Logic ---
             if (ScoreManager.Instance != null)
             {
-                ScoreManager.Instance.UpdateScore(pointsAwarded); // Using the public scoreValue field
+                ScoreManager.Instance.UpdateScore(pointsAwarded); 
                 Debug.Log("Score updated by " + pointsAwarded + " for destroying " + gameObject.name);
             }
             else
