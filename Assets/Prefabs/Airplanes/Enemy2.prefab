@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4120269738831646443}
   - component: {fileID: 6902723306247740852}
   - component: {fileID: 392755642695283436}
-  - component: {fileID: 1648380715403126741}
   - component: {fileID: -2478223296254220155}
   - component: {fileID: 2892818082792462534}
   m_Layer: 0
@@ -142,29 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43aac951c95b6dd4dba5a3c4241b86f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!136 &1648380715403126741
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7236711638854185108}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.50000006
-  m_Height: 2.0000002
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-2478223296254220155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: b99da9a57308d4ba1bee1cf1d9038376, type: 3}
   enemyHitParticle: {fileID: 6544214542760133617}
+  pointsAwarded: 2
 --- !u!82 &2892818082792462534
 AudioSource:
   m_ObjectHideFlags: 0
