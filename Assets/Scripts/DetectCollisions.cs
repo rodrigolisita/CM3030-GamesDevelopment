@@ -138,13 +138,13 @@ public class DetectCollisions : MonoBehaviour
             Debug.Log("Enemy collided with Player. Attempting to trigger Player's explosion particle and reduce life.");
 
             // --- Reduce Player's Life ---
-            if (PlayerStatsManager.Instance != null)
+            if (GameManager.Instance != null)
             {
-                PlayerStatsManager.Instance.LoseLife();
+                GameManager.Instance.LoseLife();
             }
             else
             {
-                Debug.LogError("PlayerStatsManager.Instance is null! Cannot call LoseLife(). Ensure PlayerStatsManager is in the scene and correctly initialized.");
+                Debug.LogError("GameManager.Instance is null! Cannot call LoseLife(). Ensure GameManager is in the scene and correctly initialized.");
             }
             // --- End of Reduce Player's Life ---
 
@@ -175,7 +175,7 @@ public class DetectCollisions : MonoBehaviour
 
             // IMPORTANT: Player Destruction Logic & Enemy Destruction Logic
             // This script currently DOES NOT destroy the player OR THE ENEMY when colliding with the player.
-            // The PlayerStatsManager should handle what happens when lives reach zero (e.g., destroying the player, showing game over screen).
+            // The GameManager should handle what happens when lives reach zero (e.g., destroying the player, showing game over screen).
             // If the enemy should be destroyed after colliding with the player (regardless of player lives), add that logic here.
             // For example, after playing its sound and particle:
             // float enemyDestructionDelayPlayerCollision = soundLength;
@@ -191,14 +191,14 @@ public class DetectCollisions : MonoBehaviour
             Debug.Log(gameObject.name + " (Enemy) collided with a projectile: " + other.gameObject.name + ". Destroying projectile and this enemy (after sound/particle).");
             
              // --- Score Update Logic ---
-            if (ScoreManager.Instance != null)
+            if (GameManager.Instance != null)
             {
-                ScoreManager.Instance.UpdateScore(pointsAwarded); 
+                GameManager.Instance.UpdateScore(pointsAwarded); 
                 Debug.Log("Score updated by " + pointsAwarded + " for destroying " + gameObject.name);
             }
             else
             {
-                Debug.LogWarning("ScoreManager.Instance is null. Cannot update score.");
+                Debug.LogWarning("GameManager.Instance is null. Cannot update score.");
             }
             // --- End of Score Update ---
 
