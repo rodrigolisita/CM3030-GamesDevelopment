@@ -14,6 +14,9 @@ public class PlayerController2D : MonoBehaviour
 
     private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
 
+    // Game Manager
+    GameManager2D gameManager2D;
+
     //public ParticleSystem explosionParticle;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,45 +58,51 @@ public class PlayerController2D : MonoBehaviour
         //    var main = explosionParticle.main;
         //    main.playOnAwake = false;
         //}
+
+        // Game Manager
+        gameManager2D = GameObject.Find("GameManager2D").GetComponent<GameManager2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move player left and right
-        horizontalInput = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * speed);
-
-        // Ensure the player stays within x bounds
-        if (transform.position.x < -xRange)
+        if (gameManager2D.isGameActive)
         {
-            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
-        }
-        if (transform.position.x > xRange)
-        {
-            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
-        }
+            // Move player left and right
+            horizontalInput = Input.GetAxis("Horizontal");
+            transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * speed);
 
-        // Instantiate the projectile and play sound
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // Launch a projectile from the player
-            Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
-
-            // Play the shooting sound
-            if (playerAudioSource != null && shootingSound != null)
+            // Ensure the player stays within x bounds
+            if (transform.position.x < -xRange)
             {
-                playerAudioSource.PlayOneShot(shootingSound);
+                transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
             }
-            // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
-            else if (playerAudioSource != null && playerAudioSource.clip != null)
+            if (transform.position.x > xRange)
             {
-                 Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
-                playerAudioSource.PlayOneShot(playerAudioSource.clip);
+                transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
             }
-            else if (playerAudioSource != null) // No clip assigned anywhere
+
+            // Instantiate the projectile and play sound
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                 Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+                // Launch a projectile from the player
+                Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+
+                // Play the shooting sound
+                if (playerAudioSource != null && shootingSound != null)
+                {
+                    playerAudioSource.PlayOneShot(shootingSound);
+                }
+                // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
+                else if (playerAudioSource != null && playerAudioSource.clip != null)
+                {
+                    Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
+                    playerAudioSource.PlayOneShot(playerAudioSource.clip);
+                }
+                else if (playerAudioSource != null) // No clip assigned anywhere
+                {
+                    Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+                }
             }
         }
     }

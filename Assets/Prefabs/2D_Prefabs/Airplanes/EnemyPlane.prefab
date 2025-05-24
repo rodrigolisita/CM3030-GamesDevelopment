@@ -229,6 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: c18d551816182e74eba523cdf9b89bcf, type: 3}
   enemyHitParticle: {fileID: 198220379293217532, guid: d8f0099df63275647a8bcf646df1ca00, type: 3}
+  pointsAwarded: 5
 --- !u!61 &3452267056757908706
 BoxCollider2D:
   m_ObjectHideFlags: 0

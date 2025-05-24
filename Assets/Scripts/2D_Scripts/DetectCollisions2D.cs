@@ -10,6 +10,8 @@ public class DetectCollisions2D : MonoBehaviour
     public AudioClip collisionSound;
     // Public variable to assign the particle system for the enemy's own hit/destruction effect
     public ParticleSystem enemyHitParticle;
+    // Public variable to define how many points this enemy is worth
+    public int pointsAwarded = 10;
 
     // Private variable to hold the AudioSource component
     private AudioSource audioSource;
@@ -112,16 +114,20 @@ public class DetectCollisions2D : MonoBehaviour
             {
                 // Log particle system state before playing
                 Debug.Log("Attempting to play enemyHitParticle on " + gameObject.name +
-                          ". IsPlaying: " + enemyHitParticle.isPlaying +
-                          ", ParticleCount: " + enemyHitParticle.particleCount +
+                          ". IsPlaying (before stop/clear): " + enemyHitParticle.isPlaying +
+                          ", ParticleCount (before stop/clear): " + enemyHitParticle.particleCount +
                           ", Main.Duration: " + enemyHitParticle.main.duration +
                           ", Emission.enabled: " + enemyHitParticle.emission.enabled +
                           ", Renderer.enabled: " + (enemyHitParticle.GetComponent<ParticleSystemRenderer>() != null ? enemyHitParticle.GetComponent<ParticleSystemRenderer>().enabled.ToString() : "NoRenderer") +
                           ", GameObject Active: " + enemyHitParticle.gameObject.activeInHierarchy);
-                
-                enemyHitParticle.Clear(); // Optional: Clears existing particles before playing again.
-                enemyHitParticle.Play();
-                Debug.Log("Enemy hit particle Play() command issued on " + gameObject.name);
+
+                // Explicitly stop and clear the particle system to ensure a fresh play.
+                enemyHitParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); // Stop emission & clear particles.
+                // The 'true' argument affects children particle systems as well.
+                // ParticleSystemStopBehavior.StopEmittingAndClear is generally a good choice for a hard reset.
+
+                enemyHitParticle.Play(true); // Play, including children.
+                Debug.Log("Enemy hit particle Play() command issued on " + gameObject.name + ". IsPlaying (after play): " + enemyHitParticle.isPlaying);
             }
         }
 
@@ -129,6 +135,17 @@ public class DetectCollisions2D : MonoBehaviour
         if (isPlayerCollision)
         {
             Debug.Log("Enemy collided with Player. Attempting to trigger Player's explosion particle.");
+
+            // --- Reduce Player's Life ---
+            if (GameManager2D.Instance != null)
+            {
+                GameManager2D.Instance.LoseLife();
+            }
+            else
+            {
+                Debug.LogError("GameManager2D.Instance is null! Cannot call LoseLife(). Ensure GameManager2D is in the scene and correctly initialized.");
+            }
+            // --- End of Reduce Player's Life ---
 
             // Attempt to find the PlayerController script on the player GameObject
             PlayerController2D playerController = other.gameObject.GetComponent<PlayerController2D>();
@@ -172,6 +189,18 @@ public class DetectCollisions2D : MonoBehaviour
         {
             // If the collision is with a projectile
             Debug.Log(gameObject.name + " (Enemy) collided with a projectile: " + other.gameObject.name + ". Destroying projectile and this enemy (after sound/particle).");
+
+            // --- Score Update Logic ---
+            if (GameManager2D.Instance != null)
+            {
+                GameManager2D.Instance.UpdateScore(pointsAwarded);
+                Debug.Log("Score updated by " + pointsAwarded + " for destroying " + gameObject.name);
+            }
+            else
+            {
+                Debug.LogWarning("GameManager2D.Instance is null. Cannot update score.");
+            }
+            // --- End of Score Update ---
 
             Collider2D enemyCollider = GetComponent<Collider2D>();
             if(enemyCollider != null) enemyCollider.enabled = false;
