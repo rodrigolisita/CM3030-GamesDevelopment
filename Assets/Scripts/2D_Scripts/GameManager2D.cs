@@ -3,29 +3,36 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(AudioSource))] // Ensures an AudioSource component will be added if not present
-
+[RequireComponent(typeof(AudioSource))]
 public class GameManager2D : MonoBehaviour
 {
     public static GameManager2D Instance { get; private set; }
 
-    // --- UI Element References (will be re-found on scene load) ---
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI livesText;
-    public TextMeshProUGUI gameOverText;
-    public Button restartButton;
+    // --- UI Element References ---
+    private GameObject titleScreen; 
+    private TextMeshProUGUI scoreText;
+    private TextMeshProUGUI livesText;
+    private TextMeshProUGUI gameOverText;
+    private Button restartButton;
+    private Button easyButton; 
+    private Button mediumButton; // Added reference for Medium Button
 
-    // --- Names of UI GameObjects in the Scene (ensure these match your scene) ---
+    // --- Names of UI GameObjects in the Scene ---
+    // IMPORTANT: These GameObjects MUST BE ACTIVE in your scene by default for FindUIElements to locate them.
+    // The script will then control their visibility.
+    public string titleScreenName = "TitleScreen"; 
     public string scoreTextName = "ScoreText"; 
     public string livesTextName = "LivesText";
     public string gameOverTextName = "GameOverText";
     public string restartButtonName = "RestartButton";
+    public string easyButtonName = "EasyButton"; 
+    public string mediumButtonName = "MediumButton"; // Added name for Medium Button
 
     // --- Game State Variables ---
     private int score;
     public int initialLives = 3;
     private int currentLives;
-    public bool isGameActive;
+    public bool isGameActive = false; // Game starts as inactive
 
     // --- Audio Management ---
     private AudioSource audioSource;
@@ -34,149 +41,256 @@ public class GameManager2D : MonoBehaviour
 
     void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject.transform.root.gameObject); // Persist the root GameObject
+            DontDestroyOnLoad(gameObject.transform.root.gameObject);
 
-            audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
+            audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
-                Debug.LogError("GameManager is missing an AudioSource component! Please add one.", this.gameObject);
+                Debug.LogError("GameManager2D is missing an AudioSource component!", this.gameObject);
             }
             else
             {
-                audioSource.loop = true; // Background music should usually loop
+                audioSource.loop = true;
             }
-
-            SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene loaded event
-            ResetInternalGameState(); // Initialize for the very first game session
-            PlayActiveMusic(); // Play active music when the game first starts
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else if (Instance != this)
         {
-            // If another instance exists, destroy this duplicate.
             Destroy(gameObject);
-            return; 
+            return;
         }
-        // If Instance == this, it's the persistent GameManager2D.
-        // OnSceneLoaded will handle UI re-linking and updates.
+    }
+
+    void Start()
+    {
+        // This runs once for the persistent instance on first launch.
+        Debug.Log("GameManager2D Start(): Setting initial pre-game state.");
+        isGameActive = false; 
+        currentLives = initialLives; 
+
+        FindUIElements(); 
+        UpdateAllUIDisplays(); 
     }
 
     void OnDestroy()
     {
-        // Unsubscribe from the event when the GameManager2D is truly destroyed
-        // to prevent memory leaks, though with DontDestroyOnLoad, this is less common.
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Called every time a scene finishes loading
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Re-finding UI elements and updating display.");
-        FindUIElements(); // First, get references to the new UI elements
-        UpdateAllUIDisplays(); // Then, update them based on current game state
-        
-        // If the game is active after scene load (e.g., after restart), play active music.
-        // If it's not (e.g., somehow loaded into a game over state, though less likely with this setup),
-        // the GameOver method would handle the music.
-        if (isGameActive && audioSource != null && activeGameMusic != null)
+        // This runs every time a scene (including this one after a reload) finishes loading.
+        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current isGameActive (before FindUI/UpdateAllUI): " + isGameActive);
+        FindUIElements();       // Re-find UI elements in the newly loaded scene
+        UpdateAllUIDisplays();  // Update their visibility based on current game state
+
+        if (isGameActive)
         {
-             // Check if it's not already playing the active game music to avoid restarting it unnecessarily
-            if (audioSource.clip != activeGameMusic || !audioSource.isPlaying)
-            {
-                PlayActiveMusic();
-            }
+            PlayActiveMusic();
         }
+        // else { PlayMenuMusic(); // If you have menu music }
     }
 
-    // Finds UI elements in the current scene.
     void FindUIElements()
     {
-        Debug.Log("GameManager2D FindUIElements: Attempting to find UI elements by name.");
+        Debug.Log("GameManager2D FindUIElements: Attempting to find UI elements by name. Ensure they are ACTIVE in the scene by default to be found.");
+
+        GameObject titleScreenGO_temp = GameObject.Find(titleScreenName); 
+        if (titleScreenGO_temp != null) 
+        {
+            titleScreen = titleScreenGO_temp;
+            Debug.Log("GameManager2D: Found TitleScreen GameObject named: '" + titleScreenName + "'.");
+            
+            // Find EasyButton, assuming it's a child of TitleScreen or uniquely named
+            Transform easyButtonTransform = titleScreen.transform.Find(easyButtonName);
+            if (easyButtonTransform != null)
+            {
+                easyButton = easyButtonTransform.GetComponent<Button>();
+                if (easyButton == null) Debug.LogError("GameManager2D: Found EasyButton GameObject as child of TitleScreen but it's missing a Button component.", easyButtonTransform.gameObject);
+                else Debug.Log("GameManager2D: Found EasyButton as child of TitleScreen.");
+            }
+            else 
+            {
+                GameObject easyButtonGO_global = GameObject.Find(easyButtonName);
+                if (easyButtonGO_global != null) easyButton = easyButtonGO_global.GetComponent<Button>();
+                else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
+            }
+
+            // Find MediumButton, assuming it's a child of TitleScreen or uniquely named
+            Transform mediumButtonTransform = titleScreen.transform.Find(mediumButtonName);
+            if (mediumButtonTransform != null)
+            {
+                mediumButton = mediumButtonTransform.GetComponent<Button>();
+                if (mediumButton == null) Debug.LogError("GameManager2D: Found MediumButton GameObject as child of TitleScreen but it's missing a Button component.", mediumButtonTransform.gameObject);
+                else Debug.Log("GameManager2D: Found MediumButton as child of TitleScreen.");
+            }
+            else
+            {
+                GameObject mediumButtonGO_global = GameObject.Find(mediumButtonName);
+                if (mediumButtonGO_global != null) mediumButton = mediumButtonGO_global.GetComponent<Button>();
+                else Debug.LogWarning("GameManager2D: Could not find MediumButton GameObject named: '" + mediumButtonName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
+            }
+        }
+        else 
+        {
+            Debug.LogError("GameManager2D: Could not find TitleScreen GameObject named: '" + titleScreenName + "'. UI will not display correctly. Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
+            titleScreen = null; 
+            // If titleScreen isn't found, try finding buttons globally as a last resort
+            GameObject easyButtonGO_global_fallback = GameObject.Find(easyButtonName);
+            if (easyButtonGO_global_fallback != null) easyButton = easyButtonGO_global_fallback.GetComponent<Button>();
+            else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (TitleScreen also not found).", this.gameObject);
+            
+            GameObject mediumButtonGO_global_fallback = GameObject.Find(mediumButtonName);
+            if (mediumButtonGO_global_fallback != null) mediumButton = mediumButtonGO_global_fallback.GetComponent<Button>();
+            else Debug.LogWarning("GameManager2D: Could not find MediumButton GameObject named: '" + mediumButtonName + "' (TitleScreen also not found).", this.gameObject);
+        }
+        
         GameObject scoreTextGO = GameObject.Find(scoreTextName);
         if (scoreTextGO != null) scoreText = scoreTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogError("GameManager2D FindUIElements: Could not find ScoreText GameObject named: '" + scoreTextName + "'. Ensure it exists in the scene and the name matches.", this.gameObject);
+        else Debug.LogError("GameManager2D: Could not find ScoreText GameObject named: '" + scoreTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
 
         GameObject livesTextGO = GameObject.Find(livesTextName);
         if (livesTextGO != null) livesText = livesTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogError("GameManager2D FindUIElements: Could not find LivesText GameObject named: '" + livesTextName + "'.", this.gameObject);
+        else Debug.LogError("GameManager2D: Could not find LivesText GameObject named: '" + livesTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
         
         GameObject gameOverTextGO = GameObject.Find(gameOverTextName);
-        if (gameOverTextGO != null) gameOverText = gameOverTextGO.GetComponent<TextMeshProUGUI>(); // Changed from TextMeshProUGUI to GameObject
-        else Debug.LogError("GameManager2D FindUIElements: Could not find GameOverText GameObject named: '" + gameOverTextName + "'.", this.gameObject);
+        if (gameOverTextGO != null) gameOverText = gameOverTextGO.GetComponent<TextMeshProUGUI>();
+        else Debug.LogError("GameManager2D: Could not find GameOverText GameObject named: '" + gameOverTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
 
         GameObject restartButtonGO = GameObject.Find(restartButtonName);
         if (restartButtonGO != null) restartButton = restartButtonGO.GetComponent<Button>();
-        else Debug.LogError("GameManager2D FindUIElements: Could not find RestartButton GameObject named: '" + restartButtonName + "'.", this.gameObject);
+        else Debug.LogError("GameManager2D: Could not find RestartButton GameObject named: '" + restartButtonName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
 
-        // Ensure the restart button's listener is set up.
         if (restartButton != null)
         {
-            restartButton.onClick.RemoveAllListeners(); // Clear previous listeners to be safe
+            restartButton.onClick.RemoveAllListeners(); 
             restartButton.onClick.AddListener(RestartGame);
-            Debug.Log("GameManager2D FindUIElements: RestartButton listener re-assigned.");
         }
+        // Note: The EasyButton's and MediumButton's listeners are assumed to be on their own DifficultyButton scripts.
     }
 
-    // Resets the internal game state variables.
     void ResetInternalGameState()
     {
-        isGameActive = true; // Explicitly set to true for a new game
         score = 0;
         currentLives = initialLives;
-        Debug.Log("GameManager2D ResetInternalGameState: Game state reset. isGameActive: " + isGameActive + ", Score: " + score + ", Lives: " + currentLives);
-        // DO NOT try to SetActive(false) on UI elements here, as their references might be stale
-        // if this is called before a scene reload. UI visibility is handled in UpdateAllUIDisplays.
+        Debug.Log("GameManager2D ResetInternalGameState: Score: " + score + ", Lives: " + currentLives + ". (isGameActive is currently: " + isGameActive + ")");
     }
 
-    // Updates all relevant UI elements based on the current game state.
     void UpdateAllUIDisplays()
     {
-        Debug.Log("GameManager2D UpdateAllUIDisplays: Updating UI. Current isGameActive: " + isGameActive);
+        bool isPreGameState = !isGameActive && currentLives > 0; 
+        bool isTrulyGameOver = !isGameActive && currentLives <= 0; 
 
-        // Update score display
+        Debug.Log("GameManager2D UpdateAllUIDisplays: isGameActive=" + isGameActive + ", currentLives=" + currentLives + " -> isPreGameState=" + isPreGameState + ", isTrulyGameOver=" + isTrulyGameOver);
+
+        if (titleScreen != null)
+        {
+            titleScreen.SetActive(isPreGameState);
+            Debug.Log("GameManager2D: TitleScreen active state set to: " + isPreGameState);
+        }
+        else
+        {
+            Debug.LogError("GameManager2D UpdateAllUIDisplays: titleScreen reference is NULL. Cannot set its active state.");
+        }
+
+        // If EasyButton and MediumButton are children of titleScreen, their visibility
+        // will be controlled by titleScreen.SetActive().
+        // If they are separate and need individual control:
+        if (easyButton != null)
+        {
+            easyButton.gameObject.SetActive(isPreGameState);
+            Debug.Log("GameManager2D: EasyButton active state set to: " + isPreGameState);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager2D UpdateAllUIDisplays: easyButton reference is NULL. Cannot set its active state.");
+        }
+
+        if (mediumButton != null)
+        {
+            mediumButton.gameObject.SetActive(isPreGameState);
+            Debug.Log("GameManager2D: MediumButton active state set to: " + isPreGameState);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager2D UpdateAllUIDisplays: mediumButton reference is NULL. Cannot set its active state.");
+        }
+
+
         if (scoreText != null) 
         {
-            scoreText.text = "Score: " + score; 
-            Debug.Log("GameManager2D UpdateAllUIDisplays: Score UI updated to: " + scoreText.text);
+            scoreText.gameObject.SetActive(isGameActive);
+            if(isGameActive) scoreText.text = "Score: " + score; 
         }
-        else Debug.LogError("ScoreText reference is null in UpdateAllUIDisplays. Cannot update score display.", this.gameObject);
-
-        // Update lives display
         if (livesText != null) 
         {
-            UpdateLivesDisplay(); // This method already contains a null check for livesText
-            Debug.Log("GameManager2D UpdateAllUIDisplays: Lives UI updated via UpdateLivesDisplay(). Current lives on UI: " + (livesText.text));
+            livesText.gameObject.SetActive(isGameActive);
+            if(isGameActive) UpdateLivesDisplay(); 
         }
-        else Debug.LogError("LivesText reference is null in UpdateAllUIDisplays. Cannot initially call UpdateLivesDisplay().", this.gameObject);
         
-        // Determine if Game Over UI should be active
-        bool showGameOverUI = !isGameActive; // If game is active, don't show game over UI
-
         if (gameOverText != null) 
         {
-            Debug.Log("GameManager2D UpdateAllUIDisplays: Setting GameOverText active state to: " + showGameOverUI + " (because isGameActive is " + isGameActive + ")");
-            gameOverText.gameObject.SetActive(showGameOverUI);
+            gameOverText.gameObject.SetActive(isTrulyGameOver);
         }
-        else Debug.LogError("GameOverText reference is null in UpdateAllUIDisplays. Cannot set active state.", this.gameObject);
-
         if (restartButton != null) 
         {
-            Debug.Log("GameManager2D UpdateAllUIDisplays: Setting RestartButton active state to: " + showGameOverUI + " (because isGameActive is " + isGameActive + ")");
-            restartButton.gameObject.SetActive(showGameOverUI);
+            restartButton.gameObject.SetActive(isTrulyGameOver);
         }
-        else Debug.LogError("RestartButton reference is null in UpdateAllUIDisplays. Cannot set active state.", this.gameObject);
     }
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    // For a persistent GameManager2D, this will only run when it's first created.
-    void Start()
+    // --- Game Lifecycle Methods ---
+    public void StartGame(float difficultySpawnInterval) // Accepts spawn interval from DifficultyButton
     {
-        Debug.Log("GameManager2D Start() called (should only be once for persistent instance).");
+        Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultySpawnInterval);
+        isGameActive = true;
+        ResetInternalGameState(); 
+        UpdateAllUIDisplays();    
+        PlayActiveMusic();
+
+        // Assuming SpawnManager2D is found and assigned via FindUIElementsAndSpawnManager
+        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); // Or use a cached reference if preferred
+        if (spawnManager != null)
+        {
+            spawnManager.BeginSpawningEnemies(difficultySpawnInterval);
+        }
+        else
+        {
+            Debug.LogError("GameManager2D: SpawnManager2D instance not found in StartGame(). Cannot start enemy spawning.", this.gameObject);
+        }
+    }
+    
+    public void GameOver()
+    {
+        if (!isGameActive && currentLives <= 0) return; 
+      
+        Debug.Log("GameManager2D: GameOver() called.");
+        isGameActive = false; 
+        PlayGameOverMusic(); 
+        UpdateAllUIDisplays(); 
+
+        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
+        if (spawnManager != null)
+        {
+            spawnManager.StopSpawningEnemies(); 
+        }
+    }
+
+    public void RestartGame()
+    {
+        Debug.Log("GameManager2D: RestartGame() called. Setting isGameActive to false for title screen return.");
+        isGameActive = false; 
+        ResetInternalGameState(); 
         
+        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
+        if (spawnManager != null)
+        {
+            spawnManager.StopSpawningEnemies();
+        }
+        Debug.Log("GameManager2D: State before loading scene in RestartGame - isGameActive: " + isGameActive + ", currentLives: " + currentLives);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // --- Audio Control Methods ---
@@ -184,131 +298,47 @@ public class GameManager2D : MonoBehaviour
     {
         if (audioSource != null && activeGameMusic != null)
         {
-            if (audioSource.clip == activeGameMusic && audioSource.isPlaying) return; // Already playing this clip
-
-            audioSource.Stop();
-            audioSource.clip = activeGameMusic;
-            audioSource.loop = true; // Ensure looping for game music
-            audioSource.Play();
-            Debug.Log("GameManager: Playing active game music.");
-        }
-        else
-        {
-            if(audioSource == null) Debug.LogError("GameManager: AudioSource is null. Cannot play active music.", this.gameObject);
-            if(activeGameMusic == null) Debug.LogError("GameManager: ActiveGameMusic AudioClip is not assigned. Cannot play active music.", this.gameObject);
-        }
+            if (audioSource.clip == activeGameMusic && audioSource.isPlaying) return; 
+            audioSource.Stop(); audioSource.clip = activeGameMusic; audioSource.loop = true; audioSource.Play();
+            Debug.Log("GameManager2D: Playing active game music.");
+        } else { Debug.LogError("GameManager2D: Cannot play active music - AudioSource or AudioClip missing.");}
     }
 
     void PlayGameOverMusic()
     {
         if (audioSource != null && gameOverMusic != null)
         {
-            if (audioSource.clip == gameOverMusic && audioSource.isPlaying) return; // Already playing this clip
-
-            audioSource.Stop();
-            audioSource.clip = gameOverMusic;
-            audioSource.loop = true; // Game over music might loop or be a one-shot, adjust as needed
-            audioSource.Play();
-            Debug.Log("GameManager: Playing game over music.");
-        }
-        else
-        {
-             if(audioSource == null) Debug.LogError("GameManager: AudioSource is null. Cannot play game over music.", this.gameObject);
-            if(gameOverMusic == null) Debug.LogError("GameManager: GameOverMusic AudioClip is not assigned. Cannot play game over music.", this.gameObject);
-        }
+            if (audioSource.clip == gameOverMusic && audioSource.isPlaying) return;
+            audioSource.Stop(); audioSource.clip = gameOverMusic; audioSource.loop = true; audioSource.Play();
+            Debug.Log("GameManager2D: Playing game over music.");
+        } else { Debug.LogError("GameManager2D: Cannot play game over music - AudioSource or AudioClip missing.");}
     }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    
     // --- Score functions ---
     public void UpdateScore(int scoreToAdd)
     {
-        if (!isGameActive && scoreToAdd > 0) 
-        {
-            // Debug.Log("Game is not active. Score not updated.");
-            // return;
-        }
+        if (!isGameActive && scoreToAdd > 0) return;
         score += scoreToAdd;
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score;
-        }
-        // No need for an else here if FindUIElements and UpdateAllUIDisplays handle initial setup
+        if (scoreText != null && isGameActive) scoreText.text = "Score: " + score;
     }
 
     // --- Lives functions ---
     public void LoseLife()
     {
         if (!isGameActive) return; 
-
         if (currentLives > 0)
         {
             currentLives--;
             Debug.Log("Player lost a life. Lives remaining: " + currentLives);
-            UpdateLivesDisplay(); 
-
-            if (currentLives <= 0)
-            {
-                GameOver();
-            }
+            if (livesText != null && isGameActive) UpdateLivesDisplay(); 
+            if (currentLives <= 0) GameOver();
         }
     }
 
-    public int GetCurrentLives()
-    {
-        return currentLives;
-    }
+    public int GetCurrentLives() { return currentLives; }
 
     void UpdateLivesDisplay()
     {
-        if (livesText != null)
-        {
-            livesText.text = "Lives: " + currentLives;
-        }
-        // No need for an else here if FindUIElements and UpdateAllUIDisplays handle initial setup
+        if (livesText != null) livesText.text = "Lives: " + currentLives;
     }     
-
-    // --- Game Over Functions ---
-    public void GameOver()
-    {
-        if (!isGameActive) return; // Prevent calling GameOver multiple times
-
-        Debug.Log("GameManager2D: GameOver() called.");
-        isGameActive = false; // Set game to inactive first
-         PlayGameOverMusic(); // Play game over music
-
-        if (gameOverText != null)
-        {
-            gameOverText.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("GameOverText is not assigned/found! Cannot show Game Over text.", this.gameObject);
-        }
-        
-        if (restartButton != null)
-        {
-            restartButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("RestartButton is not assigned/found! Cannot show Restart button.", this.gameObject);
-        }
-    }
-
-    public void RestartGame()
-    {
-        Debug.Log("GameManager2D: RestartGame() called. Resetting internal state and reloading scene.");
-        ResetInternalGameState(); // This will set isGameActive = true and reset score/lives
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        // After scene load, OnSceneLoaded will fire, which calls FindUIElements and then UpdateAllUIDisplays.
-        // UpdateAllUIDisplays will then use the fresh isGameActive = true to hide the game over UI.
-    }
-    
 }
