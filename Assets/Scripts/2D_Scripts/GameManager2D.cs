@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))] // Ensures an AudioSource component will be added if not present
+
 public class GameManager2D : MonoBehaviour
 {
     public static GameManager2D Instance { get; private set; }
@@ -25,6 +27,11 @@ public class GameManager2D : MonoBehaviour
     private int currentLives;
     public bool isGameActive;
 
+    // --- Audio Management ---
+    private AudioSource audioSource;
+    public AudioClip activeGameMusic;
+    public AudioClip gameOverMusic;
+
     void Awake()
     {
         // Singleton pattern
@@ -32,8 +39,20 @@ public class GameManager2D : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject.transform.root.gameObject); // Persist the root GameObject
+
+            audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
+            if (audioSource == null)
+            {
+                Debug.LogError("GameManager is missing an AudioSource component! Please add one.", this.gameObject);
+            }
+            else
+            {
+                audioSource.loop = true; // Background music should usually loop
+            }
+
             SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene loaded event
             ResetInternalGameState(); // Initialize for the very first game session
+            PlayActiveMusic(); // Play active music when the game first starts
         }
         else if (Instance != this)
         {
@@ -58,6 +77,18 @@ public class GameManager2D : MonoBehaviour
         Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Re-finding UI elements and updating display.");
         FindUIElements(); // First, get references to the new UI elements
         UpdateAllUIDisplays(); // Then, update them based on current game state
+        
+        // If the game is active after scene load (e.g., after restart), play active music.
+        // If it's not (e.g., somehow loaded into a game over state, though less likely with this setup),
+        // the GameOver method would handle the music.
+        if (isGameActive && audioSource != null && activeGameMusic != null)
+        {
+             // Check if it's not already playing the active game music to avoid restarting it unnecessarily
+            if (audioSource.clip != activeGameMusic || !audioSource.isPlaying)
+            {
+                PlayActiveMusic();
+            }
+        }
     }
 
     // Finds UI elements in the current scene.
@@ -145,7 +176,49 @@ public class GameManager2D : MonoBehaviour
     void Start()
     {
         Debug.Log("GameManager2D Start() called (should only be once for persistent instance).");
+        
     }
+
+    // --- Audio Control Methods ---
+    void PlayActiveMusic()
+    {
+        if (audioSource != null && activeGameMusic != null)
+        {
+            if (audioSource.clip == activeGameMusic && audioSource.isPlaying) return; // Already playing this clip
+
+            audioSource.Stop();
+            audioSource.clip = activeGameMusic;
+            audioSource.loop = true; // Ensure looping for game music
+            audioSource.Play();
+            Debug.Log("GameManager: Playing active game music.");
+        }
+        else
+        {
+            if(audioSource == null) Debug.LogError("GameManager: AudioSource is null. Cannot play active music.", this.gameObject);
+            if(activeGameMusic == null) Debug.LogError("GameManager: ActiveGameMusic AudioClip is not assigned. Cannot play active music.", this.gameObject);
+        }
+    }
+
+    void PlayGameOverMusic()
+    {
+        if (audioSource != null && gameOverMusic != null)
+        {
+            if (audioSource.clip == gameOverMusic && audioSource.isPlaying) return; // Already playing this clip
+
+            audioSource.Stop();
+            audioSource.clip = gameOverMusic;
+            audioSource.loop = true; // Game over music might loop or be a one-shot, adjust as needed
+            audioSource.Play();
+            Debug.Log("GameManager: Playing game over music.");
+        }
+        else
+        {
+             if(audioSource == null) Debug.LogError("GameManager: AudioSource is null. Cannot play game over music.", this.gameObject);
+            if(gameOverMusic == null) Debug.LogError("GameManager: GameOverMusic AudioClip is not assigned. Cannot play game over music.", this.gameObject);
+        }
+    }
+
+
 
     // Update is called once per frame
     void Update()
@@ -208,6 +281,7 @@ public class GameManager2D : MonoBehaviour
 
         Debug.Log("GameManager2D: GameOver() called.");
         isGameActive = false; // Set game to inactive first
+         PlayGameOverMusic(); // Play game over music
 
         if (gameOverText != null)
         {

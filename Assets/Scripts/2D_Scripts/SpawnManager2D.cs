@@ -12,10 +12,14 @@ public class SpawnManager2D : MonoBehaviour
     private float startDelay = 2;
     private float spawnInterval = 1.5f;
 
+    GameManager2D gameManager; // To stop the game when the state is game over
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InvokeRepeating("SpawnRandomEnemy", startDelay, spawnInterval);
+        gameManager = GameObject.Find("GameManager2D").GetComponent<GameManager2D>();
+
         
     }
 
@@ -30,8 +34,14 @@ public class SpawnManager2D : MonoBehaviour
     }
 
     void SpawnRandomEnemy(){
-        int enemyIndex = Random.Range(0,enemyPrefabs.Length);
-        Vector3 spawnPos = new Vector3(Random.Range(-spawnRangeX,spawnRangeX), spawnY, 0);
-        Instantiate(enemyPrefabs[enemyIndex], spawnPos, enemyPrefabs[enemyIndex].transform.rotation);
+
+        if(gameManager.isGameActive){
+            int enemyIndex = Random.Range(0,enemyPrefabs.Length);
+            Vector3 spawnPos = new Vector3(Random.Range(-spawnRangeX,spawnRangeX), spawnY, 0);
+            Instantiate(enemyPrefabs[enemyIndex], spawnPos, enemyPrefabs[enemyIndex].transform.rotation);
+        }
+        
+        
+        
     }
 }
