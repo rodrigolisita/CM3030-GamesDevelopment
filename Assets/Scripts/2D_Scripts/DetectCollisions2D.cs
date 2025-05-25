@@ -154,16 +154,16 @@ public class DetectCollisions2D : MonoBehaviour
             {
                 //// Check if the Player's explosionParticle reference itself is not null AND
                 //// the GameObject of the particle system has not been destroyed.
-                //if (playerController.explosionParticle != null && playerController.explosionParticle.gameObject != null) 
-                //{
+                if (playerController.explosionParticle != null && playerController.explosionParticle.gameObject != null) 
+                {
                 //    // Play the player's explosion particle system
-                //    playerController.explosionParticle.Play();
+                    playerController.explosionParticle.Play();
                 //    Debug.Log("Player's explosion particle system triggered by enemy.");
-                //}
-                //else
-                //{
-                //    Debug.LogWarning("PlayerController found on Player, but its explosionParticle is not assigned, or the particle system GameObject has been destroyed.", other.gameObject);
-                //}
+                }
+                else
+                {
+                    Debug.LogWarning("PlayerController found on Player, but its explosionParticle is not assigned, or the particle system GameObject has been destroyed.", other.gameObject);
+                }
             }
             else
             {

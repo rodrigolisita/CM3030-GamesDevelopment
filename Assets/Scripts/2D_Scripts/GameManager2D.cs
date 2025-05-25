@@ -236,4 +236,5 @@ public class GameManager2D : MonoBehaviour
         // After scene load, OnSceneLoaded will fire, which calls FindUIElements and then UpdateAllUIDisplays.
         // UpdateAllUIDisplays will then use the fresh isGameActive = true to hide the game over UI.
     }
+    
 }

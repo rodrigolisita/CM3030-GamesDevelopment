@@ -3,7 +3,7 @@ using UnityEngine;
 // Require an AudioSource component to be attached to the same GameObject.
 // This will automatically add an AudioSource if one doesn't exist when you add this script.
 [RequireComponent(typeof(AudioSource))]
-public class PlayerController2D : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public float horizontalInput;
     public float speed = 10.0f;
@@ -11,16 +11,14 @@ public class PlayerController2D : MonoBehaviour
 
     public GameObject projectilePrefab;
     public AudioClip shootingSound; // Public variable to assign your shooting sound effect
-    public ParticleSystem explosionParticle;
 
     private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
 
-    
+    public ParticleSystem explosionParticle;
 
     // Game Manager
-    GameManager2D gameManager2D;
+    GameManager gameManager;
 
-    //public ParticleSystem explosionParticle;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,27 +47,27 @@ public class PlayerController2D : MonoBehaviour
                              ", and no default clip on AudioSource. Please ensure a sound is set if you want shooting sounds.", gameObject);
         }
 
-        //// Check if the explosion particle system has been assigned
-        //if (explosionParticle == null)
-        //{
-        //    Debug.LogError("Explosion Particle System not assigned in the Inspector for " + gameObject.name + ". Please assign it. It will be triggered by other scripts (e.g., Enemy).", gameObject);
-        //}
-        //else
-        //{
-        //    // Ensure the particle system doesn't play on awake by default
-        //    // You might have already set this in the Inspector, but it's good practice.
-        //    var main = explosionParticle.main;
-        //    main.playOnAwake = false;
-        //}
+        // Check if the explosion particle system has been assigned
+        if (explosionParticle == null)
+        {
+            Debug.LogError("Explosion Particle System not assigned in the Inspector for " + gameObject.name + ". Please assign it. It will be triggered by other scripts (e.g., Enemy).", gameObject);
+        }
+        else
+        {
+            // Ensure the particle system doesn't play on awake by default
+            // You might have already set this in the Inspector, but it's good practice.
+            var main = explosionParticle.main;
+            main.playOnAwake = false;
+        }
 
         // Game Manager
-        gameManager2D = GameObject.Find("GameManager2D").GetComponent<GameManager2D>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameManager2D.isGameActive)
+        if(gameManager.isGameActive)
         {
             // Move player left and right
             horizontalInput = Input.GetAxis("Horizontal");
@@ -99,16 +97,16 @@ public class PlayerController2D : MonoBehaviour
                 // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
                 else if (playerAudioSource != null && playerAudioSource.clip != null)
                 {
-                    Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
+                     Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
                     playerAudioSource.PlayOneShot(playerAudioSource.clip);
                 }
                 else if (playerAudioSource != null) // No clip assigned anywhere
                 {
-                    Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+                     Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
                 }
             }
         }
     }
 
-    
+   
 }
