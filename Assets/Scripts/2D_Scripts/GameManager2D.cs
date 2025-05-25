@@ -19,14 +19,13 @@ public class GameManager2D : MonoBehaviour
 
     // --- Names of UI GameObjects in the Scene ---
     // IMPORTANT: These GameObjects MUST BE ACTIVE in your scene by default for FindUIElements to locate them.
-    // The script will then control their visibility.
     public string titleScreenName = "TitleScreen"; 
     public string scoreTextName = "ScoreText"; 
     public string livesTextName = "LivesText";
     public string gameOverTextName = "GameOverText";
     public string restartButtonName = "RestartButton";
     public string easyButtonName = "EasyButton"; 
-    public string mediumButtonName = "MediumButton"; // Added name for Medium Button
+    public string mediumButtonName = "MediumButton"; 
 
     // --- Game State Variables ---
     private int score;
@@ -56,6 +55,11 @@ public class GameManager2D : MonoBehaviour
                 audioSource.loop = true;
             }
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            // Set initial internal game state for the very first launch
+            isGameActive = false; 
+            currentLives = initialLives; 
+            Debug.Log("GameManager2D Awake(): Initial internal state set. isGameActive: " + isGameActive + ", currentLives: " + currentLives);
         }
         else if (Instance != this)
         {
@@ -66,13 +70,9 @@ public class GameManager2D : MonoBehaviour
 
     void Start()
     {
-        // This runs once for the persistent instance on first launch.
-        Debug.Log("GameManager2D Start(): Setting initial pre-game state.");
-        isGameActive = false; 
-        currentLives = initialLives; 
-
-        FindUIElements(); 
-        UpdateAllUIDisplays(); 
+        // Start() is called once for the persistent object.
+        // UI setup is now fully handled by OnSceneLoaded, which will be called for the initial scene load.
+        Debug.Log("GameManager2D Start() called. Initial UI setup is handled by OnSceneLoaded.");
     }
 
     void OnDestroy()
@@ -82,8 +82,8 @@ public class GameManager2D : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // This runs every time a scene (including this one after a reload) finishes loading.
-        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current isGameActive (before FindUI/UpdateAllUI): " + isGameActive);
+        // This runs every time a scene finishes loading, INCLUDING THE FIRST SCENE.
+        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current isGameActive (from persistent instance): " + isGameActive);
         FindUIElements();       // Re-find UI elements in the newly loaded scene
         UpdateAllUIDisplays();  // Update their visibility based on current game state
 
@@ -91,7 +91,7 @@ public class GameManager2D : MonoBehaviour
         {
             PlayActiveMusic();
         }
-        // else { PlayMenuMusic(); // If you have menu music }
+        // else { PlayMenuMusic(); // If you have menu music and game is not active }
     }
 
     void FindUIElements()
@@ -104,7 +104,6 @@ public class GameManager2D : MonoBehaviour
             titleScreen = titleScreenGO_temp;
             Debug.Log("GameManager2D: Found TitleScreen GameObject named: '" + titleScreenName + "'.");
             
-            // Find EasyButton, assuming it's a child of TitleScreen or uniquely named
             Transform easyButtonTransform = titleScreen.transform.Find(easyButtonName);
             if (easyButtonTransform != null)
             {
@@ -119,7 +118,6 @@ public class GameManager2D : MonoBehaviour
                 else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
             }
 
-            // Find MediumButton, assuming it's a child of TitleScreen or uniquely named
             Transform mediumButtonTransform = titleScreen.transform.Find(mediumButtonName);
             if (mediumButtonTransform != null)
             {
@@ -138,7 +136,7 @@ public class GameManager2D : MonoBehaviour
         {
             Debug.LogError("GameManager2D: Could not find TitleScreen GameObject named: '" + titleScreenName + "'. UI will not display correctly. Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
             titleScreen = null; 
-            // If titleScreen isn't found, try finding buttons globally as a last resort
+            
             GameObject easyButtonGO_global_fallback = GameObject.Find(easyButtonName);
             if (easyButtonGO_global_fallback != null) easyButton = easyButtonGO_global_fallback.GetComponent<Button>();
             else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (TitleScreen also not found).", this.gameObject);
@@ -169,7 +167,6 @@ public class GameManager2D : MonoBehaviour
             restartButton.onClick.RemoveAllListeners(); 
             restartButton.onClick.AddListener(RestartGame);
         }
-        // Note: The EasyButton's and MediumButton's listeners are assumed to be on their own DifficultyButton scripts.
     }
 
     void ResetInternalGameState()
@@ -196,9 +193,6 @@ public class GameManager2D : MonoBehaviour
             Debug.LogError("GameManager2D UpdateAllUIDisplays: titleScreen reference is NULL. Cannot set its active state.");
         }
 
-        // If EasyButton and MediumButton are children of titleScreen, their visibility
-        // will be controlled by titleScreen.SetActive().
-        // If they are separate and need individual control:
         if (easyButton != null)
         {
             easyButton.gameObject.SetActive(isPreGameState);
@@ -208,7 +202,7 @@ public class GameManager2D : MonoBehaviour
         {
             Debug.LogWarning("GameManager2D UpdateAllUIDisplays: easyButton reference is NULL. Cannot set its active state.");
         }
-
+        
         if (mediumButton != null)
         {
             mediumButton.gameObject.SetActive(isPreGameState);
@@ -218,7 +212,6 @@ public class GameManager2D : MonoBehaviour
         {
             Debug.LogWarning("GameManager2D UpdateAllUIDisplays: mediumButton reference is NULL. Cannot set its active state.");
         }
-
 
         if (scoreText != null) 
         {
@@ -242,7 +235,7 @@ public class GameManager2D : MonoBehaviour
     }
 
     // --- Game Lifecycle Methods ---
-    public void StartGame(float difficultySpawnInterval) // Accepts spawn interval from DifficultyButton
+    public void StartGame(float difficultySpawnInterval) 
     {
         Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultySpawnInterval);
         isGameActive = true;
@@ -250,8 +243,7 @@ public class GameManager2D : MonoBehaviour
         UpdateAllUIDisplays();    
         PlayActiveMusic();
 
-        // Assuming SpawnManager2D is found and assigned via FindUIElementsAndSpawnManager
-        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); // Or use a cached reference if preferred
+        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); 
         if (spawnManager != null)
         {
             spawnManager.BeginSpawningEnemies(difficultySpawnInterval);
