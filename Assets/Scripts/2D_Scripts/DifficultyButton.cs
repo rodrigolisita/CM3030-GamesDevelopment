@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class DifficultyButton : MonoBehaviour
 {
     private Button button;
-    public float spawnIntervalForThisDifficulty = 1.5f; // Set this in Inspector for each button
+    //public float spawnIntervalForThisDifficulty = 1.5f; // Set this in Inspector for each button
+    public int difficulty = 1;
 
     void Start()
     {
@@ -24,10 +25,12 @@ public class DifficultyButton : MonoBehaviour
 
     void OnButtonClick()
     {
-        Debug.Log(gameObject.name + " was clicked. Setting spawn interval to: " + spawnIntervalForThisDifficulty);
+        //Debug.Log(gameObject.name + " was clicked. Setting spawn interval to: " + spawnIntervalForThisDifficulty);
+        Debug.Log(gameObject.name + " was clicked. Setting spawn interval to: " + difficulty);
         if (GameManager2D.Instance != null)
         {
-            GameManager2D.Instance.StartGame(spawnIntervalForThisDifficulty);
+            //GameManager2D.Instance.StartGame(spawnIntervalForThisDifficulty);
+            GameManager2D.Instance.StartGame(difficulty);
             
             // Optional: Deactivate the title screen or just this button after starting
             // This might be better handled by GameManager2D.UpdateAllUIDisplays()

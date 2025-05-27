@@ -10,7 +10,7 @@ public class SpawnManager2D : MonoBehaviour
     private float spawnY = 5.0f;    
 
     private float startDelay = 2.0f; // Delay before the first spawn *after* spawning is started
-    private float currentSpawnInterval = 1.5f; // Default, will be set by GameManager2D
+    private float defaultSpawnInterval = 1.5f; // Default, will be set by GameManager2D
 
     private bool isSpawningActive = false;
 
@@ -21,7 +21,7 @@ public class SpawnManager2D : MonoBehaviour
         Debug.Log("SpawnManager2D Start(): Waiting for GameManager2D to initiate spawning.");
     }
 
-    public void BeginSpawningEnemies(float interval)
+    public void BeginSpawningEnemies(int difficulty)
     {
         if (GameManager2D.Instance == null || !GameManager2D.Instance.isGameActive)
         {
@@ -29,7 +29,7 @@ public class SpawnManager2D : MonoBehaviour
             return;
         }
 
-        currentSpawnInterval = interval;
+        float currentSpawnInterval = defaultSpawnInterval/difficulty;
         isSpawningActive = true;
 
         CancelInvoke("SpawnRandomEnemy"); // Stop any previous InvokeRepeating, just in case

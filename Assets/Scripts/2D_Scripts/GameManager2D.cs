@@ -235,9 +235,10 @@ public class GameManager2D : MonoBehaviour
     }
 
     // --- Game Lifecycle Methods ---
-    public void StartGame(float difficultySpawnInterval) 
+    //public void StartGame(float difficultySpawnInterval) 
+    public void StartGame(int difficultyLevel) 
     {
-        Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultySpawnInterval);
+        Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultyLevel);
         isGameActive = true;
         ResetInternalGameState(); 
         UpdateAllUIDisplays();    
@@ -246,7 +247,7 @@ public class GameManager2D : MonoBehaviour
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); 
         if (spawnManager != null)
         {
-            spawnManager.BeginSpawningEnemies(difficultySpawnInterval);
+            spawnManager.BeginSpawningEnemies(difficultyLevel);
         }
         else
         {
