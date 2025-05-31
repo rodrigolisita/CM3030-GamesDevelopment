@@ -97,7 +97,7 @@ public class PlayerController2D : MonoBehaviour
             {
                 float curTime = Time.time;
                 //Check if the weapon can fire another shot yet
-                Debug.Log("Time.time = " + Time.time + "\nlastShotTime = " + lastShotTime + "\n burstStartTime = " + burstStartTime + "\n shotsFiredThisBurst = " + shotsFiredThisBurst);
+                //Debug.Log("Time.time = " + Time.time + "\nlastShotTime = " + lastShotTime + "\n burstStartTime = " + burstStartTime + "\n shotsFiredThisBurst = " + shotsFiredThisBurst);
                 if (((!firing) && ((curTime - lastShotTime) > (60 / roundsPerMinute))) || firing && (shotsFiredThisBurst < (roundsPerMinute / 60) * (curTime - burstStartTime)))
                 {
                     //update the info on the shot
