@@ -1816,7 +1816,7 @@ MonoBehaviour:
   mediumButtonName: MediumButton
   initialLives: 3
   isGameActive: 0
-  activeGameMusic: {fileID: 8300000, guid: 7e486744df33fca4c86fa67ae018285c, type: 3}
+  activeGameMusic: {fileID: 8300000, guid: e302709325de49546992473a8a8939fc, type: 3}
   gameOverMusic: {fileID: 8300000, guid: 97f5a65dda474424587cc414c6de95e3, type: 3}
 --- !u!82 &1901104074
 AudioSource:
@@ -1837,7 +1837,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 0
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
