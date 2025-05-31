@@ -15,6 +15,13 @@ public class PlayerController2D : MonoBehaviour
 
     private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
 
+    private bool firing = false;
+    private float burstStartTime = 0;
+    private int shotsFiredThisBurst = 0;
+    private float lastShotTime = 0;
+
+    public float roundsPerMinute = 800;
+
     
 
     // Game Manager
@@ -86,26 +93,48 @@ public class PlayerController2D : MonoBehaviour
             }
 
             // Instantiate the projectile and play sound
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
-                // Launch a projectile from the player
-                Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+                float curTime = Time.time;
+                //Check if the weapon can fire another shot yet
+                Debug.Log("Time.time = " + Time.time + "\nlastShotTime = " + lastShotTime + "\n burstStartTime = " + burstStartTime + "\n shotsFiredThisBurst = " + shotsFiredThisBurst);
+                if (((!firing) && ((curTime - lastShotTime) > (60 / roundsPerMinute))) || firing && (shotsFiredThisBurst < (roundsPerMinute / 60) * (curTime - burstStartTime)))
+                {
+                    //update the info on the shot
+                    lastShotTime = curTime;
 
-                // Play the shooting sound
-                if (playerAudioSource != null && shootingSound != null)
-                {
-                    playerAudioSource.PlayOneShot(shootingSound);
+                    if (firing)
+                    {
+                        shotsFiredThisBurst += 1;
+                    } else
+                    {
+                        firing = true;
+                        burstStartTime = curTime;
+                        shotsFiredThisBurst = 1;
+                    }
+
+                    // Launch a projectile from the player
+                    Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+
+                    // Play the shooting sound
+                    if (playerAudioSource != null && shootingSound != null)
+                    {
+                        playerAudioSource.PlayOneShot(shootingSound);
+                    }
+                    // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
+                    else if (playerAudioSource != null && playerAudioSource.clip != null)
+                    {
+                        Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
+                        playerAudioSource.PlayOneShot(playerAudioSource.clip);
+                    }
+                    else if (playerAudioSource != null) // No clip assigned anywhere
+                    {
+                        Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+                    }
                 }
-                // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
-                else if (playerAudioSource != null && playerAudioSource.clip != null)
-                {
-                    Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
-                    playerAudioSource.PlayOneShot(playerAudioSource.clip);
-                }
-                else if (playerAudioSource != null) // No clip assigned anywhere
-                {
-                    Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
-                }
+            } else
+            {
+                firing = false; // Stop the current burst if space bar is not pressed
             }
         }
     }

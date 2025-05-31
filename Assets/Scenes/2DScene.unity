@@ -2102,6 +2102,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4405560302285325999, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
+      propertyPath: roundsPerMinute
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: -4405560302285325999, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: 5596652749312473574, guid: abedb403bd4a1fd40bf2dda60242543c, type: 3}
