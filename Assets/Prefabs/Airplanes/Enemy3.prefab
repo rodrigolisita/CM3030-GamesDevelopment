@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 1613397647513667092}
   - component: {fileID: 3569760209877985968}
   - component: {fileID: 5942242832386153059}
-  - component: {fileID: 4854949240091099716}
   - component: {fileID: 7941470369870615583}
   - component: {fileID: 2309992058787209064}
   - component: {fileID: 277005132728308878}
   - component: {fileID: -2854864958819072403}
+  - component: {fileID: 3099556519408817932}
   m_Layer: 0
   m_Name: Enemy3
   m_TagString: Enemy
@@ -93,19 +93,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4854949240091099716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1031406610796028078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 207a9e2112b930b4bbb1d1fe03d036f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2
 --- !u!114 &7941470369870615583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +238,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3099556519408817932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031406610796028078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab42eb1b51da38e4db0c575f1f49664d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 15
 --- !u!1001 &6165867002095103672
 PrefabInstance:
   m_ObjectHideFlags: 0
