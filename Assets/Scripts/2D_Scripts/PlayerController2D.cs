@@ -20,6 +20,9 @@ public class PlayerController2D : MonoBehaviour
     private int shotsFiredThisBurst = 0;
     private float lastShotTime = 0;
 
+    [SerializeField]
+    private Animator planeAnimController;
+
     public float roundsPerMinute = 800;
 
     
@@ -131,6 +134,9 @@ public class PlayerController2D : MonoBehaviour
                     {
                         Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
                     }
+
+                    // Play the shooting animation
+                    planeAnimController.SetTrigger("isFiring");
                 }
             } else
             {
