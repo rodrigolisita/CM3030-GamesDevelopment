@@ -422,6 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
+  - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
   spawnRangeX: 1.6
   spawnY: 1.9
 --- !u!4 &536829683
