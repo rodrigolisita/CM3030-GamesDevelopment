@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3837374178644820092}
   - component: {fileID: 3452267056757908706}
   - component: {fileID: 1579772232035711225}
+  - component: {fileID: 3287553307227734701}
   m_Layer: 0
   m_Name: EnemyPlane
   m_TagString: Enemy
@@ -229,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: c18d551816182e74eba523cdf9b89bcf, type: 3}
-  enemyHitParticle: {fileID: 7643973872817077014}
+  enemyDestroyedExplosion: {fileID: 7643973872817077014}
   pointsAwarded: 5
 --- !u!61 &3452267056757908706
 BoxCollider2D:
@@ -304,6 +305,23 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &3287553307227734701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2
+  damageStateSprites:
+  - {fileID: 21300000, guid: c8e0c15479b8f1b4590f605349be333f, type: 3}
+  flashColor: {r: 0.9528302, g: 0.06741722, b: 0.06741722, a: 1}
+  flashDuration: 0.1
 --- !u!1001 &7553898232591854786
 PrefabInstance:
   m_ObjectHideFlags: 0

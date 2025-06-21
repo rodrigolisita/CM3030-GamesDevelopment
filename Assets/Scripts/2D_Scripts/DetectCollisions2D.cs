@@ -1,228 +1,172 @@
 using UnityEngine;
-using System.Collections; // Required for IEnumerator and StartCoroutine
+using System.Collections;
 
-// Require an AudioSource component to be attached to the same GameObject.
-// This will automatically add an AudioSource if one doesn't exist when you add the script.
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(EnemyHealth))] // This enemy now requires an EnemyHealth script
 public class DetectCollisions2D : MonoBehaviour
 {
-    // Public variable to assign your enemy's collision sound effect in the Inspector
+    // Public variables for effects and points
     public AudioClip collisionSound;
-    // Public variable to assign the particle system for the enemy's own hit/destruction effect
-    public ParticleSystem enemyHitParticle;
-    // Public variable to define how many points this enemy is worth
+    public ParticleSystem enemyDestroyedExplosion;
     public int pointsAwarded = 10;
 
-    // Private variable to hold the AudioSource component
+    // Private component references
     private AudioSource audioSource;
+    private EnemyHealth enemyHealth; // Reference to the health script
 
-    // Define the tag for projectiles - ensure your projectile prefabs have this tag
+    // Tags for collision checking
     private const string ProjectileTag = "Projectile";
     private const string PlayerTag = "Player";
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Get the AudioSource component attached to this GameObject
         audioSource = GetComponent<AudioSource>();
+        enemyHealth = GetComponent<EnemyHealth>(); // Get the EnemyHealth script on this object
 
-        // Check if the AudioSource component was found
+        // --- Component and reference checks ---
         if (audioSource == null)
         {
-            Debug.LogError("AudioSource component not found on " + gameObject.name + ". Please add one.", gameObject);
+            Debug.LogError("AudioSource component not found on " + gameObject.name, gameObject);
         }
-
-        // Check if a collision sound has been assigned in the Inspector
-        if (collisionSound == null && (audioSource != null && audioSource.clip == null) ) // Only warn if no clip is set anywhere
+        if (enemyHealth == null)
         {
-            Debug.LogWarning("Collision sound not assigned in the Inspector for " + gameObject.name + 
-                             ", and no default clip on AudioSource. Please ensure a sound is set if you want collision sounds.", gameObject);
+            Debug.LogError("EnemyHealth component not found on " + gameObject.name, gameObject);
         }
-
-        // Check if the enemy hit particle system has been assigned
-        if (enemyHitParticle == null)
+        if (collisionSound == null && (audioSource != null && audioSource.clip == null))
         {
-            Debug.LogWarning("Enemy Hit Particle System not assigned in the Inspector for " + gameObject.name + ". Please assign it if you want a hit effect.", gameObject);
+            Debug.LogWarning("Collision sound not assigned in the Inspector for " + gameObject.name, gameObject);
+        }
+        if (enemyDestroyedExplosion == null)
+        {
+            Debug.LogWarning("Enemy Hit Particle System not assigned in the Inspector for " + gameObject.name, gameObject);
         }
         else
         {
-            // Ensure the particle system doesn't play on awake by default
-            var mainModule = enemyHitParticle.main; // Renamed for clarity
+            var mainModule = enemyDestroyedExplosion.main;
             mainModule.playOnAwake = false;
-            // IMPORTANT: Also ensure its 'Stop Action' in the Inspector is NOT set to 'Destroy' if this particle system's GameObject is the enemy itself or a critical child.
-            // If 'Stop Action' is 'Destroy', the GameObject holding the particle system will be destroyed after it finishes playing.
-            // It's generally better to manage destruction via this script's Destroy(gameObject, delay) calls.
             if (mainModule.stopAction == ParticleSystemStopAction.Destroy)
             {
-                Debug.LogWarning("The 'Stop Action' for 'enemyHitParticle' on " + gameObject.name + " is set to 'Destroy'. This might cause issues if the particle system's GameObject is the enemy itself or an essential child. Consider setting it to 'None' or 'Disable' and letting this script handle destruction.", enemyHitParticle.gameObject);
+                Debug.LogWarning("The 'Stop Action' for 'enemyDestroyedExplosion' on " + gameObject.name + " is set to 'Destroy'. Consider setting to 'None' or 'Disable'.", enemyDestroyedExplosion.gameObject);
             }
         }
-
-        // You can add any initialization for the enemy here if needed
         if (GetComponent<Collider2D>() == null)
         {
             Debug.LogError("Enemy prefab is missing a Collider2D component!", gameObject);
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Usually, collision detection logic goes into OnTriggerEnter2D or OnCollisionEnter2D,
-        // not Update, unless you're doing manual overlap checks.
-    }
-
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Log every collision to see what this enemy is interacting with
-        Debug.Log(gameObject.name + " (Enemy) triggered with: " + other.gameObject.name + " (Tag: " + other.gameObject.tag + ")");
+        bool isPlayerCollision = other.CompareTag(PlayerTag);
+        bool isProjectileCollision = other.CompareTag(ProjectileTag);
 
-        bool isPlayerCollision = other.gameObject.CompareTag(PlayerTag);
-        bool isProjectileCollision = other.gameObject.CompareTag(ProjectileTag);
-
-        AudioClip clipToPlay = null;
-        float soundLength = 0.5f; // Default delay if no clip length can be found
-
-        // Determine which clip to play for the enemy's own sound
-        if (collisionSound != null)
-        {
-            clipToPlay = collisionSound;
-            soundLength = clipToPlay.length;
-        }
-        else if (audioSource != null && audioSource.clip != null)
-        {
-            clipToPlay = audioSource.clip;
-            soundLength = clipToPlay.length;
-            Debug.LogWarning("Playing default enemy collision sound from AudioSource as 'collisionSound' was not set in script for " + gameObject.name, gameObject);
-        }
-
-        // Play the enemy's collision sound AND its own hit particle if it's a player OR a projectile collision
-        if (isPlayerCollision || isProjectileCollision)
-        {
-            // Play enemy's own sound
-            if (audioSource != null && clipToPlay != null)
-            {
-                audioSource.PlayOneShot(clipToPlay);
-            }
-            else if (audioSource != null) // No clip assigned anywhere for enemy sound
-            {
-                Debug.LogWarning("Enemy AudioSource found on " + gameObject.name + " but no AudioClip is assigned for its collision sound.", gameObject);
-            }
-
-            // Play enemy's own hit particle effect
-            if (enemyHitParticle != null)
-            {
-                // Log particle system state before playing
-                Debug.Log("Attempting to play enemyHitParticle on " + gameObject.name +
-                          ". IsPlaying (before stop/clear): " + enemyHitParticle.isPlaying +
-                          ", ParticleCount (before stop/clear): " + enemyHitParticle.particleCount +
-                          ", Main.Duration: " + enemyHitParticle.main.duration +
-                          ", Emission.enabled: " + enemyHitParticle.emission.enabled +
-                          ", Renderer.enabled: " + (enemyHitParticle.GetComponent<ParticleSystemRenderer>() != null ? enemyHitParticle.GetComponent<ParticleSystemRenderer>().enabled.ToString() : "NoRenderer") +
-                          ", GameObject Active: " + enemyHitParticle.gameObject.activeInHierarchy);
-
-                // Explicitly stop and clear the particle system to ensure a fresh play.
-                enemyHitParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); // Stop emission & clear particles.
-                // The 'true' argument affects children particle systems as well.
-                // ParticleSystemStopBehavior.StopEmittingAndClear is generally a good choice for a hard reset.
-
-                enemyHitParticle.Play(true); // Play, including children.
-                Debug.Log("Enemy hit particle Play() command issued on " + gameObject.name + ". IsPlaying (after play): " + enemyHitParticle.isPlaying);
-            }
-        }
-
-        // Handle specific game logic based on collision type
         if (isPlayerCollision)
         {
-            Debug.Log("Enemy collided with Player. Attempting to trigger Player's explosion particle.");
+            // --- Player Collision Logic ---
+            Debug.Log("Enemy collided with Player. Triggering effects.");
 
-            // --- Reduce Player's Life ---
+            // Play the enemy's own hit/destruction sound and particle effect
+            PlayHitEffects();
+            
+            // Tell GameManager the player lost a life
             if (GameManager2D.Instance != null)
             {
                 GameManager2D.Instance.LoseLife();
             }
-            else
-            {
-                Debug.LogError("GameManager2D.Instance is null! Cannot call LoseLife(). Ensure GameManager2D is in the scene and correctly initialized.");
-            }
-            // --- End of Reduce Player's Life ---
 
-            // Attempt to find the PlayerController script on the player GameObject
+            // Attempt to find the PlayerController script to trigger its explosion
             PlayerController2D playerController = other.gameObject.GetComponent<PlayerController2D>();
-
-            if (playerController != null) // Check if PlayerController component exists
+            if (playerController != null) 
             {
-                //// Check if the Player's explosionParticle reference itself is not null AND
-                //// the GameObject of the particle system has not been destroyed.
-                if (playerController.explosionParticle != null && playerController.explosionParticle.gameObject != null) 
+                // Check if the Player has an explosion particle assigned
+                if (playerController.explosionParticle != null) 
                 {
-                //    // Play the player's explosion particle system
+                    // Play the player's own explosion particle system
                     playerController.explosionParticle.Play();
-                //    Debug.Log("Player's explosion particle system triggered by enemy.");
+                    Debug.Log("Player's explosion particle system triggered by enemy.");
                 }
                 else
                 {
-                    Debug.LogWarning("PlayerController found on Player, but its explosionParticle is not assigned, or the particle system GameObject has been destroyed.", other.gameObject);
+                    Debug.LogWarning("PlayerController found on Player, but its explosionParticle is not assigned.", other.gameObject);
                 }
             }
             else
             {
-                // This means the Player GameObject itself might have been destroyed, or it doesn't have the PlayerController script.
-                Debug.LogWarning("PlayerController script not found on the collided Player object (it might have been destroyed or is missing the script).", other.gameObject);
+                Debug.LogWarning("PlayerController2D script not found on the collided Player object.", other.gameObject);
             }
 
-            // Original "Game Over" log
-            Debug.Log("Game Over from enemy collision with player.");
-            
-            // IMPORTANT: Player Destruction Logic & Enemy Destruction Logic
-            // This script currently DOES NOT destroy the player OR THE ENEMY when colliding with the player.
-            // If the enemy should be destroyed after colliding with the player, you'd add that here.
-            // For example, after playing its sound and particle:
-            // float enemyDestructionDelayPlayerCollision = soundLength;
-            // if (enemyHitParticle != null && enemyHitParticle.main.duration > soundLength)
-            // {
-            //     enemyDestructionDelayPlayerCollision = enemyHitParticle.main.duration;
-            // }
-            // Destroy(gameObject, enemyDestructionDelayPlayerCollision);
+
+            // Immediately destroy this enemy when it hits the player
+            Destroy(gameObject);
         }
         else if (isProjectileCollision)
         {
-            // If the collision is with a projectile
-            Debug.Log(gameObject.name + " (Enemy) collided with a projectile: " + other.gameObject.name + ". Destroying projectile and this enemy (after sound/particle).");
+            // --- Projectile Collision Logic ---
+            Debug.Log(gameObject.name + " collided with a projectile.");
 
-            // --- Score Update Logic ---
-            if (GameManager2D.Instance != null)
-            {
-                GameManager2D.Instance.UpdateScore(pointsAwarded);
-                Debug.Log("Score updated by " + pointsAwarded + " for destroying " + gameObject.name);
-            }
-            else
-            {
-                Debug.LogWarning("GameManager2D.Instance is null. Cannot update score.");
-            }
-            // --- End of Score Update ---
+            // Destroy the projectile that hit the enemy
+            Destroy(other.gameObject);
 
-            Collider2D enemyCollider = GetComponent<Collider2D>();
-            if(enemyCollider != null) enemyCollider.enabled = false;
-            
-            Renderer enemyRenderer = GetComponent<Renderer>();
-            if(enemyRenderer != null) enemyRenderer.enabled = false;
-            // If you have child renderers, you might need to loop through them:
-            // foreach(Renderer r in GetComponentsInChildren<Renderer>()) { r.enabled = false; }
-
-            Destroy(other.gameObject); // Destroy the projectile immediately
-            // Delay destruction of enemy by the longer of its sound or its particle duration
-            float enemyDestructionDelay = soundLength;
-            if (enemyHitParticle != null && enemyHitParticle.main.duration > soundLength)
+            // Tell the health script to take damage
+            if (enemyHealth != null)
             {
-                enemyDestructionDelay = enemyHitParticle.main.duration;
+                enemyHealth.TakeDamage(1); // Assuming each projectile does 1 damage
             }
-            Destroy(gameObject, enemyDestructionDelay); 
         }
-        else
+    }
+
+    /// <summary>
+    /// This method is now called by the EnemyHealth script when health reaches zero.
+    /// </summary>
+    public void HandleEnemyDefeat()
+    {
+        Debug.Log(gameObject.name + " has been defeated.");
+
+        // Update score
+        if (GameManager2D.Instance != null)
         {
-            // This block executes if the collision is with ANY object NOT tagged "Player" OR "Projectile"
-            Debug.Log(gameObject.name + " (Enemy) collided with a non-player, non-projectile object: " + other.gameObject.name + ".");
+            GameManager2D.Instance.UpdateScore(pointsAwarded);
+        }
+
+        // Play final destruction sound and particle effects
+        PlayHitEffects();
+
+        // Disable components to prevent further interaction while effects play out
+        Collider2D enemyCollider = GetComponent<Collider2D>();
+        if (enemyCollider != null) enemyCollider.enabled = false;
+
+        Renderer enemyRenderer = GetComponent<Renderer>();
+        if (enemyRenderer != null) enemyRenderer.enabled = false;
+
+        // Calculate destruction delay based on sound or particle duration
+        float soundLength = (collisionSound != null) ? collisionSound.length : 0.5f;
+        float particleDuration = (enemyDestroyedExplosion != null) ? enemyDestroyedExplosion.main.duration : 0f;
+        float destructionDelay = Mathf.Max(soundLength, particleDuration);
+        
+        // Destroy this enemy GameObject after the delay
+        Destroy(gameObject, destructionDelay);
+    }
+
+    /// <summary>
+    /// A helper method to play sound and particle effects to reduce code duplication.
+    /// </summary>
+    private void PlayHitEffects()
+    {
+        // Play collision sound
+        if (audioSource != null && collisionSound != null)
+        {
+            // Play sound at the position of this enemy, independent of its destruction
+            AudioSource.PlayClipAtPoint(collisionSound, transform.position);
+        }
+
+        // Play particle effect
+        if (enemyDestroyedExplosion != null)
+        {
+            // Instantiate the particle effect prefab at this position so it's not destroyed with the enemy
+            ParticleSystem explosionInstance = Instantiate(enemyDestroyedExplosion, transform.position, transform.rotation);
+            explosionInstance.Play(); // Explicitly play the instantiated system
+            // Note: The explosionInstance prefab should have a script or a "Stop Action" set to "Destroy"
+            // to clean itself up after it has finished playing.
         }
     }
 }
