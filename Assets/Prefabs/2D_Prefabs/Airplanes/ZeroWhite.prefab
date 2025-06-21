@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3452267056757908706}
   - component: {fileID: 1579772232035711225}
   - component: {fileID: -3842358675377192294}
+  - component: {fileID: -1217774116601103752}
   m_Layer: 0
   m_Name: ZeroWhite
   m_TagString: Enemy
@@ -325,6 +326,21 @@ MonoBehaviour:
   - {fileID: 2028745763, guid: 00f2c27c4ca949243b2a5e9c6af69321, type: 3}
   flashColor: {r: 0.9716981, g: 0.041251317, b: 0.041251317, a: 1}
   flashDuration: 0.1
+--- !u!114 &-1217774116601103752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de9cfc80180cd54ba35c292436196f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpeed: -0.5
+  maxSpeed: 0.5
+  changeIntervalSeconds: 4
 --- !u!1001 &7553898232591854786
 PrefabInstance:
   m_ObjectHideFlags: 0

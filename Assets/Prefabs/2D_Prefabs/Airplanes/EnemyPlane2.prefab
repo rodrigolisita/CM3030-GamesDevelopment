@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3452267056757908706}
   - component: {fileID: 1579772232035711225}
   - component: {fileID: -5691390659390177633}
+  - component: {fileID: 3264359545902398525}
   m_Layer: 0
   m_Name: EnemyPlane2
   m_TagString: Enemy
@@ -322,6 +323,21 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f70f7898b9caa014585c9b6bd9c774f6, type: 3}
   flashColor: {r: 0.9528302, g: 0.05842829, b: 0.05842829, a: 1}
   flashDuration: 0.1
+--- !u!114 &3264359545902398525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de9cfc80180cd54ba35c292436196f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpeed: -0.2
+  maxSpeed: 0.2
+  changeIntervalSeconds: 1
 --- !u!1001 &7553898232591854786
 PrefabInstance:
   m_ObjectHideFlags: 0

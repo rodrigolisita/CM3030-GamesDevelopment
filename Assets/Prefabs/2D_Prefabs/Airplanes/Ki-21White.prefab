@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3452267056757908706}
   - component: {fileID: 1579772232035711225}
   - component: {fileID: 1631942227261215136}
+  - component: {fileID: 2270789050953446158}
   m_Layer: 0
   m_Name: Ki-21White
   m_TagString: Enemy
@@ -324,6 +325,21 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 14bbdbe23570dbb4483cfcebb6e446b4, type: 3}
   flashColor: {r: 0.9622642, g: 0.06808472, b: 0.06808472, a: 1}
   flashDuration: 0.1
+--- !u!114 &2270789050953446158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de9cfc80180cd54ba35c292436196f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpeed: -0.4
+  maxSpeed: 0.4
+  changeIntervalSeconds: 3
 --- !u!1001 &7553898232591854786
 PrefabInstance:
   m_ObjectHideFlags: 0
