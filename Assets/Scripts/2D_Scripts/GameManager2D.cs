@@ -19,6 +19,7 @@ public class GameManager2D : MonoBehaviour
 
     // --- Names of UI GameObjects in the Scene ---
     // IMPORTANT: These GameObjects MUST BE ACTIVE in your scene by default for FindUIElements to locate them.
+    [Header("UI Object Names")]
     public string titleScreenName = "TitleScreen"; 
     public string scoreTextName = "ScoreText"; 
     public string livesTextName = "LivesText";
@@ -29,12 +30,15 @@ public class GameManager2D : MonoBehaviour
 
     // --- Game State Variables ---
     private int score;
-    public int initialLives = 3;
     private int currentLives;
+
+    [Header("Gameplay Settings")]
+    public int initialLives = 3;
     public bool isGameActive = false; // Game starts as inactive
 
     // --- Audio Management ---
     private AudioSource audioSource;
+    [Header("Audio Clips")]
     public AudioClip startScreenMusic;
     public AudioClip activeGameMusic;
     public AudioClip gameOverMusic;

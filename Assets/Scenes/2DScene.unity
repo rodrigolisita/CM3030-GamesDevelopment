@@ -1819,6 +1819,7 @@ MonoBehaviour:
   mediumButtonName: MediumButton
   initialLives: 3
   isGameActive: 0
+  startScreenMusic: {fileID: 8300000, guid: 39d40557c022e9441b83874cdcb1b50e, type: 3}
   activeGameMusic: {fileID: 8300000, guid: e302709325de49546992473a8a8939fc, type: 3}
   gameOverMusic: {fileID: 8300000, guid: 97f5a65dda474424587cc414c6de95e3, type: 3}
 --- !u!82 &1901104074

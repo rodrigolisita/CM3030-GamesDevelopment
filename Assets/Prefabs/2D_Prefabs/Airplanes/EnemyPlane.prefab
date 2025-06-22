@@ -324,8 +324,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: -0.05
   maxSpeed: 0.05
-  yTurnAngle: 25
-  turnSpeed: 5
+  baseAngle: 180
+  tiltAngle: 5
+  tiltSpeed: 5
   changeIntervalSeconds: 0
 --- !u!114 &-5720619537381038293
 MonoBehaviour:
