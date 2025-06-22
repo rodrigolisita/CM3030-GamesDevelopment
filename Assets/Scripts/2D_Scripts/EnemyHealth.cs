@@ -12,11 +12,11 @@ public class EnemyHealth : MonoBehaviour
     // Assign sprites for the damaged states. The array size should be (maxHealth - 1).
     // Order: [First Damaged Sprite, Second Damaged Sprite, ...]
     public Sprite[] damageStateSprites;
-    public Color flashColor = Color.white; // The color the sprite will flash when hit
+    public Color flashColor = Color.red; // The color the sprite will flash when hit
     public float flashDuration = 0.1f;    // How long the flash lasts
 
     // Private component references
-    private DetectCollisions2D collisionHandler;
+    private EnemyCollisionHandler collisionHandler;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
 
         // Get references to other components on this same GameObject.
-        collisionHandler = GetComponent<DetectCollisions2D>();
+        collisionHandler = GetComponent<EnemyCollisionHandler>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (collisionHandler == null)

@@ -44,12 +44,12 @@ GameObject:
   - component: {fileID: 6033983929233245055}
   - component: {fileID: 3133969218018841801}
   - component: {fileID: 3134745274368357541}
-  - component: {fileID: 3837374178644820092}
   - component: {fileID: 3452267056757908706}
   - component: {fileID: 1579772232035711225}
   - component: {fileID: -3842358675377192294}
   - component: {fileID: -1217774116601103752}
   - component: {fileID: 1451985172564168374}
+  - component: {fileID: -4183492649320153232}
   m_Layer: 0
   m_Name: ZeroWhite
   m_TagString: Enemy
@@ -251,21 +251,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3837374178644820092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2506428594068861399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd5a5dd383288f944952f5cd4c168d30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collisionSound: {fileID: 8300000, guid: c18d551816182e74eba523cdf9b89bcf, type: 3}
-  enemyDestroyedExplosion: {fileID: 7643973872817077014}
-  pointsAwarded: 5
 --- !u!61 &3452267056757908706
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -375,7 +360,7 @@ MonoBehaviour:
   maxSpeed: 0.5
   yTurnAngle: 25
   turnSpeed: 5
-  changeIntervalSeconds: 4
+  changeIntervalSeconds: 0.7
 --- !u!114 &1451985172564168374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,7 +375,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 5596652749312473574, guid: fff9cb89f66c52c43825614cb559c656, type: 3}
   firePoint: {fileID: 4181055777293875363}
-  fireRate: 0.8
+  fireRate: 1.7
+--- !u!114 &-4183492649320153232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd5a5dd383288f944952f5cd4c168d30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionSound: {fileID: 8300000, guid: c18d551816182e74eba523cdf9b89bcf, type: 3}
+  enemyDestroyedExplosion: {fileID: 7643973872817077014}
+  pointsAwarded: 5
 --- !u!1001 &7553898232591854786
 PrefabInstance:
   m_ObjectHideFlags: 0

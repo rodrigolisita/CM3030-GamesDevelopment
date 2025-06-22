@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(EnemyHealth))] // This enemy now requires an EnemyHealth script
-public class DetectCollisions2D : MonoBehaviour
+public class EnemyCollisionHandler : MonoBehaviour
 {
     // Public variables for effects and points
     public AudioClip collisionSound;

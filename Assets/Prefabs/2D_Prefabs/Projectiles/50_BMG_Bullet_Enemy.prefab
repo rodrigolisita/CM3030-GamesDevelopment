@@ -190,4 +190,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   speed: 3
-  lifetime: 5
+  lifetime: 0.5
