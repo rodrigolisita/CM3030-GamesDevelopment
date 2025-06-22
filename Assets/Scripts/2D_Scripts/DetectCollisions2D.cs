@@ -16,6 +16,7 @@ public class DetectCollisions2D : MonoBehaviour
 
     // Tags for collision checking
     private const string ProjectileTag = "Projectile";
+    private const string EnemyProjectileTag = "EnemyProjectile";
     private const string PlayerTag = "Player";
 
     void Start()
@@ -57,60 +58,24 @@ public class DetectCollisions2D : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        bool isPlayerCollision = other.CompareTag(PlayerTag);
-        bool isProjectileCollision = other.CompareTag(ProjectileTag);
+        // This script NO LONGER damages the player. It only handles itself.
 
-        if (isPlayerCollision)
+        if (other.CompareTag(PlayerTag))
         {
             // --- Player Collision Logic ---
-            Debug.Log("Enemy collided with Player. Triggering effects.");
-
-            // Play the enemy's own hit/destruction sound and particle effect
-            PlayHitEffects();
-            
-            // Tell GameManager the player lost a life
-            if (GameManager2D.Instance != null)
-            {
-                GameManager2D.Instance.LoseLife();
-            }
-
-            // Attempt to find the PlayerController script to trigger its explosion
-            PlayerController2D playerController = other.gameObject.GetComponent<PlayerController2D>();
-            if (playerController != null) 
-            {
-                // Check if the Player has an explosion particle assigned
-                if (playerController.explosionParticle != null) 
-                {
-                    // Play the player's own explosion particle system
-                    playerController.explosionParticle.Play();
-                    Debug.Log("Player's explosion particle system triggered by enemy.");
-                }
-                else
-                {
-                    Debug.LogWarning("PlayerController found on Player, but its explosionParticle is not assigned.", other.gameObject);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("PlayerController2D script not found on the collided Player object.", other.gameObject);
-            }
-
-
-            // Immediately destroy this enemy when it hits the player
-            Destroy(gameObject);
+            // The enemy simply destroys itself when it hits the player.
+            // The Player's script is now responsible for deducting a life.
+            Debug.Log("Enemy collided with Player. Destroying self.");
+            HandleEnemyDefeat(); 
         }
-        else if (isProjectileCollision)
+        else if (other.CompareTag(ProjectileTag))
         {
             // --- Projectile Collision Logic ---
-            Debug.Log(gameObject.name + " collided with a projectile.");
-
-            // Destroy the projectile that hit the enemy
+            Debug.Log(gameObject.name + " collided with a player projectile.");
             Destroy(other.gameObject);
-
-            // Tell the health script to take damage
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamage(1); // Assuming each projectile does 1 damage
+                enemyHealth.TakeDamage(1);
             }
         }
     }

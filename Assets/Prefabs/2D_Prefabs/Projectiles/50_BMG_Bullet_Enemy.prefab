@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 6267270987969841877}
   - component: {fileID: 3431106545013045879}
   - component: {fileID: 3695808160559504554}
-  - component: {fileID: -2440631865182112521}
+  - component: {fileID: 7463059354159678533}
   m_Layer: 0
-  m_Name: 50_BMG_Bullet
-  m_TagString: Projectile
+  m_Name: 50_BMG_Bullet_Enemy
+  m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -176,7 +176,7 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &-2440631865182112521
+--- !u!114 &7463059354159678533
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,6 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba4bf64c531cb2643ae13a4eb661cda9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   speed: 3
   lifetime: 5
