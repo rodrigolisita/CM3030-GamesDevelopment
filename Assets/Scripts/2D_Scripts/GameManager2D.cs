@@ -35,8 +35,10 @@ public class GameManager2D : MonoBehaviour
 
     // --- Audio Management ---
     private AudioSource audioSource;
+    public AudioClip startScreenMusic;
     public AudioClip activeGameMusic;
     public AudioClip gameOverMusic;
+    
 
     void Awake()
     {
@@ -89,9 +91,13 @@ public class GameManager2D : MonoBehaviour
 
         if (isGameActive)
         {
+            // If the scene loads and the game is already active (e.g., moving to level 2), play game music.
             PlayActiveMusic();
         }
-        // else { PlayMenuMusic(); // If you have menu music and game is not active }
+        else { 
+             // If you have menu music and game is not active 
+            PlayStartScreenMusic();
+        }
     }
 
     void FindUIElements()
@@ -287,6 +293,24 @@ public class GameManager2D : MonoBehaviour
     }
 
     // --- Audio Control Methods ---
+    void PlayStartScreenMusic()
+    {
+    if (audioSource != null && startScreenMusic != null)
+    {
+        // Don't restart the music if this track is already playing
+        if (audioSource.clip == startScreenMusic && audioSource.isPlaying) return; 
+        
+        audioSource.Stop(); 
+        audioSource.clip = startScreenMusic; 
+        audioSource.loop = true; 
+        audioSource.Play();
+        Debug.Log("GameManager2D: Playing start screen music.");
+    }
+    else 
+    {
+        Debug.LogWarning("GameManager2D: Cannot play start screen music - AudioSource or AudioClip missing.");
+    }
+}
     void PlayActiveMusic()
     {
         if (audioSource != null && activeGameMusic != null)
