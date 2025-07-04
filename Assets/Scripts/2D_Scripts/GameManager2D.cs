@@ -13,6 +13,7 @@ public class GameManager2D : MonoBehaviour
     private TextMeshProUGUI scoreText;
     private TextMeshProUGUI livesText;
     private TextMeshProUGUI gameOverText;
+    private TextMeshProUGUI playInstructionText;
     private Button restartButton;
     private Button easyButton; 
     private Button mediumButton; // Added reference for Medium Button
@@ -24,6 +25,7 @@ public class GameManager2D : MonoBehaviour
     public string scoreTextName = "ScoreText"; 
     public string livesTextName = "LivesText";
     public string gameOverTextName = "GameOverText";
+    public string playInstructionTextName = "PlayInstruction";
     public string restartButtonName = "RestartButton";
     public string easyButtonName = "EasyButton"; 
     public string mediumButtonName = "MediumButton"; 
@@ -168,6 +170,10 @@ public class GameManager2D : MonoBehaviour
         if (gameOverTextGO != null) gameOverText = gameOverTextGO.GetComponent<TextMeshProUGUI>();
         else Debug.LogError("GameManager2D: Could not find GameOverText GameObject named: '" + gameOverTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
 
+        GameObject playInstructionTextGO = GameObject.Find(playInstructionTextName);
+        if (playInstructionTextGO != null) playInstructionText = playInstructionTextGO.GetComponent<TextMeshProUGUI>();
+        else Debug.LogWarning("GameManager2D: Could not find PlayInstruction Text GameObject named: '" + playInstructionTextName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
+
         GameObject restartButtonGO = GameObject.Find(restartButtonName);
         if (restartButtonGO != null) restartButton = restartButtonGO.GetComponent<Button>();
         else Debug.LogError("GameManager2D: Could not find RestartButton GameObject named: '" + restartButtonName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
@@ -241,6 +247,11 @@ public class GameManager2D : MonoBehaviour
         if (restartButton != null) 
         {
             restartButton.gameObject.SetActive(isTrulyGameOver);
+        }
+
+        if (playInstructionText != null)
+        {
+            playInstructionText.gameObject.SetActive(isPreGameState);
         }
     }
 
