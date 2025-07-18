@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic; // Added for List
 
 public class TimeBasedParallax : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class TimeBasedParallax : MonoBehaviour
     [Header("Loop Settings")]
     public bool loopBackground = true;    // Whether to loop background
     public int backgroundCopies = 2;      // Number of background copies
+    public bool hideStaticBackgrounds = true; // Hide backgrounds that appear static at the top
     
     [Header("Game State Control")]
     public bool pauseOnGameOver = true;   // Pause when game over
@@ -27,6 +29,7 @@ public class TimeBasedParallax : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private GameManager2D gameManager;
     private bool isPaused = false;
+    private List<GameObject> backgroundCopiesList; // Track all background copies
     
     void Start()
     {
@@ -77,6 +80,7 @@ public class TimeBasedParallax : MonoBehaviour
     
     void CreateBackgroundCopies()
     {
+        backgroundCopiesList = new List<GameObject>(); // Initialize the list
         for (int i = 1; i < backgroundCopies; i++)
         {
             Vector3 offset = Vector3.zero;
@@ -105,6 +109,7 @@ public class TimeBasedParallax : MonoBehaviour
             {
                 Debug.Log($"Created background copy: {backgroundCopy.name} position: {backgroundCopy.transform.position}");
             }
+            backgroundCopiesList.Add(backgroundCopy); // Add to the list
         }
     }
     
@@ -168,6 +173,49 @@ public class TimeBasedParallax : MonoBehaviour
                 if (showDebugInfo)
                 {
                     Debug.Log($"Vertical loop reset: {gameObject.name}");
+                }
+            }
+            
+            // Hide backgrounds that are too high up (appear static)
+            if (hideStaticBackgrounds)
+            {
+                float hideThreshold = startPosition.y + backgroundHeight * 0.5f; // Hide when above this threshold
+                if (transform.position.y > hideThreshold)
+                {
+                    if (spriteRenderer != null)
+                    {
+                        spriteRenderer.enabled = false;
+                    }
+                }
+                else
+                {
+                    if (spriteRenderer != null)
+                    {
+                        spriteRenderer.enabled = true;
+                    }
+                }
+                
+                // Handle background copies visibility
+                if (backgroundCopiesList != null)
+                {
+                    foreach (GameObject copy in backgroundCopiesList)
+                    {
+                        if (copy != null)
+                        {
+                            SpriteRenderer copyRenderer = copy.GetComponent<SpriteRenderer>();
+                            if (copyRenderer != null)
+                            {
+                                if (copy.transform.position.y > hideThreshold)
+                                {
+                                    copyRenderer.enabled = false;
+                                }
+                                else
+                                {
+                                    copyRenderer.enabled = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -242,9 +290,42 @@ public class TimeBasedParallax : MonoBehaviour
     public void ResetToStartPosition()
     {
         transform.position = startPosition;
+        
+        // Ensure visibility is restored when resetting
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+        }
+        
+        // Restore visibility for all copies
+        if (backgroundCopiesList != null)
+        {
+            foreach (GameObject copy in backgroundCopiesList)
+            {
+                if (copy != null)
+                {
+                    SpriteRenderer copyRenderer = copy.GetComponent<SpriteRenderer>();
+                    if (copyRenderer != null)
+                    {
+                        copyRenderer.enabled = true;
+                    }
+                }
+            }
+        }
+        
         if (showDebugInfo)
         {
             Debug.Log($"Reset to initial position: {gameObject.name}");
+        }
+    }
+    
+    // Public method: Set hide static backgrounds
+    public void SetHideStaticBackgrounds(bool hide)
+    {
+        hideStaticBackgrounds = hide;
+        if (showDebugInfo)
+        {
+            Debug.Log($"Hide static backgrounds setting updated: {gameObject.name}, hide: {hide}");
         }
     }
     

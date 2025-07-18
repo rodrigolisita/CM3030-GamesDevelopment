@@ -13,7 +13,8 @@ public class ParallaxManager : MonoBehaviour
     [Header("Game State Control")]
     public bool pauseOnGameOver = true;               // Pause when game over
     public bool adjustSpeedForDifficulty = true;      // Adjust speed based on difficulty
-    
+    public bool hideStaticBackgrounds = true;         // Hide static backgrounds at the top
+
     [Header("Debug Info")]
     public bool showDebugInfo = false;                // Show debug information
     
@@ -59,6 +60,7 @@ public class ParallaxManager : MonoBehaviour
                 timeBasedLayers[i].SetParallaxMultiplier(parallaxEffects[i]);
                 timeBasedLayers[i].showDebugInfo = showDebugInfo;
                 timeBasedLayers[i].pauseOnGameOver = pauseOnGameOver;
+                timeBasedLayers[i].SetHideStaticBackgrounds(hideStaticBackgrounds);
                 
                 if (showDebugInfo)
                 {
@@ -167,6 +169,25 @@ public class ParallaxManager : MonoBehaviour
         }
     }
     
+    // Set hide static backgrounds for all layers
+    public void SetAllLayersHideStaticBackgrounds(bool hide)
+    {
+        hideStaticBackgrounds = hide;
+        
+        foreach (TimeBasedParallax layer in allTimeLayers)
+        {
+            if (layer != null)
+            {
+                layer.SetHideStaticBackgrounds(hide);
+            }
+        }
+        
+        if (showDebugInfo)
+        {
+            Debug.Log($"All parallax layers hide static backgrounds: {hide}");
+        }
+    }
+    
     // Get parallax layer information
     public string GetParallaxInfo()
     {
@@ -174,6 +195,7 @@ public class ParallaxManager : MonoBehaviour
         info += $"Time layers count: {allTimeLayers.Count}\n";
         info += $"Pause state: {pauseOnGameOver}\n";
         info += $"Difficulty adjustment: {adjustSpeedForDifficulty}\n";
+        info += $"Hide static backgrounds: {hideStaticBackgrounds}\n";
         
         return info;
     }
