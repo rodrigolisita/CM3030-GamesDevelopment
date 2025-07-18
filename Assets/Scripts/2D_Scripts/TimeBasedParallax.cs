@@ -17,6 +17,12 @@ public class TimeBasedParallax : MonoBehaviour
     public int backgroundCopies = 2;      // Number of background copies
     public bool hideStaticBackgrounds = true; // Hide backgrounds that appear static at the top
     
+    [Header("Background Size Settings")]
+    [Tooltip("背景高度（单位：Unity单位）。如果设为0，将自动计算；否则使用此值")]
+    public float manualBackgroundHeight = 0f; // Manual background height setting
+    [Tooltip("背景宽度（单位：Unity单位）。如果设为0，将自动计算；否则使用此值")]
+    public float manualBackgroundWidth = 0f;  // Manual background width setting
+    
     [Header("Game State Control")]
     public bool pauseOnGameOver = true;   // Pause when game over
     
@@ -69,12 +75,49 @@ public class TimeBasedParallax : MonoBehaviour
     
     void CalculateBackgroundSize()
     {
-        backgroundWidth = spriteRenderer.bounds.size.x;
-        backgroundHeight = spriteRenderer.bounds.size.y;
+        // 如果手动设置了尺寸，使用手动设置的值；否则自动计算
+        if (manualBackgroundWidth > 0f)
+        {
+            backgroundWidth = manualBackgroundWidth;
+            if (showDebugInfo)
+            {
+                Debug.Log($"使用手动设置的背景宽度: {backgroundWidth}");
+            }
+        }
+        else
+        {
+            backgroundWidth = spriteRenderer.bounds.size.x;
+            if (showDebugInfo)
+            {
+                Debug.Log($"自动计算的背景宽度: {backgroundWidth}");
+            }
+        }
+        
+        if (manualBackgroundHeight > 0f)
+        {
+            backgroundHeight = manualBackgroundHeight;
+            if (showDebugInfo)
+            {
+                Debug.Log($"使用手动设置的背景高度: {backgroundHeight}");
+            }
+        }
+        else
+        {
+            backgroundHeight = spriteRenderer.bounds.size.y;
+            if (showDebugInfo)
+            {
+                Debug.Log($"自动计算的背景高度: {backgroundHeight}");
+            }
+        }
         
         if (showDebugInfo)
         {
-            Debug.Log($"Background size: width={backgroundWidth}, height={backgroundHeight}");
+            Debug.Log($"=== 背景尺寸信息 ===");
+            Debug.Log($"最终背景宽度: {backgroundWidth}");
+            Debug.Log($"最终背景高度: {backgroundHeight}");
+            Debug.Log($"起始位置: {startPosition}");
+            Debug.Log($"循环结束位置: {startPosition.y - backgroundHeight}");
+            Debug.Log($"隐藏阈值位置: {startPosition.y + backgroundHeight * 0.5f}");
         }
     }
     
@@ -329,6 +372,40 @@ public class TimeBasedParallax : MonoBehaviour
         }
     }
     
+    // Public method: Set manual background height
+    public void SetManualBackgroundHeight(float height)
+    {
+        manualBackgroundHeight = height;
+        CalculateBackgroundSize(); // 重新计算背景尺寸
+        if (showDebugInfo)
+        {
+            Debug.Log($"Manual background height updated: {gameObject.name}, new height: {height}");
+        }
+    }
+    
+    // Public method: Set manual background width
+    public void SetManualBackgroundWidth(float width)
+    {
+        manualBackgroundWidth = width;
+        CalculateBackgroundSize(); // 重新计算背景尺寸
+        if (showDebugInfo)
+        {
+            Debug.Log($"Manual background width updated: {gameObject.name}, new width: {width}");
+        }
+    }
+    
+    // Public method: Get current background dimensions
+    public Vector2 GetBackgroundDimensions()
+    {
+        return new Vector2(backgroundWidth, backgroundHeight);
+    }
+    
+    // Public method: Get loop end position
+    public float GetLoopEndPosition()
+    {
+        return startPosition.y - backgroundHeight;
+    }
+    
     // Displaying debugging information in the editor
     void OnDrawGizmosSelected()
     {
@@ -336,7 +413,8 @@ public class TimeBasedParallax : MonoBehaviour
         {
             // Drawing background boundaries
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireCube(transform.position, spriteRenderer.bounds.size);
+            Vector3 currentSize = new Vector3(backgroundWidth, backgroundHeight, 0.1f);
+            Gizmos.DrawWireCube(transform.position, currentSize);
             
             // Drawing the direction of movement
             Gizmos.color = Color.green;
@@ -362,7 +440,16 @@ public class TimeBasedParallax : MonoBehaviour
                 {
                     loopPosition.x -= backgroundWidth;
                 }
-                Gizmos.DrawWireCube(loopPosition, spriteRenderer.bounds.size);
+                Gizmos.DrawWireCube(loopPosition, currentSize);
+                
+                // Draw hide threshold
+                if (hideStaticBackgrounds && moveVertically)
+                {
+                    Gizmos.color = Color.red;
+                    Vector3 hidePosition = startPosition;
+                    hidePosition.y += backgroundHeight * 0.5f;
+                    Gizmos.DrawWireCube(hidePosition, currentSize);
+                }
             }
         }
     }

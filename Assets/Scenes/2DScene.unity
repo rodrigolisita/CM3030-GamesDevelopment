@@ -1264,8 +1264,8 @@ Transform:
   m_GameObject: {fileID: 1111907761}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalPosition: {x: 0, y: 1.62, z: 0.91}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 53717557}
@@ -1282,14 +1282,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737b08e9de0b2c346bcdb05d4ba62473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  parallaxMultiplier: 0.3
+  moveSpeed: 4
+  parallaxMultiplier: 1
   moveHorizontally: 0
   moveVertically: 1
   loopBackground: 1
   backgroundCopies: 2
+  hideStaticBackgrounds: 1
+  manualBackgroundHeight: 2
+  manualBackgroundWidth: 0
   pauseOnGameOver: 1
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!212 &1111907764
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1334,7 +1337,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 6970137be64933e4e9b94031cc5384ed, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1508,8 +1511,8 @@ Transform:
   m_GameObject: {fileID: 1382586882}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.28, z: 6}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalPosition: {x: 0.67, y: 1.28, z: 2.51}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 53717557}
@@ -1527,13 +1530,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
-  parallaxMultiplier: 0.5
+  parallaxMultiplier: 0.6
   moveHorizontally: 0
   moveVertically: 1
   loopBackground: 1
   backgroundCopies: 2
+  hideStaticBackgrounds: 1
+  manualBackgroundHeight: 2
+  manualBackgroundWidth: 0
   pauseOnGameOver: 1
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!212 &1382586885
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1578,7 +1584,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -9
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 1a3227a9e5a48da46821d76607144780, type: 3}
   m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1912,6 +1918,7 @@ MonoBehaviour:
   - 0.8
   pauseOnGameOver: 1
   adjustSpeedForDifficulty: 1
+  hideStaticBackgrounds: 1
   showDebugInfo: 1
 --- !u!1 &1784873312
 GameObject:
@@ -2272,8 +2279,8 @@ Transform:
   m_GameObject: {fileID: 1883093299}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.23, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 1}
+  m_LocalPosition: {x: 1.34, y: 1.6, z: 5.2}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 53717557}
@@ -2290,12 +2297,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737b08e9de0b2c346bcdb05d4ba62473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  parallaxMultiplier: 0.8
+  moveSpeed: 0.3
+  parallaxMultiplier: 0.1
   moveHorizontally: 0
   moveVertically: 1
   loopBackground: 1
   backgroundCopies: 2
+  hideStaticBackgrounds: 1
+  manualBackgroundHeight: 2
+  manualBackgroundWidth: 0
   pauseOnGameOver: 1
   showDebugInfo: 0
 --- !u!212 &1883093302
@@ -2342,7 +2352,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -8
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 0a9b3fb5ac23e1d40a4a6f2cce66705b, type: 3}
   m_Color: {r: 0.16226411, g: 0.02296188, b: 0.02296188, a: 1}
   m_FlipX: 0
   m_FlipY: 0
