@@ -4,20 +4,15 @@ public class SpawnManager2D : MonoBehaviour
 {
     public GameObject[] enemyPrefabs;
 
-    [SerializeField]
-    private float spawnRangeX = 7.0f; 
-    [SerializeField]
-    private float spawnY = 5.0f;    
+    // We removed the serialized fields for spawnRangeX and spawnY
+    // as they are now calculated automatically.
 
-    private float startDelay = 2.0f; // Delay before the first spawn *after* spawning is started
-    private float defaultSpawnInterval = 1.5f; // Default, will be set by GameManager2D
-
+    private float startDelay = 2.0f;
+    private float defaultSpawnInterval = 1.5f;
     private bool isSpawningActive = false;
 
     void Start()
     {
-        // Spawning is no longer started automatically here.
-        // GameManager2D will call BeginSpawningEnemies().
         Debug.Log("SpawnManager2D Start(): Waiting for GameManager2D to initiate spawning.");
     }
 
@@ -25,14 +20,14 @@ public class SpawnManager2D : MonoBehaviour
     {
         if (GameManager2D.Instance == null || !GameManager2D.Instance.isGameActive)
         {
-            Debug.LogWarning("SpawnManager2D: BeginSpawningEnemies called, but game is not active or GameManager2D is missing. Spawning aborted.");
+            Debug.LogWarning("SpawnManager2D: BeginSpawningEnemies called, but game is not active. Aborting.");
             return;
         }
 
-        float currentSpawnInterval = defaultSpawnInterval/difficulty;
+        float currentSpawnInterval = defaultSpawnInterval / difficulty;
         isSpawningActive = true;
 
-        CancelInvoke("SpawnRandomEnemy"); // Stop any previous InvokeRepeating, just in case
+        CancelInvoke("SpawnRandomEnemy");
         InvokeRepeating("SpawnRandomEnemy", startDelay, currentSpawnInterval);
         Debug.Log("SpawnManager2D: Began spawning enemies with interval: " + currentSpawnInterval);
     }
@@ -46,33 +41,35 @@ public class SpawnManager2D : MonoBehaviour
 
     void SpawnRandomEnemy()
     {
-        // Check instance and game state again, as InvokeRepeating continues until cancelled
         if (GameManager2D.Instance != null && GameManager2D.Instance.isGameActive && isSpawningActive)
         {
             if (enemyPrefabs == null || enemyPrefabs.Length == 0)
             {
-                Debug.LogWarning("SpawnManager2D: Enemy prefabs array is not assigned or is empty.", gameObject);
+                Debug.LogWarning("SpawnManager2D: Enemy prefabs array is not assigned or is empty.");
                 return;
             }
 
-            int enemyIndex = Random.Range(0, enemyPrefabs.Length);
-            Vector3 spawnPos = new Vector3(Random.Range(-spawnRangeX, spawnRangeX), spawnY, 0);
+            // Get the boundaries from the central manager
+            float randomX = Random.Range(BoundaryManager.Instance.MinX, BoundaryManager.Instance.MaxX);
+            float spawnY = BoundaryManager.Instance.PaddedMaxY;
+
+            Vector3 spawnPos = new Vector3(randomX, spawnY, 0);
             
+
+            int enemyIndex = Random.Range(0, enemyPrefabs.Length);
             if (enemyPrefabs[enemyIndex] != null)
             {
                 Instantiate(enemyPrefabs[enemyIndex], spawnPos, enemyPrefabs[enemyIndex].transform.rotation);
             }
             else
             {
-                Debug.LogWarning("SpawnManager2D: Enemy prefab at index " + enemyIndex + " is null.", gameObject);
+                Debug.LogWarning("SpawnManager2D: Enemy prefab at index " + enemyIndex + " is null.");
             }
         }
-        else if (!isSpawningActive)
+        else
         {
-            // This case handles if StopSpawningEnemies was called.
-            Debug.Log("SpawnManager2D: SpawnRandomEnemy called, but isSpawningActive is false. Cancelling further invokes.");
-            CancelInvoke("SpawnRandomEnemy");
+            // MINIMAL CHANGE: Added a log to explain WHY it's not spawning.
+            Debug.LogWarning("SpawnRandomEnemy SKIPPED. isGameActive=" + GameManager2D.Instance.isGameActive + ", isSpawningActive=" + isSpawningActive);
         }
-        // No need to log error if GameManager2D.Instance is null here, as BeginSpawningEnemies should have handled it.
     }
 }

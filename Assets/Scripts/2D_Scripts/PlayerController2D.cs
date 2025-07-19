@@ -5,26 +5,35 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerController2D : MonoBehaviour
 {
-    public float horizontalInput;
-    public float speed = 10.0f;
-    public float xRange = 24;
-
+    [Header("Movement")]
+    [Tooltip("The speed of the player's horizontal movement.")]
+    public float horizontalSpeed = 5.0f;
+    [Tooltip("The speed of the player's vertical movement.")]
+    public float verticalSpeed = 2.0f;  
+            
+    [Header("Combat")]
+    [Tooltip("The projectile prefab that the player will fire.")]
     public GameObject projectilePrefab;
+    [Tooltip("The number of shots the player can fire per minute.")]
+    public float roundsPerMinute = 800;
+
+    [Header("Effects & Audio")]
+    [Tooltip("The sound effect that plays when the player shoots.")]
     public AudioClip shootingSound; // Public variable to assign your shooting sound effect
+    [Tooltip("The particle system that plays when the player is hit or destroyed.")]
     public ParticleSystem explosionParticle;
 
-    private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
+    [Header("Component References")]
+    [Tooltip("The Animator component that controls the plane's animations.")]
+    [SerializeField]
+    private Animator planeAnimController;
 
+    // Private variables for internal logic
+    private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
     private bool firing = false;
     private float burstStartTime = 0;
     private int shotsFiredThisBurst = 0;
     private float lastShotTime = 0;
-
-    [SerializeField]
-    private Animator planeAnimController;
-
-    public float roundsPerMinute = 800;
-
     
 
     // Game Manager
@@ -81,19 +90,35 @@ public class PlayerController2D : MonoBehaviour
     {
         if (gameManager2D.isGameActive)
         {
+            // --- Movement logic ---
             // Move player left and right
-            horizontalInput = Input.GetAxis("Horizontal");
-            transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * speed);
+            float horizontalInput = Input.GetAxis("Horizontal");
+             
+            // Move player top and bottom
+            float verticalInput = Input.GetAxis("Vertical");
+            //transform.Translate(Vector3.up * verticalInput * Time.deltaTime * speed);
 
-            // Ensure the player stays within x bounds
-            if (transform.position.x < -xRange)
-            {
-                transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
-            }
-            if (transform.position.x > xRange)
-            {
-                transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
-            }
+            // Calculate the movement for each axis individually using the separate speeds
+            float xMovement = horizontalInput * horizontalSpeed;
+            float yMovement = verticalInput * verticalSpeed;
+
+            // Create a final movement vector from the individual calculations
+            Vector3 movementVelocity = new Vector3(xMovement, yMovement, 0);
+
+            // Move the player in the calculated direction
+            transform.Translate(movementVelocity * Time.deltaTime);
+
+            // --- BOUNDARY LOGIC ---
+            // Get the current position
+            Vector3 currentPosition = transform.position;
+
+            // Clamp both the X and Y positions using the BoundaryManager
+            currentPosition.x = Mathf.Clamp(currentPosition.x, BoundaryManager.Instance.MinX, BoundaryManager.Instance.MaxX);
+            currentPosition.y = Mathf.Clamp(currentPosition.y, BoundaryManager.Instance.MinY, BoundaryManager.Instance.MaxY);
+        
+            // Apply the clamped position
+            transform.position = currentPosition;
+            
 
             // Instantiate the projectile and play sound
             if (Input.GetKey(KeyCode.Space))

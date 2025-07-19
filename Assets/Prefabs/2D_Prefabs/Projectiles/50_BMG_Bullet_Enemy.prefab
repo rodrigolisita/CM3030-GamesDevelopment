@@ -189,6 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  speed: 0.5
+  speed: 1
   lifetime: 3
   hitSound: {fileID: 8300000, guid: 7bef0064f8567430cac22499c6b93d4f, type: 3}

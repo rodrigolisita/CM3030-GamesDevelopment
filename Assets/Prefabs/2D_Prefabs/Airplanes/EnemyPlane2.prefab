@@ -308,7 +308,7 @@ MonoBehaviour:
   maxHealth: 1
   damageStateSprites: []
   flashColor: {r: 0.9528302, g: 0.05842829, b: 0.05842829, a: 1}
-  flashDuration: 0.1
+  flashDuration: 0.05
 --- !u!114 &3264359545902398525
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -311,7 +311,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: aaf3a2f243d40bc4f903f31ee8176bcd, type: 3}
   - {fileID: 21300000, guid: aaf3a2f243d40bc4f903f31ee8176bcd, type: 3}
   flashColor: {r: 0.9622642, g: 0.06808472, b: 0.06808472, a: 1}
-  flashDuration: 0.1
+  flashDuration: 0.05
 --- !u!114 &2270789050953446158
 MonoBehaviour:
   m_ObjectHideFlags: 0
