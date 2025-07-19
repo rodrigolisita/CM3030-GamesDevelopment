@@ -357,6 +357,8 @@ MonoBehaviour:
   collisionSound: {fileID: 8300000, guid: c18d551816182e74eba523cdf9b89bcf, type: 3}
   enemyDestroyedExplosion: {fileID: 7643973872817077014}
   pointsAwarded: 5
+  explosionSprite: {fileID: 2897330427778015961, guid: e1e54ff293eee98458a955fc6db59091, type: 3}
+  explosionSize: 1
 --- !u!1 &4021877707005958211
 GameObject:
   m_ObjectHideFlags: 0

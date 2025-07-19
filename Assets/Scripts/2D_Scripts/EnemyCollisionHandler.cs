@@ -10,6 +10,9 @@ public class EnemyCollisionHandler : MonoBehaviour
     public ParticleSystem enemyDestroyedExplosion;
     public int pointsAwarded = 10;
 
+    public GameObject explosionSprite;
+    public int explosionSize = 1;
+
     // Private component references
     private AudioSource audioSource;
     private EnemyHealth enemyHealth; // Reference to the health script
@@ -40,6 +43,10 @@ public class EnemyCollisionHandler : MonoBehaviour
         if (enemyDestroyedExplosion == null)
         {
             Debug.LogWarning("Enemy Hit Particle System not assigned in the Inspector for " + gameObject.name, gameObject);
+        }
+        if (explosionSprite == null)
+        {
+            Debug.LogWarning("Explosion Sprite not assigned in the Inspector for " + gameObject.name, gameObject);
         }
         else
         {
@@ -124,7 +131,8 @@ public class EnemyCollisionHandler : MonoBehaviour
             AudioSource.PlayClipAtPoint(collisionSound, transform.position);
         }
 
-        // Play particle effect
+        // commented out for now, we could add particles in addition to the sprite at some point though
+        /*// Play particle effect
         if (enemyDestroyedExplosion != null)
         {
             // Instantiate the particle effect prefab at this position so it's not destroyed with the enemy
@@ -132,6 +140,12 @@ public class EnemyCollisionHandler : MonoBehaviour
             explosionInstance.Play(); // Explicitly play the instantiated system
             // Note: The explosionInstance prefab should have a script or a "Stop Action" set to "Destroy"
             // to clean itself up after it has finished playing.
+        }*/
+
+        // Spawn explosion sprite
+        if (explosionSprite != null)
+        {
+            Instantiate(explosionSprite, transform);
         }
     }
 }
