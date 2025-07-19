@@ -305,9 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
-  damageStateSprites:
-  - {fileID: 21300000, guid: c8e0c15479b8f1b4590f605349be333f, type: 3}
+  maxHealth: 1
+  damageStateSprites: []
   flashColor: {r: 0.9528302, g: 0.06741722, b: 0.06741722, a: 1}
   flashDuration: 0.1
 --- !u!114 &-7386205443270506123

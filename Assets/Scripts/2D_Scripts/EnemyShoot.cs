@@ -13,12 +13,18 @@ public class EnemyShoot : MonoBehaviour
     [Tooltip("Time in seconds between each shot.")]
     [SerializeField] private float fireRate = 1f;
 
+    // used to check if this enemy is actually active
+    private Collider2D enemyCollider;
+
     private float fireTimer;
 
     void Start()
     {
         // Add a small initial random delay to prevent all enemies from shooting at the exact same time
         fireTimer = Random.Range(0, fireRate);
+
+        // used to check if this enemy is actually active
+        enemyCollider = GetComponent<Collider2D>();
     }
 
     void Update()
@@ -27,7 +33,8 @@ public class EnemyShoot : MonoBehaviour
         fireTimer -= Time.deltaTime;
 
         // If the timer reaches zero, it's time to shoot
-        if (fireTimer <= 0f)
+        // Won't shoot if enemy collider is disabled (due to enemy being dead)
+        if (fireTimer <= 0f && enemyCollider != null && enemyCollider.enabled)
         {
             Shoot();
             // Reset the timer back to the fire rate

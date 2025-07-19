@@ -336,12 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
-  damageStateSprites:
-  - {fileID: -1668656301, guid: 00f2c27c4ca949243b2a5e9c6af69321, type: 3}
-  - {fileID: 2028745763, guid: 00f2c27c4ca949243b2a5e9c6af69321, type: 3}
-  - {fileID: -1668656301, guid: 00f2c27c4ca949243b2a5e9c6af69321, type: 3}
-  - {fileID: 2028745763, guid: 00f2c27c4ca949243b2a5e9c6af69321, type: 3}
+  maxHealth: 1
+  damageStateSprites: []
   flashColor: {r: 0.9716981, g: 0.041251317, b: 0.041251317, a: 1}
   flashDuration: 0.1
 --- !u!114 &-1217774116601103752
