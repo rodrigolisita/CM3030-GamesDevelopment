@@ -901,11 +901,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582569530}
   m_CullTransparentMesh: 1
---- !u!198 &595104845 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 1048112138092031468, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-  m_PrefabInstance: {fileID: 1091798830804199114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &613806021
 GameObject:
   m_ObjectHideFlags: 0
@@ -2745,30 +2740,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -6366657560227658397, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4405560302285325999, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: roundsPerMinute
-      value: 600
-      objectReference: {fileID: 0}
-    - target: {fileID: -4405560302285325999, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: projectilePrefab
-      value: 
-      objectReference: {fileID: 5596652749312473574, guid: abedb403bd4a1fd40bf2dda60242543c, type: 3}
-    - target: {fileID: -4405560302285325999, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: explosionParticle
-      value: 
-      objectReference: {fileID: 595104845}
-    - target: {fileID: 3548328172457599514, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3548328172457599514, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7033077554173365002, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2809,10 +2780,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7193176531617379500, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8508186655575751765, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
       propertyPath: m_Name
       value: PlayerPlane
@@ -2820,30 +2787,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8508186655575751765, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1091798830804199116}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
---- !u!1 &1091798830804199115 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8508186655575751765, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
-  m_PrefabInstance: {fileID: 1091798830804199114}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1091798830804199116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091798830804199115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa0082db6c6936742b8e09a22a29b2ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  explosionParticle: {fileID: 595104845}
-  playerHitSound: {fileID: 8300000, guid: b9eff218e132a4e76be78840eca96fb2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

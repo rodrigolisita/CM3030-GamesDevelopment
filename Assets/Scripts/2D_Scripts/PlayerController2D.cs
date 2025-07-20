@@ -92,10 +92,10 @@ public class PlayerController2D : MonoBehaviour
         {
             // --- Movement logic ---
             // Move player left and right
-            float horizontalInput = Input.GetAxis("Horizontal");
+            float horizontalInput = Input.GetAxisRaw("Horizontal");
              
             // Move player top and bottom
-            float verticalInput = Input.GetAxis("Vertical");
+            float verticalInput = Input.GetAxisRaw("Vertical");
             //transform.Translate(Vector3.up * verticalInput * Time.deltaTime * speed);
 
             // Calculate the movement for each axis individually using the separate speeds

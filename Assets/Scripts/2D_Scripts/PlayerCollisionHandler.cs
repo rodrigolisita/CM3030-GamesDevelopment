@@ -7,6 +7,8 @@ public class PlayerCollisionHandler : MonoBehaviour
     [Header("Effects")]
     public ParticleSystem explosionParticle;
     public AudioClip playerHitSound; // NEW: Variable to hold the sound clip.
+    public GameObject explosionSprite;
+    public float explosionSize = 1.0f;
 
     // NEW: Private reference to the AudioSource component.
     private AudioSource audioSource;
@@ -38,12 +40,22 @@ public class PlayerCollisionHandler : MonoBehaviour
             {
                 Destroy(other.gameObject);
             }
-            
+
             // Play our own explosion particle effect
-            if (explosionParticle != null)
+            /*if (explosionParticle != null)
             {
                 explosionParticle.Play();
+
+            }*/
+
+            // Play the explosion sprite animation
+            if (explosionSprite != null)
+            {
+                GameObject explosionInstance = Instantiate(explosionSprite, transform);
+                explosionInstance.transform.SetParent(transform);
+                explosionInstance.transform.localScale = explosionInstance.transform.localScale * explosionSize;
             }
+                
 
             // Tell the GameManager we lost a life
             if (GameManager2D.Instance != null)

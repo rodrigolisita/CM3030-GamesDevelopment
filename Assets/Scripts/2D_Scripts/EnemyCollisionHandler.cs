@@ -11,7 +11,7 @@ public class EnemyCollisionHandler : MonoBehaviour
     public int pointsAwarded = 10;
 
     public GameObject explosionSprite;
-    public int explosionSize = 1;
+    public float explosionSize = 1;
 
     // Private component references
     private AudioSource audioSource;
@@ -145,7 +145,9 @@ public class EnemyCollisionHandler : MonoBehaviour
         // Spawn explosion sprite
         if (explosionSprite != null)
         {
-            Instantiate(explosionSprite, transform);
+            GameObject explosionInstance = Instantiate(explosionSprite, transform);
+            explosionInstance.transform.SetParent(transform);
+            explosionInstance.transform.localScale = explosionInstance.transform.localScale * explosionSize;
         }
     }
 }
