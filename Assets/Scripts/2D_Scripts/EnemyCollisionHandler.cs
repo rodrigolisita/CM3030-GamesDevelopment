@@ -128,7 +128,7 @@ public class EnemyCollisionHandler : MonoBehaviour
         if (audioSource != null && collisionSound != null)
         {
             // Play sound at the position of this enemy, independent of its destruction
-            AudioSource.PlayClipAtPoint(collisionSound, transform.position);
+            AudioSource.PlayClipAtPoint(collisionSound, Camera.main.transform.position);
         }
 
         // commented out for now, we could add particles in addition to the sprite at some point though
