@@ -1,6 +1,24 @@
 using UnityEngine;
 using System.Collections; // Required for Coroutines
 
+
+[System.Serializable]
+public class DamageVisual
+{
+    public float activationPercent;
+    public Sprite damageSprite;
+    public Color smokeColor;
+    public bool smoking;
+    public bool onFire;
+
+    public DamageVisual()
+    {
+        smokeColor = Color.white;
+        smoking = true;
+        onFire = false;
+    }
+}
+
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
@@ -9,9 +27,13 @@ public class EnemyHealth : MonoBehaviour
     private int currentHealth;
 
     [Header("Damage Visuals")]
-    // Assign sprites for the damaged states. The array size should be (maxHealth - 1).
+    /*// Assign sprites for the damaged states. The array size should be (maxHealth - 1).
     // Order: [First Damaged Sprite, Second Damaged Sprite, ...]
-    public Sprite[] damageStateSprites;
+    public Sprite[] damageStateSprites;*/
+
+    // Assign visuals for each damage state based on percentage of health remaining. Visuals must be ordered from full health to least health.
+    public DamageVisual[] damageVisuals;
+    
     public Color flashColor = Color.red; // The color the sprite will flash when hit
     public float flashDuration = 0.1f;    // How long the flash lasts
 
@@ -43,11 +65,13 @@ public class EnemyHealth : MonoBehaviour
             originalColor = spriteRenderer.color;
         }
 
-        // Check that the number of damage sprites matches the number of damage states.
+        
+
+        /*// Check that the number of damage sprites matches the number of damage states.
         if (damageStateSprites.Length != maxHealth - 1)
         {
             Debug.LogWarning("On " + gameObject.name + ", the number of damage sprites (" + damageStateSprites.Length + ") does not match the number of damage states (" + (maxHealth - 1) + "). Visuals may not display as expected.", gameObject);
-        }
+        }*/
         // No need to call UpdateSprite() here, as the enemy already has its default full-health sprite.
     }
 
@@ -97,12 +121,38 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
         
-        if (spriteRenderer == null || damageStateSprites == null || damageStateSprites.Length == 0)
+        if (spriteRenderer == null || damageVisuals == null || damageVisuals.Length == 0)
         {
             return; // Exit if we don't have the necessary components/assets.
         }
 
-        // This logic maps the remaining health to the correct damaged sprite.
+        float damagePercent = currentHealth * 100f / maxHealth;
+        int newVisualIndex = 0;
+        while (newVisualIndex + 1 < damageVisuals.Length)
+        {
+            if (damageVisuals[newVisualIndex + 1].activationPercent >= damagePercent)
+            {
+                newVisualIndex += 1;
+            } else
+            {
+                break;
+            }
+        }
+        DamageVisual newVisual = damageVisuals[newVisualIndex];
+
+        if (newVisual.damageSprite != null)
+        {
+            spriteRenderer.sprite = newVisual.damageSprite;
+        }
+        
+        if (newVisual.smoking && newVisual.smokeColor != null)
+        {
+            collisionHandler.PlaySmokeEffects(newVisual.smokeColor);
+        }
+
+
+
+        /*// This logic maps the remaining health to the correct damaged sprite.
         // The sprites are ordered from lightest damage to heaviest damage.
         // Example (maxHealth = 3, array size = 2):
         // - currentHealth = 2 -> index = 3 - 2 - 1 = 0 (first damaged sprite)
@@ -116,7 +166,7 @@ public class EnemyHealth : MonoBehaviour
             {
                 spriteRenderer.sprite = damageStateSprites[spriteIndex];
             }
-        }
+        }*/
     }
 
     /// <summary>

@@ -14,6 +14,7 @@ public class EnemyCollisionHandler : MonoBehaviour
     public float explosionSize = 1;
 
     public ParticleSystem enemySmokeTrail;
+    
 
     // Private component references
     private AudioSource audioSource;
@@ -28,6 +29,7 @@ public class EnemyCollisionHandler : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         enemyHealth = GetComponent<EnemyHealth>(); // Get the EnemyHealth script on this object
+
 
         // --- Component and reference checks ---
         if (audioSource == null)
@@ -86,7 +88,6 @@ public class EnemyCollisionHandler : MonoBehaviour
             {
                 enemyHealth.TakeDamage(1);
             }
-            PlaySmokeEffects();
         }
     }
 
@@ -158,8 +159,24 @@ public class EnemyCollisionHandler : MonoBehaviour
         }
     }
 
-    private void PlaySmokeEffects()
+    public void PlaySmokeEffects()
     {
-        enemySmokeTrail.Play();
+        if (!enemySmokeTrail.isPlaying)
+        {
+            enemySmokeTrail.Play();
+        }
     }
+
+    public void PlaySmokeEffects(Color color)
+    {
+        Debug.Log("hi");
+        ParticleSystem.MainModule enemySmokeTrailMain = enemySmokeTrail.main;
+        Debug.Log(enemySmokeTrailMain, enemySmokeTrail);
+        ParticleSystem.MinMaxGradient newColor = new ParticleSystem.MinMaxGradient(color);
+        Debug.Log(newColor);
+        enemySmokeTrailMain.startColor = newColor;
+        Debug.Log(enemySmokeTrailMain.startColor);
+        PlaySmokeEffects();
+    }
+
 }
