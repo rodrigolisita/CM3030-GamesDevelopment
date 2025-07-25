@@ -13,6 +13,8 @@ public class EnemyCollisionHandler : MonoBehaviour
     public GameObject explosionSprite;
     public float explosionSize = 1;
 
+    public ParticleSystem enemySmokeTrail;
+
     // Private component references
     private AudioSource audioSource;
     private EnemyHealth enemyHealth; // Reference to the health script
@@ -84,6 +86,7 @@ public class EnemyCollisionHandler : MonoBehaviour
             {
                 enemyHealth.TakeDamage(1);
             }
+            PlaySmokeEffects();
         }
     }
 
@@ -99,6 +102,10 @@ public class EnemyCollisionHandler : MonoBehaviour
         {
             GameManager2D.Instance.UpdateScore(pointsAwarded);
         }
+
+        // Stop smoke trail
+        //enemySmokeTrail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        Destroy(enemySmokeTrail);
 
         // Play final destruction sound and particle effects
         PlayHitEffects();
@@ -149,5 +156,10 @@ public class EnemyCollisionHandler : MonoBehaviour
             explosionInstance.transform.SetParent(transform);
             explosionInstance.transform.localScale = explosionInstance.transform.localScale * explosionSize;
         }
+    }
+
+    private void PlaySmokeEffects()
+    {
+        enemySmokeTrail.Play();
     }
 }
