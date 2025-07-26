@@ -479,30 +479,6 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Scale.z
       value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startSize.minScalar
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
