@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(EnemyHealth))] // This enemy now requires an EnemyHealth script
-public class EnemyCollisionHandler : MonoBehaviour
+[RequireComponent(typeof(PlaneHealth))] // This enemy now requires an PlaneHealth script
+public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler
 {
     // Public variables for effects and points
     public AudioClip collisionSound;
@@ -13,12 +13,10 @@ public class EnemyCollisionHandler : MonoBehaviour
     public GameObject explosionSprite;
     public float explosionSize = 1;
 
-    public ParticleSystem enemySmokeTrail;
-    
 
     // Private component references
     private AudioSource audioSource;
-    private EnemyHealth enemyHealth; // Reference to the health script
+    private PlaneHealth enemyHealth; // Reference to the health script
 
     // Tags for collision checking
     private const string ProjectileTag = "Projectile";
@@ -28,7 +26,7 @@ public class EnemyCollisionHandler : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        enemyHealth = GetComponent<EnemyHealth>(); // Get the EnemyHealth script on this object
+        enemyHealth = GetComponent<PlaneHealth>(); // Get the PlaneHealth script on this object
 
 
         // --- Component and reference checks ---
@@ -77,7 +75,7 @@ public class EnemyCollisionHandler : MonoBehaviour
             // The enemy simply destroys itself when it hits the player.
             // The Player's script is now responsible for deducting a life.
             Debug.Log("Enemy collided with Player. Destroying self.");
-            HandleEnemyDefeat(); 
+            HandleDefeat(); 
         }
         else if (other.CompareTag(ProjectileTag))
         {
@@ -92,9 +90,9 @@ public class EnemyCollisionHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// This method is now called by the EnemyHealth script when health reaches zero.
+    /// This method is now called by the PlaneHealth script when health reaches zero.
     /// </summary>
-    public void HandleEnemyDefeat()
+    public void HandleDefeat()
     {
         Debug.Log(gameObject.name + " has been defeated.");
 
@@ -106,7 +104,7 @@ public class EnemyCollisionHandler : MonoBehaviour
 
         // Stop smoke trail
         //enemySmokeTrail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        Destroy(enemySmokeTrail);
+        //Destroy(enemySmokeTrail);
 
         // Play final destruction sound and particle effects
         PlayHitEffects();
@@ -159,24 +157,6 @@ public class EnemyCollisionHandler : MonoBehaviour
         }
     }
 
-    public void PlaySmokeEffects()
-    {
-        if (!enemySmokeTrail.isPlaying)
-        {
-            enemySmokeTrail.Play();
-        }
-    }
 
-    public void PlaySmokeEffects(Color color)
-    {
-        Debug.Log("hi");
-        ParticleSystem.MainModule enemySmokeTrailMain = enemySmokeTrail.main;
-        Debug.Log(enemySmokeTrailMain, enemySmokeTrail);
-        ParticleSystem.MinMaxGradient newColor = new ParticleSystem.MinMaxGradient(color);
-        Debug.Log(newColor);
-        enemySmokeTrailMain.startColor = newColor;
-        Debug.Log(enemySmokeTrailMain.startColor);
-        PlaySmokeEffects();
-    }
 
 }

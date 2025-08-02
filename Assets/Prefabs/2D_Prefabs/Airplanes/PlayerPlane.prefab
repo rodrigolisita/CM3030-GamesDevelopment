@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6635959572428943550}
   - component: {fileID: 3454706774014118111}
   - component: {fileID: 6718860501600200289}
+  - component: {fileID: 36775055451942071}
   m_Layer: 0
   m_Name: PlayerPlane
   m_TagString: Player
@@ -36,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 883951231090984846}
+  - {fileID: 2308072345421677729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &-6366657560227658397
@@ -298,6 +300,43 @@ MonoBehaviour:
   playerHitSound: {fileID: 8300000, guid: b9eff218e132a4e76be78840eca96fb2, type: 3}
   explosionSprite: {fileID: 2897330427778015961, guid: e1e54ff293eee98458a955fc6db59091, type: 3}
   explosionSize: 0.1
+--- !u!114 &36775055451942071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508186655575751765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 4
+  damageVisuals:
+  - activationPercent: 100
+    damageSprite: {fileID: 21300000, guid: f7bc4817a39c59a44814d4a9252dea52, type: 3}
+    smokeColor: {r: 0, g: 0, b: 0, a: 1}
+    smoking: 0
+    onFire: 0
+  - activationPercent: 99
+    damageSprite: {fileID: 21300000, guid: cfb2d0ab77dafce45919d420049ed2e0, type: 3}
+    smokeColor: {r: 1, g: 1, b: 1, a: 1}
+    smoking: 1
+    onFire: 0
+  - activationPercent: 74
+    damageSprite: {fileID: 21300000, guid: f7575cb844f55534c8f9e5a3cd7950f6, type: 3}
+    smokeColor: {r: 0.5396226, g: 0.5396226, b: 0.5396226, a: 1}
+    smoking: 1
+    onFire: 0
+  - activationPercent: 49
+    damageSprite: {fileID: 21300000, guid: 316b2f370f59a56428d0afea0218fcba, type: 3}
+    smokeColor: {r: 0.18490559, g: 0.18490559, b: 0.18490559, a: 1}
+    smoking: 1
+    onFire: 1
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.1
+  smokeTrail: {fileID: 6121874567867957778}
 --- !u!1001 &885990561917860408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -424,4 +463,71 @@ Transform:
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 198175801688348628, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
   m_PrefabInstance: {fileID: 885990561917860408}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3245160831152881297
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7033077554173365002}
+    m_Modifications:
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197069364377066762, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+      propertyPath: m_Name
+      value: LightDamageSmokeTrail
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+--- !u!4 &2308072345421677729 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 940912593883888176, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+  m_PrefabInstance: {fileID: 3245160831152881297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6121874567867957778 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8790011524923292803, guid: e53538625ca34a44fbd0a09436de8818, type: 3}
+  m_PrefabInstance: {fileID: 3245160831152881297}
   m_PrefabAsset: {fileID: 0}

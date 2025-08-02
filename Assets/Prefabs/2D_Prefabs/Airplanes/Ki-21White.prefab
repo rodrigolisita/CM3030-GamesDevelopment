@@ -325,6 +325,7 @@ MonoBehaviour:
     onFire: 0
   flashColor: {r: 0.9622642, g: 0.06808472, b: 0.06808472, a: 1}
   flashDuration: 0.05
+  smokeTrail: {fileID: 3266891203644839987}
 --- !u!114 &2270789050953446158
 MonoBehaviour:
   m_ObjectHideFlags: 0

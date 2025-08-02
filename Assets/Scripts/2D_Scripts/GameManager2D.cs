@@ -373,4 +373,15 @@ public class GameManager2D : MonoBehaviour
     {
         if (livesText != null) livesText.text = "Lives: " + currentLives;
     }     
+
+    public void UpdateHealth(int healthRemaining)
+    {
+        if (livesText != null) livesText.text = "Lives: " + healthRemaining;
+    }
+
+    public void HandlePlayerDefeat()
+    {
+        if (!isGameActive) return;
+        GameOver();
+    }
 }

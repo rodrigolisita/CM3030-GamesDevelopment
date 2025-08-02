@@ -19,7 +19,7 @@ public class DamageVisual
     }
 }
 
-public class EnemyHealth : MonoBehaviour
+public class PlaneHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     // Set the maximum health for this enemy type in the Inspector.
@@ -37,10 +37,13 @@ public class EnemyHealth : MonoBehaviour
     public Color flashColor = Color.red; // The color the sprite will flash when hit
     public float flashDuration = 0.1f;    // How long the flash lasts
 
+    public ParticleSystem smokeTrail;
+
     // Private component references
-    private EnemyCollisionHandler collisionHandler;
+    private PlaneCollisionHandler collisionHandler;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+
 
     void Start()
     {
@@ -48,7 +51,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
 
         // Get references to other components on this same GameObject.
-        collisionHandler = GetComponent<EnemyCollisionHandler>();
+        collisionHandler = GetComponent<PlaneCollisionHandler>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (collisionHandler == null)
@@ -73,6 +76,11 @@ public class EnemyHealth : MonoBehaviour
             Debug.LogWarning("On " + gameObject.name + ", the number of damage sprites (" + damageStateSprites.Length + ") does not match the number of damage states (" + (maxHealth - 1) + "). Visuals may not display as expected.", gameObject);
         }*/
         // No need to call UpdateSprite() here, as the enemy already has its default full-health sprite.
+    }
+
+    public int GetHealth()
+    {
+        return currentHealth;
     }
 
     /// <summary>
@@ -100,7 +108,8 @@ public class EnemyHealth : MonoBehaviour
             // If health is depleted, tell the collision handler to start the death sequence.
             if (collisionHandler != null)
             {
-                collisionHandler.HandleEnemyDefeat();
+                Destroy(smokeTrail);
+                collisionHandler.HandleDefeat();
             }
             else
             {
@@ -147,7 +156,7 @@ public class EnemyHealth : MonoBehaviour
         
         if (newVisual.smoking && newVisual.smokeColor != null)
         {
-            collisionHandler.PlaySmokeEffects(newVisual.smokeColor);
+            PlaySmokeEffects(newVisual.smokeColor);
         }
 
 
@@ -167,6 +176,25 @@ public class EnemyHealth : MonoBehaviour
                 spriteRenderer.sprite = damageStateSprites[spriteIndex];
             }
         }*/
+    }
+
+    public void PlaySmokeEffects()
+    {
+        if (!smokeTrail.isPlaying)
+        {
+            smokeTrail.Play();
+        }
+    }
+
+    public void PlaySmokeEffects(Color color)
+    {
+        ParticleSystem.MainModule enemySmokeTrailMain = smokeTrail.main;
+        Debug.Log(enemySmokeTrailMain, smokeTrail);
+        ParticleSystem.MinMaxGradient newColor = new ParticleSystem.MinMaxGradient(color);
+        Debug.Log(newColor);
+        enemySmokeTrailMain.startColor = newColor;
+        Debug.Log(enemySmokeTrailMain.startColor);
+        PlaySmokeEffects();
     }
 
     /// <summary>

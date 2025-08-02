@@ -307,9 +307,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  damageStateSprites: []
+  damageVisuals: []
   flashColor: {r: 0.9528302, g: 0.06741722, b: 0.06741722, a: 1}
   flashDuration: 0.05
+  smokeTrail: {fileID: 8487772573092084364}
 --- !u!114 &-7386205443270506123
 MonoBehaviour:
   m_ObjectHideFlags: 0
