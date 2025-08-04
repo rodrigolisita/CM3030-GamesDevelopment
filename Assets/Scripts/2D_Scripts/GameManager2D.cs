@@ -33,6 +33,9 @@ public class GameManager2D : MonoBehaviour
     // --- Game State Variables ---
     private int score;
     private int currentLives;
+    private GameObject playerPlane;
+    public GameObject playerPlanePrefab;
+    public GameObject playerSpawnPoint;
 
     [Header("Gameplay Settings")]
     public int initialLives = 3;
@@ -88,12 +91,23 @@ public class GameManager2D : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    void SpawnNewPlayer()
+    {
+        if (playerPlane != null)
+        {
+            Destroy(playerPlane);
+        }
+        playerPlane = Instantiate(playerPlanePrefab, playerSpawnPoint.transform.position, playerSpawnPoint.transform.rotation);
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // This runs every time a scene finishes loading, INCLUDING THE FIRST SCENE.
         Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current isGameActive (from persistent instance): " + isGameActive);
         FindUIElements();       // Re-find UI elements in the newly loaded scene
         UpdateAllUIDisplays();  // Update their visibility based on current game state
+
+        SpawnNewPlayer();
 
         if (isGameActive)
         {
@@ -190,12 +204,13 @@ public class GameManager2D : MonoBehaviour
         score = 0;
         currentLives = initialLives;
         Debug.Log("GameManager2D ResetInternalGameState: Score: " + score + ", Lives: " + currentLives + ". (isGameActive is currently: " + isGameActive + ")");
+        SpawnNewPlayer();
     }
 
     void UpdateAllUIDisplays()
     {
         bool isPreGameState = !isGameActive && currentLives > 0; 
-        bool isTrulyGameOver = !isGameActive && currentLives <= 0; 
+        bool isTrulyGameOver = !isGameActive && currentLives <= 0;
 
         Debug.Log("GameManager2D UpdateAllUIDisplays: isGameActive=" + isGameActive + ", currentLives=" + currentLives + " -> isPreGameState=" + isPreGameState + ", isTrulyGameOver=" + isTrulyGameOver);
 
@@ -377,6 +392,7 @@ public class GameManager2D : MonoBehaviour
     public void UpdateHealth(int healthRemaining)
     {
         if (livesText != null) livesText.text = "Lives: " + healthRemaining;
+        currentLives = healthRemaining;
     }
 
     public void HandlePlayerDefeat()

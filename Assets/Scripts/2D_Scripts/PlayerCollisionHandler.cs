@@ -79,6 +79,13 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
             explosionInstance.transform.localScale = explosionInstance.transform.localScale * explosionSize;
         }
 
+        // Disable components to prevent further interaction while effects play out
+        Collider2D playerCollider = GetComponent<Collider2D>();
+        if (playerCollider != null) playerCollider.enabled = false;
+
+        Renderer playerRenderer = GetComponent<Renderer>();
+        if (playerRenderer != null) playerRenderer.enabled = false;
+
         if (GameManager2D.Instance != null)
         {
             GameManager2D.Instance.HandlePlayerDefeat();

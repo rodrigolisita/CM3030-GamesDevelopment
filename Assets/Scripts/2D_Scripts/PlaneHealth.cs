@@ -38,6 +38,7 @@ public class PlaneHealth : MonoBehaviour
     public float flashDuration = 0.1f;    // How long the flash lasts
 
     public ParticleSystem smokeTrail;
+    public ParticleSystem fireTrail;
 
     // Private component references
     private PlaneCollisionHandler collisionHandler;
@@ -108,7 +109,15 @@ public class PlaneHealth : MonoBehaviour
             // If health is depleted, tell the collision handler to start the death sequence.
             if (collisionHandler != null)
             {
-                Destroy(smokeTrail);
+                if (smokeTrail != null)
+                {
+                    Destroy(smokeTrail);
+                }
+                if (fireTrail != null)
+                {
+                    Destroy(fireTrail);
+                }
+
                 collisionHandler.HandleDefeat();
             }
             else
@@ -159,6 +168,11 @@ public class PlaneHealth : MonoBehaviour
             PlaySmokeEffects(newVisual.smokeColor);
         }
 
+        if (newVisual.onFire)
+        {
+            PlayFireEffects();
+        }
+
 
 
         /*// This logic maps the remaining health to the correct damaged sprite.
@@ -195,6 +209,17 @@ public class PlaneHealth : MonoBehaviour
         enemySmokeTrailMain.startColor = newColor;
         Debug.Log(enemySmokeTrailMain.startColor);
         PlaySmokeEffects();
+    }
+
+    public void PlayFireEffects()
+    {
+        if (fireTrail != null)
+        {
+            if (!fireTrail.isPlaying)
+            {
+                fireTrail.Play();
+            }
+        }
     }
 
     /// <summary>
