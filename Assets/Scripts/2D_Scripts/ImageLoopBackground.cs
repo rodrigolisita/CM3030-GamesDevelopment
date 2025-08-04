@@ -224,7 +224,7 @@ public class ImageLoopBackground : MonoBehaviour
         // 检查是否需要暂停
         if (pauseOnGameOver && gameManager != null)
         {
-            isPaused = !gameManager.isGameActive;
+            isPaused = !(GameManager2D.Instance.gameState == GameState.Active);
         }
         
         if (isPaused) return;

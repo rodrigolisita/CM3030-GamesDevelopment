@@ -18,7 +18,7 @@ public class SpawnManager2D : MonoBehaviour
 
     public void BeginSpawningEnemies(int difficulty)
     {
-        if (GameManager2D.Instance == null || !GameManager2D.Instance.isGameActive)
+        if (GameManager2D.Instance == null || !(GameManager2D.Instance.gameState == GameState.Active))
         {
             Debug.LogWarning("SpawnManager2D: BeginSpawningEnemies called, but game is not active. Aborting.");
             return;
@@ -41,7 +41,7 @@ public class SpawnManager2D : MonoBehaviour
 
     void SpawnRandomEnemy()
     {
-        if (GameManager2D.Instance != null && GameManager2D.Instance.isGameActive && isSpawningActive)
+        if (GameManager2D.Instance != null && (GameManager2D.Instance.gameState == GameState.Active) && isSpawningActive)
         {
             if (enemyPrefabs == null || enemyPrefabs.Length == 0)
             {
@@ -69,7 +69,7 @@ public class SpawnManager2D : MonoBehaviour
         else
         {
             // MINIMAL CHANGE: Added a log to explain WHY it's not spawning.
-            Debug.LogWarning("SpawnRandomEnemy SKIPPED. isGameActive=" + GameManager2D.Instance.isGameActive + ", isSpawningActive=" + isSpawningActive);
+            Debug.LogWarning("SpawnRandomEnemy SKIPPED. isGameActive=" + (GameManager2D.Instance.gameState == GameState.Active) + ", isSpawningActive=" + isSpawningActive);
         }
     }
 }

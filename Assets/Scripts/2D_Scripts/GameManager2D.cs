@@ -3,6 +3,13 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum GameState
+{
+    PreGame,
+    Active,
+    GameOver
+}
+
 [RequireComponent(typeof(AudioSource))]
 public class GameManager2D : MonoBehaviour
 {
@@ -32,14 +39,15 @@ public class GameManager2D : MonoBehaviour
 
     // --- Game State Variables ---
     private int score;
-    private int currentLives;
+    // currentLives is deprecated, do not use
+    private int currentLives = 0;
     private GameObject playerPlane;
     public GameObject playerPlanePrefab;
     public GameObject playerSpawnPoint;
 
     [Header("Gameplay Settings")]
-    public int initialLives = 3;
-    public bool isGameActive = false; // Game starts as inactive
+    public GameState gameState = GameState.PreGame; // Game starts as PreGame
+
 
     // --- Audio Management ---
     private AudioSource audioSource;
@@ -68,9 +76,9 @@ public class GameManager2D : MonoBehaviour
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             // Set initial internal game state for the very first launch
-            isGameActive = false; 
-            currentLives = initialLives; 
-            Debug.Log("GameManager2D Awake(): Initial internal state set. isGameActive: " + isGameActive + ", currentLives: " + currentLives);
+            gameState = GameState.PreGame;
+            //currentLives = initialLives; 
+            Debug.Log("GameManager2D Awake(): Initial internal state set. gameSate: " + gameState + ", currentLives: " + currentLives);
         }
         else if (Instance != this)
         {
@@ -97,19 +105,25 @@ public class GameManager2D : MonoBehaviour
         {
             Destroy(playerPlane);
         }
-        playerPlane = Instantiate(playerPlanePrefab, playerSpawnPoint.transform.position, playerSpawnPoint.transform.rotation);
+        Vector3 playerPosition = new Vector3(playerSpawnPoint.transform.position.x, playerSpawnPoint.transform.position.y, playerSpawnPoint.transform.position.z);
+        Quaternion playerRotation = new Quaternion(playerSpawnPoint.transform.rotation.x, playerSpawnPoint.transform.rotation.y, playerSpawnPoint.transform.rotation.z, playerSpawnPoint.transform.rotation.w);
+        playerPlane = Instantiate(playerPlanePrefab, playerPosition, playerRotation);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // This runs every time a scene finishes loading, INCLUDING THE FIRST SCENE.
-        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current isGameActive (from persistent instance): " + isGameActive);
-        FindUIElements();       // Re-find UI elements in the newly loaded scene
-        UpdateAllUIDisplays();  // Update their visibility based on current game state
+        Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current gameState (from persistent instance): " + gameState);
 
         SpawnNewPlayer();
 
-        if (isGameActive)
+
+        FindUIElements();       // Re-find UI elements in the newly loaded scene
+        UpdateAllUIDisplays();  // Update their visibility based on current game state
+
+        
+
+        if (gameState == GameState.Active)
         {
             // If the scene loads and the game is already active (e.g., moving to level 2), play game music.
             PlayActiveMusic();
@@ -202,22 +216,19 @@ public class GameManager2D : MonoBehaviour
     void ResetInternalGameState()
     {
         score = 0;
-        currentLives = initialLives;
-        Debug.Log("GameManager2D ResetInternalGameState: Score: " + score + ", Lives: " + currentLives + ". (isGameActive is currently: " + isGameActive + ")");
+        Debug.Log("GameManager2D ResetInternalGameState: Score: " + score + ". (gameState is currently: " + gameState + ")");
         SpawnNewPlayer();
     }
 
     void UpdateAllUIDisplays()
     {
-        bool isPreGameState = !isGameActive && currentLives > 0; 
-        bool isTrulyGameOver = !isGameActive && currentLives <= 0;
 
-        Debug.Log("GameManager2D UpdateAllUIDisplays: isGameActive=" + isGameActive + ", currentLives=" + currentLives + " -> isPreGameState=" + isPreGameState + ", isTrulyGameOver=" + isTrulyGameOver);
+        Debug.Log("GameManager2D UpdateAllUIDisplays: gameState = " + gameState + ", currentLives=" + currentLives);
 
         if (titleScreen != null)
         {
-            titleScreen.SetActive(isPreGameState);
-            Debug.Log("GameManager2D: TitleScreen active state set to: " + isPreGameState);
+            titleScreen.SetActive(gameState == GameState.PreGame);
+            Debug.Log("GameManager2D: TitleScreen active state set to: " + (gameState == GameState.PreGame));
         }
         else
         {
@@ -226,8 +237,8 @@ public class GameManager2D : MonoBehaviour
 
         if (easyButton != null)
         {
-            easyButton.gameObject.SetActive(isPreGameState);
-            Debug.Log("GameManager2D: EasyButton active state set to: " + isPreGameState);
+            easyButton.gameObject.SetActive(gameState == GameState.PreGame);
+            Debug.Log("GameManager2D: EasyButton active state set to: " + (gameState == GameState.PreGame));
         }
         else
         {
@@ -236,8 +247,8 @@ public class GameManager2D : MonoBehaviour
         
         if (mediumButton != null)
         {
-            mediumButton.gameObject.SetActive(isPreGameState);
-            Debug.Log("GameManager2D: MediumButton active state set to: " + isPreGameState);
+            mediumButton.gameObject.SetActive((gameState == GameState.PreGame));
+            Debug.Log("GameManager2D: MediumButton active state set to: " + (gameState == GameState.PreGame));
         }
         else
         {
@@ -246,27 +257,27 @@ public class GameManager2D : MonoBehaviour
 
         if (scoreText != null) 
         {
-            scoreText.gameObject.SetActive(isGameActive);
-            if(isGameActive) scoreText.text = "Score: " + score; 
+            scoreText.gameObject.SetActive(gameState == GameState.Active);
+            if(gameState == GameState.Active) scoreText.text = "Score: " + score; 
         }
         if (livesText != null) 
         {
-            livesText.gameObject.SetActive(isGameActive);
-            if(isGameActive) UpdateLivesDisplay(); 
+            livesText.gameObject.SetActive(gameState == GameState.Active);
+            if(gameState == GameState.Active) UpdateLivesDisplay(); 
         }
         
         if (gameOverText != null) 
         {
-            gameOverText.gameObject.SetActive(isTrulyGameOver);
+            gameOverText.gameObject.SetActive(gameState == GameState.GameOver);
         }
         if (restartButton != null) 
         {
-            restartButton.gameObject.SetActive(isTrulyGameOver);
+            restartButton.gameObject.SetActive(gameState == GameState.GameOver);
         }
 
         if (playInstructionText != null)
         {
-            playInstructionText.gameObject.SetActive(isPreGameState);
+            playInstructionText.gameObject.SetActive(gameState == GameState.GameOver);
         }
     }
 
@@ -275,7 +286,7 @@ public class GameManager2D : MonoBehaviour
     public void StartGame(int difficultyLevel) 
     {
         Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultyLevel);
-        isGameActive = true;
+        gameState = GameState.Active;
         ResetInternalGameState(); 
         UpdateAllUIDisplays();    
         PlayActiveMusic();
@@ -293,10 +304,8 @@ public class GameManager2D : MonoBehaviour
     
     public void GameOver()
     {
-        if (!isGameActive && currentLives <= 0) return; 
-      
         Debug.Log("GameManager2D: GameOver() called.");
-        isGameActive = false; 
+        gameState = GameState.GameOver; 
         PlayGameOverMusic(); 
         UpdateAllUIDisplays(); 
 
@@ -310,7 +319,7 @@ public class GameManager2D : MonoBehaviour
     public void RestartGame()
     {
         Debug.Log("GameManager2D: RestartGame() called. Setting isGameActive to false for title screen return.");
-        isGameActive = false; 
+        gameState = GameState.PreGame;
         ResetInternalGameState(); 
         
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
@@ -318,7 +327,7 @@ public class GameManager2D : MonoBehaviour
         {
             spawnManager.StopSpawningEnemies();
         }
-        Debug.Log("GameManager2D: State before loading scene in RestartGame - isGameActive: " + isGameActive + ", currentLives: " + currentLives);
+        Debug.Log("GameManager2D: State before loading scene in RestartGame - gameState: " + gameState);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -364,40 +373,54 @@ public class GameManager2D : MonoBehaviour
     // --- Score functions ---
     public void UpdateScore(int scoreToAdd)
     {
-        if (!isGameActive && scoreToAdd > 0) return;
+        if (!(gameState == GameState.Active) && scoreToAdd > 0) return;
         score += scoreToAdd;
-        if (scoreText != null && isGameActive) scoreText.text = "Score: " + score;
+        if (scoreText != null && gameState == GameState.Active) scoreText.text = "Score: " + score;
     }
 
     // --- Lives functions ---
-    public void LoseLife()
+    /*public void LoseLife()
     {
-        if (!isGameActive) return; 
+        if (!(gameState == GameState.Active)) return; 
         if (currentLives > 0)
         {
             currentLives--;
             Debug.Log("Player lost a life. Lives remaining: " + currentLives);
-            if (livesText != null && isGameActive) UpdateLivesDisplay(); 
+            if (livesText != null && (gameState == GameState.Active)) UpdateLivesDisplay(); 
             if (currentLives <= 0) GameOver();
         }
     }
 
-    public int GetCurrentLives() { return currentLives; }
+    public int GetCurrentLives() { return currentLives; }*/
 
-    void UpdateLivesDisplay()
+    public void UpdateLivesDisplay()
     {
-        if (livesText != null) livesText.text = "Lives: " + currentLives;
+        if (livesText != null && playerPlane != null)
+        {
+            PlaneHealth playerHealth = playerPlane.GetComponent<PlaneHealth>();
+            if (playerHealth != null)
+            {
+                livesText.text = "Lives: " + playerHealth.GetCurrentHealth();
+            }
+            else
+            {
+                Debug.LogError("playerHealth null");
+            }
+        } else
+        {
+            Debug.LogError("livesText " + livesText + " or playerPlane " + playerPlane + " is null");
+        }
     }     
 
-    public void UpdateHealth(int healthRemaining)
+    /*public void UpdateHealth(int healthRemaining)
     {
         if (livesText != null) livesText.text = "Lives: " + healthRemaining;
         currentLives = healthRemaining;
-    }
+    }*/
 
     public void HandlePlayerDefeat()
     {
-        if (!isGameActive) return;
+        if (!(gameState == GameState.Active)) return;
         GameOver();
     }
 }

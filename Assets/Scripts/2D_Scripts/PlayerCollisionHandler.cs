@@ -61,7 +61,7 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
                 // Inform the game manager of our health
                 if (GameManager2D.Instance != null)
                 {
-                    GameManager2D.Instance.UpdateHealth(playerHealth.GetHealth());
+                    GameManager2D.Instance.UpdateLivesDisplay();
                 }
             }
 

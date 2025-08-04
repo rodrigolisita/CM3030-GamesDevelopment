@@ -161,7 +161,7 @@ public class TimeBasedParallax : MonoBehaviour
         // Check if pause is needed
         if (pauseOnGameOver && gameManager != null)
         {
-            isPaused = !gameManager.isGameActive;
+            isPaused = !(GameManager2D.Instance.gameState == GameState.Active);
         }
         
         if (isPaused) return;

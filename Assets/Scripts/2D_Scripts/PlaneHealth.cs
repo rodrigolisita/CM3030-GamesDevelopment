@@ -45,11 +45,14 @@ public class PlaneHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
-
-    void Start()
+    private void Awake()
     {
         // Initialize health when the enemy spawns.
         currentHealth = maxHealth;
+    }
+    void Start()
+    {
+        
 
         // Get references to other components on this same GameObject.
         collisionHandler = GetComponent<PlaneCollisionHandler>();
@@ -79,9 +82,14 @@ public class PlaneHealth : MonoBehaviour
         // No need to call UpdateSprite() here, as the enemy already has its default full-health sprite.
     }
 
-    public int GetHealth()
+    public int GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
     }
 
     /// <summary>
@@ -90,7 +98,7 @@ public class PlaneHealth : MonoBehaviour
     /// <param name="damageAmount">The amount of damage to inflict.</param>
     public void TakeDamage(int damageAmount)
     {
-        if (GameManager2D.Instance != null && !GameManager2D.Instance.isGameActive)
+        if (GameManager2D.Instance != null && !(GameManager2D.Instance.gameState == GameState.Active))
         {
             return;
         }

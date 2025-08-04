@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnRandomEnemy(){
 
-        if(gameManager.isGameActive)
+        if((GameManager2D.Instance.gameState == GameState.Active))
         {
             int enemyIndex = Random.Range(0,enemyPrefabs.Length);
             Vector3 spawnPos = new Vector3(Random.Range(-spawnRangeX,spawnRangeX), 1.2f, spawnRangeZ);

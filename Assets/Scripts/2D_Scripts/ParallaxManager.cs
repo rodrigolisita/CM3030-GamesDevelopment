@@ -75,7 +75,7 @@ public class ParallaxManager : MonoBehaviour
         // Control all parallax layers based on game state
         if (pauseOnGameOver && gameManager != null)
         {
-            bool shouldPause = !gameManager.isGameActive;
+            bool shouldPause = !(GameManager2D.Instance.gameState == GameState.Active);
             SetAllLayersPaused(shouldPause);
         }
     }

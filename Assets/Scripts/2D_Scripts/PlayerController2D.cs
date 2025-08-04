@@ -88,7 +88,7 @@ public class PlayerController2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager2D.isGameActive)
+        if ((GameManager2D.Instance.gameState == GameState.Active))
         {
             // --- Movement logic ---
             // Move player left and right
