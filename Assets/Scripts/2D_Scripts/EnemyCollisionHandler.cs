@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(PlaneHealth))] // This enemy now requires an PlaneHealth script
-public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler
+public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damageable
 {
     // Public variables for effects and points
     public AudioClip collisionSound;
@@ -77,7 +77,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler
             Debug.Log("Enemy collided with Player. Destroying self.");
             HandleDefeat(); 
         }
-        else if (other.CompareTag(ProjectileTag))
+        /*else if (other.CompareTag(ProjectileTag))
         {
             // --- Projectile Collision Logic ---
             Debug.Log(gameObject.name + " collided with a player projectile.");
@@ -86,7 +86,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler
             {
                 enemyHealth.TakeDamage(1);
             }
-        }
+        }*/
     }
 
     /// <summary>
@@ -154,6 +154,14 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler
             GameObject explosionInstance = Instantiate(explosionSprite, transform);
             explosionInstance.transform.SetParent(transform);
             explosionInstance.transform.localScale = explosionInstance.transform.localScale * explosionSize;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(1);
         }
     }
 

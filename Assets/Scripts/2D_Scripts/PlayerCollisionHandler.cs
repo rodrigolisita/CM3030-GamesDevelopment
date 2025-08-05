@@ -3,7 +3,7 @@ using UnityEngine;
 // NEW: This line ensures the GameObject always has an AudioSource component.
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent (typeof(PlaneHealth))]
-public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
+public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damageable
 {
     [Header("Effects")]
     public ParticleSystem explosionParticle;
@@ -26,8 +26,8 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // If we get hit by an EnemyProjectile OR an Enemy ship...
-        if (other.CompareTag("EnemyProjectile") || other.CompareTag("Enemy"))
+        // If we get hit by an ~~EnemyProjectile~~ OR an Enemy ship...
+        if (other.CompareTag("Enemy"))
         {
             Debug.Log("Player has been hit by: " + other.name);
 
@@ -40,10 +40,10 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
             }
 
             // Destroy the projectile if that's what hit us
-            if (other.CompareTag("EnemyProjectile"))
+            /*if (other.CompareTag("EnemyProjectile"))
             {
                 Destroy(other.gameObject);
-            }
+            }*/
 
             // Play our own explosion particle effect
             /*if (explosionParticle != null)
@@ -89,6 +89,20 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler
         if (GameManager2D.Instance != null)
         {
             GameManager2D.Instance.HandlePlayerDefeat();
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        // Tell our PlaneHealth we took some amount of damage
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(damage);
+            // Inform the game manager of our health
+            if (GameManager2D.Instance != null)
+            {
+                GameManager2D.Instance.UpdateLivesDisplay();
+            }
         }
     }
 

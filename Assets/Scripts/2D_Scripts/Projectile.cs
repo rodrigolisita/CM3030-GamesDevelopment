@@ -10,8 +10,14 @@ public class Projectile : MonoBehaviour
     public float speed = 3f;
     public float lifetime = 5f;
     public AudioClip hitSound;
+    public int damage = 1;
 
     private Rigidbody2D rb; // A reference to the Rigidbody2D component
+
+    private const string ProjectileTag = "Projectile";
+    private const string EnemyProjectileTag = "EnemyProjectile";
+    private const string PlayerTag = "Player";
+    private const string EnemyTag = "Enemy";
 
     void Awake() // Using Awake to get references early
     {
@@ -37,22 +43,44 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Projectile otherProjectile = other.GetComponent<Projectile>();
-        if (otherProjectile != null)
+        // player projectile logic
+        if (type == ProjectileType.Player)
         {
-            if (this.type != otherProjectile.type)
-            {
-                Debug.Log("Projectile collision: " + this.type + " hit " + otherProjectile.type);
-
-                if (hitSound != null)
+            if (other.CompareTag(EnemyTag)) {
+                Damageable enemy = other.GetComponent<Damageable>();
+                if (enemy != null)
                 {
-                    // AudioSource.PlayClipAtPoint(hitSound, transform.position);
-                    AudioSource.PlayClipAtPoint(hitSound, Camera.main.transform.position);
-
+                    enemy.TakeDamage(damage);
+                    Destroy(gameObject);
                 }
-
-                Destroy(gameObject);
             }
         }
+        // enemy projectile logic
+        else if (type == ProjectileType.Enemy)
+        {
+            if (other.CompareTag(PlayerTag))
+            {
+                Damageable player = other.GetComponent<Damageable>();
+                if (player != null)
+                {
+                    player.TakeDamage(damage);
+                    Destroy(gameObject);
+                }
+            }
+        }
+
     }
+
+    // Called when a player projectile hits an enemy, or vice versa. Overridden by more complex projectiles like bombs.
+    public virtual void HitOpponent(Collider2D opponentCollider)
+    {
+        Damageable opponentDamageable = opponentCollider.GetComponent<Damageable>();
+        if (opponentDamageable != null)
+        {
+            opponentDamageable.TakeDamage(damage);
+            Destroy(gameObject);
+        }
+    }
+
+
 }
