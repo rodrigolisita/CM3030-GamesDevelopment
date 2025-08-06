@@ -31,13 +31,7 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Dama
         {
             Debug.Log("Player has been hit by: " + other.name);
 
-            // --- NEW: Play the hit sound ---
-            // Check if the audioSource and the sound clip are assigned to prevent errors.
-            if (audioSource != null && playerHitSound != null)
-            {
-                // Play the sound effect once.
-                audioSource.PlayOneShot(playerHitSound);
-            }
+            
 
             // Destroy the projectile if that's what hit us
             /*if (other.CompareTag("EnemyProjectile"))
@@ -52,18 +46,9 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Dama
 
             }*/
 
-            
-                
-            // Tell our PlaneHealth we lost a life
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(1);
-                // Inform the game manager of our health
-                if (GameManager2D.Instance != null)
-                {
-                    GameManager2D.Instance.UpdateLivesDisplay();
-                }
-            }
+
+
+            TakeDamage(1);
 
             
         }
@@ -94,6 +79,14 @@ public class PlayerCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Dama
 
     public void TakeDamage(int damage)
     {
+        // --- NEW: Play the hit sound ---
+        // Check if the audioSource and the sound clip are assigned to prevent errors.
+        if (audioSource != null && playerHitSound != null)
+        {
+            // Play the sound effect once.
+            audioSource.PlayOneShot(playerHitSound);
+        }
+
         // Tell our PlaneHealth we took some amount of damage
         if (playerHealth != null)
         {

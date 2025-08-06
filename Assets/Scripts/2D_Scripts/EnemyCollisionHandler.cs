@@ -161,7 +161,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     {
         if (enemyHealth != null)
         {
-            enemyHealth.TakeDamage(1);
+            enemyHealth.TakeDamage(damage);
         }
     }
 

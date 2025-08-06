@@ -154,7 +154,11 @@ MonoBehaviour:
   verticalSpeed: 2
   projectilePrefab: {fileID: 5596652749312473574, guid: abedb403bd4a1fd40bf2dda60242543c, type: 3}
   roundsPerMinute: 600
+  secondaryPrefab: {fileID: 8150028050402877700, guid: 97762aff8c625d546882d3be673f95ac, type: 3}
+  secondaryRoundsPerMinute: 30
+  maxAmmo: 0
   shootingSound: {fileID: 8300000, guid: 71d63af7d466a8e41ac4e8f2c8a47f64, type: 3}
+  secondaryShootingSound: {fileID: 0}
   explosionParticle: {fileID: 1048112138092031468}
   planeAnimController: {fileID: 0}
 --- !u!212 &7193176531617379500

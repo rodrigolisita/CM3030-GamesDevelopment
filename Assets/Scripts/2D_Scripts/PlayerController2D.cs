@@ -16,10 +16,18 @@ public class PlayerController2D : MonoBehaviour
     public GameObject projectilePrefab;
     [Tooltip("The number of shots the player can fire per minute.")]
     public float roundsPerMinute = 800;
+    [Tooltip("The prefab for the secondary weapon that the player will fire.")]
+    public GameObject secondaryPrefab;
+    [Tooltip("The number of secondary shots the player can fire per minute.")]
+    public float secondaryRoundsPerMinute = 30;
+    [Tooltip("The max ammo count for the secondary weapon")]
+    public int maxAmmo;
 
     [Header("Effects & Audio")]
     [Tooltip("The sound effect that plays when the player shoots.")]
     public AudioClip shootingSound; // Public variable to assign your shooting sound effect
+    [Tooltip("The sound effect that plays when the player fires the secondary weapon.")]
+    public AudioClip secondaryShootingSound; // Public variable to assign your secondary weapon sound effect
     [Tooltip("The particle system that plays when the player is hit or destroyed.")]
     public ParticleSystem explosionParticle;
 
@@ -34,7 +42,12 @@ public class PlayerController2D : MonoBehaviour
     private float burstStartTime = 0;
     private int shotsFiredThisBurst = 0;
     private float lastShotTime = 0;
-    
+
+    private bool secondaryFiring = false;
+    private float secondaryBurstStartTime = 0;
+    private int secondaryShotsFiredThisBurst = 0;
+    private float secondaryLastShotTime = 0;
+
 
     // Game Manager
     GameManager2D gameManager2D;
@@ -166,6 +179,55 @@ public class PlayerController2D : MonoBehaviour
             } else
             {
                 firing = false; // Stop the current burst if space bar is not pressed
+            }
+
+            //Handle secondary fire
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                float curTime = Time.time;
+                //Check if the weapon can fire another shot yet
+                if (((!secondaryFiring) && ((curTime - secondaryLastShotTime) > (60 / secondaryRoundsPerMinute))) || secondaryFiring && (secondaryShotsFiredThisBurst < (secondaryRoundsPerMinute / 60) * (curTime - secondaryBurstStartTime)))
+                {
+                    //update the info on the shot
+                    secondaryLastShotTime = curTime;
+
+                    if (secondaryFiring)
+                    {
+                        secondaryShotsFiredThisBurst += 1;
+                    }
+                    else
+                    {
+                        secondaryFiring = true;
+                        secondaryBurstStartTime = curTime;
+                        secondaryShotsFiredThisBurst = 1;
+                    }
+
+                    // Launch a projectile from the player
+                    Instantiate(secondaryPrefab, transform.position, secondaryPrefab.transform.rotation);
+
+                    // Play the shooting sound
+                    if (playerAudioSource != null && secondaryShootingSound != null)
+                    {
+                        playerAudioSource.PlayOneShot(secondaryShootingSound);
+                    }
+                    // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
+                    else if (playerAudioSource != null && playerAudioSource.clip != null)
+                    {
+                        Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
+                        playerAudioSource.PlayOneShot(playerAudioSource.clip);
+                    }
+                    else if (playerAudioSource != null) // No clip assigned anywhere
+                    {
+                        Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+                    }
+
+                    // Play the shooting animation
+                    planeAnimController.SetTrigger("isFiringSecondary");
+                }
+            }
+            else
+            {
+                secondaryFiring = false; // Stop the current burst if space bar is not pressed
             }
         }
     }

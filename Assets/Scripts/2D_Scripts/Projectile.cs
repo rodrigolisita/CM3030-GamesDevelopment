@@ -19,16 +19,18 @@ public class Projectile : MonoBehaviour
     private const string PlayerTag = "Player";
     private const string EnemyTag = "Enemy";
 
-    void Awake() // Using Awake to get references early
+    public void Awake() // Using Awake to get references early
     {
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
         {
             Debug.LogError("Projectile is missing a Rigidbody2D component!", this.gameObject);
         }
+        Debug.Log("Projectile Awake");
+        Debug.Log(rb);
     }
 
-    void Start()
+    public void Start()
     {
         // MOVEMENT LOGIC
         if (rb != null)
@@ -37,22 +39,28 @@ public class Projectile : MonoBehaviour
         }
 
         Destroy(gameObject, lifetime);
+        Debug.Log("Projectile Start");
     }
 
     // --- The Update() method is not needed for this script. ---
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (ShouldTrigger(other))
+        {
+            TriggerProjectileEffect(other);
+        }
+
+    }
+
+    public bool ShouldTrigger(Collider2D other)
+    {
         // player projectile logic
         if (type == ProjectileType.Player)
         {
-            if (other.CompareTag(EnemyTag)) {
-                Damageable enemy = other.GetComponent<Damageable>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(damage);
-                    Destroy(gameObject);
-                }
+            if (other.CompareTag(EnemyTag))
+            {
+                return true;
             }
         }
         // enemy projectile logic
@@ -60,26 +68,39 @@ public class Projectile : MonoBehaviour
         {
             if (other.CompareTag(PlayerTag))
             {
-                Damageable player = other.GetComponent<Damageable>();
-                if (player != null)
-                {
-                    player.TakeDamage(damage);
-                    Destroy(gameObject);
-                }
+                return true;
             }
         }
-
+        return false;
     }
 
     // Called when a player projectile hits an enemy, or vice versa. Overridden by more complex projectiles like bombs.
-    public virtual void HitOpponent(Collider2D opponentCollider)
+    public virtual void TriggerProjectileEffect(Collider2D other)
     {
-        Damageable opponentDamageable = opponentCollider.GetComponent<Damageable>();
-        if (opponentDamageable != null)
+        if (DealDamageTo(other))
         {
-            opponentDamageable.TakeDamage(damage);
             Destroy(gameObject);
         }
+    }
+
+    public bool DealDamageTo(Collider2D other)
+    {
+        Damageable otherDamageable = other.GetComponent<Damageable>();
+        if (otherDamageable != null)
+        {
+            otherDamageable.TakeDamage(damage);
+            return true;
+        }
+        return false;
+    }
+
+    public void DisableForExplosion()
+    {
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = false;
+
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null) renderer.enabled = false;
     }
 
 
