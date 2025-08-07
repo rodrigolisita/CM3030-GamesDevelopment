@@ -14,6 +14,7 @@ public class PlayerController2D : MonoBehaviour
     [Header("Combat")]
     [Tooltip("The projectile prefab that the player will fire.")]
     public GameObject projectilePrefab;
+    private GameObject originalProjectilePrefab;
     [Tooltip("The number of shots the player can fire per minute.")]
     public float roundsPerMinute = 800;
     [Tooltip("The prefab for the secondary weapon that the player will fire.")]
@@ -51,6 +52,9 @@ public class PlayerController2D : MonoBehaviour
 
     // Game Manager
     GameManager2D gameManager2D;
+    
+    // This will hold a reference to the upgrade manager component.
+    private PlayerUpgradeManager playerUpgradeManager;
 
     //public ParticleSystem explosionParticle;
 
@@ -96,6 +100,10 @@ public class PlayerController2D : MonoBehaviour
 
         // Game Manager
         gameManager2D = GameObject.Find("GameManager2D").GetComponent<GameManager2D>();
+
+        originalProjectilePrefab = projectilePrefab;
+
+        playerUpgradeManager = GetComponent<PlayerUpgradeManager>();
     }
 
     // Update is called once per frame
@@ -233,16 +241,35 @@ public class PlayerController2D : MonoBehaviour
     }
 
     // Public method receives an UpgradeData asset and applies its values.
-    public void ApplyUpgrade(UpgradeData upgrade)
-    {
-        if (upgrade == null) return;
+    //public void ApplyUpgrade(UpgradeData upgrade)
+    //{
+    //    if (upgrade == null) return;
     
         // The upgrade asset itself contains all the logic for how to apply it.
-        upgrade.Apply(this.gameObject);
+    //    upgrade.Apply(this.gameObject);
+    //}
+
+     public void ApplyUpgrade(UpgradeData upgrade)
+    {
+        if (upgrade == null) return;
+
+        // Pass the upgrade to the manager to handle its application and timing.
+        playerUpgradeManager.AddUpgrade(upgrade);
+
+        // After applying an upgrade, tell the GameManager to update the stats UI.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerStatsUI();
+        }
     }
     
     
-    
+    public void RevertToDefaultWeapon()
+    {
+        // Set the current projectile back to the one we saved at the start.
+        projectilePrefab = originalProjectilePrefab;
+        Debug.Log("Weapon reverted to default.");
+    }
     
     
     

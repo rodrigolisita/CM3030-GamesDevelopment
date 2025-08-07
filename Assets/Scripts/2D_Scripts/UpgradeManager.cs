@@ -59,4 +59,19 @@ public class UpgradeManager : MonoBehaviour
             }
         }
     }
+
+    public int GetNextUpgradeScore()
+    {
+        // Find the next upgrade that hasn't been awarded yet
+        for (int i = 0; i < upgradeLevels.Length; i++)
+        {
+            if (!upgradeLevels[i].awarded)
+            {
+                // Return the score threshold of the next available upgrade
+                return upgradeLevels[i].scoreThreshold;
+            }
+        }
+        // Return -1 or another indicator that all upgrades have been awarded
+        return -1;
+    }
 }

@@ -22,6 +22,9 @@ public class GameManager2D : MonoBehaviour
     private TextMeshProUGUI livesText;
     private TextMeshProUGUI gameOverText;
     private TextMeshProUGUI playInstructionText;
+    private TextMeshProUGUI nextUpgradeText; 
+    private TextMeshProUGUI upgradeTimerText;
+    private TextMeshProUGUI playerInformationText;
     private Button restartButton;
     private Button easyButton; 
     private Button mediumButton; // Added reference for Medium Button
@@ -37,14 +40,21 @@ public class GameManager2D : MonoBehaviour
     public string restartButtonName = "RestartButton";
     public string easyButtonName = "EasyButton"; 
     public string mediumButtonName = "MediumButton"; 
+    public string nextUpgradeTextName = "NextUpgradeText"; 
+    public string upgradeTimerTextName = "UpgradeTimerText"; 
+    public string playerInformationTextName = "playerInformationText"; 
 
-    // --- Game State Variables ---
+    // --- Game State & other private variables ---
     private int score;
     // currentLives is deprecated, do not use
     private int currentLives = 0;
     private GameObject playerPlane;
     public GameObject playerPlanePrefab;
     public GameObject playerSpawnPoint;
+
+    private UpgradeManager upgradeManager;
+    private PlayerUpgradeManager playerUpgradeManager;
+    private PlayerController2D playerController;
 
     [Header("Gameplay Settings")]
     public GameState gameState = GameState.PreGame; // Game starts as PreGame
@@ -94,7 +104,25 @@ public class GameManager2D : MonoBehaviour
     {
         // Start() is called once for the persistent object.
         // UI setup is now fully handled by OnSceneLoaded, which will be called for the initial scene load.
+        upgradeManager = FindObjectOfType<UpgradeManager>();
         Debug.Log("GameManager2D Start() called. Initial UI setup is handled by OnSceneLoaded.");
+
+        PlayerController2D playerController = playerPlane.GetComponent<PlayerController2D>();
+
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerStatsUI();
+        }
+
+    }
+
+    void Update()
+    {
+        // We only need to update the timer if the game is active
+        if (gameState == GameState.Active)
+        {
+            UpdateUpgradeTimerUI();
+        }
     }
 
     void OnDestroy()
@@ -214,6 +242,21 @@ public class GameManager2D : MonoBehaviour
             restartButton.onClick.RemoveAllListeners(); 
             restartButton.onClick.AddListener(RestartGame);
         }
+
+        GameObject nextUpgradeGO = GameObject.Find(nextUpgradeTextName);
+        if (nextUpgradeGO != null) nextUpgradeText = nextUpgradeGO.GetComponent<TextMeshProUGUI>();
+        else Debug.LogWarning("GameManager2D: Could not find NextUpgradeText GameObject named: " + nextUpgradeTextName);
+
+        GameObject upgradeTimerGO = GameObject.Find(upgradeTimerTextName);
+        if (upgradeTimerGO != null) upgradeTimerText = upgradeTimerGO.GetComponent<TextMeshProUGUI>();
+        else Debug.LogWarning("GameManager2D: Could not find UpgradeTimerText GameObject named: " + upgradeTimerTextName);
+
+        GameObject playerInformationGO = GameObject.Find(playerInformationTextName);
+        if (playerInformationGO != null) playerInformationText = playerInformationGO.GetComponent<TextMeshProUGUI>();
+        else Debug.LogWarning("GameManager2D: Could not find playerInformationText GameObject named: " + playerInformationTextName);
+
+        
+  
     }
 
     void ResetInternalGameState()
@@ -225,65 +268,58 @@ public class GameManager2D : MonoBehaviour
 
     void UpdateAllUIDisplays()
     {
+        Debug.Log("GameManager2D UpdateAllUIDisplays: gameState = " + gameState);
 
-        Debug.Log("GameManager2D UpdateAllUIDisplays: gameState = " + gameState + ", currentLives=" + currentLives);
+        // Determine which UI sets should be active
+        bool showTitleScreenUI = (gameState == GameState.PreGame);
+        bool showGameHUD = (gameState == GameState.Active);
+        bool showGameOverUI = (gameState == GameState.GameOver);
 
-        if (titleScreen != null)
-        {
-            titleScreen.SetActive(gameState == GameState.PreGame);
-            Debug.Log("GameManager2D: TitleScreen active state set to: " + (gameState == GameState.PreGame));
-        }
-        else
-        {
-            Debug.LogError("GameManager2D UpdateAllUIDisplays: titleScreen reference is NULL. Cannot set its active state.");
-        }
+        // --- Title Screen Elements ---
+        if (titleScreen != null) titleScreen.SetActive(showTitleScreenUI);
+        if (easyButton != null) easyButton.gameObject.SetActive(showTitleScreenUI);
+        if (mediumButton != null) mediumButton.gameObject.SetActive(showTitleScreenUI);
+        if (playInstructionText != null) playInstructionText.gameObject.SetActive(showTitleScreenUI);
 
-        if (easyButton != null)
-        {
-            easyButton.gameObject.SetActive(gameState == GameState.PreGame);
-            Debug.Log("GameManager2D: EasyButton active state set to: " + (gameState == GameState.PreGame));
-        }
-        else
-        {
-            Debug.LogWarning("GameManager2D UpdateAllUIDisplays: easyButton reference is NULL. Cannot set its active state.");
-        }
-        
-        if (mediumButton != null)
-        {
-            mediumButton.gameObject.SetActive((gameState == GameState.PreGame));
-            Debug.Log("GameManager2D: MediumButton active state set to: " + (gameState == GameState.PreGame));
-        }
-        else
-        {
-            Debug.LogWarning("GameManager2D UpdateAllUIDisplays: mediumButton reference is NULL. Cannot set its active state.");
-        }
+        // --- Game Over Screen Elements ---
+        if (gameOverText != null) gameOverText.gameObject.SetActive(showGameOverUI);
+        if (restartButton != null) restartButton.gameObject.SetActive(showGameOverUI);
 
+        // --- In-Game HUD Elements ---
         if (scoreText != null) 
         {
-            scoreText.gameObject.SetActive(gameState == GameState.Active);
-            if(gameState == GameState.Active) scoreText.text = "Score: " + score; 
+            scoreText.gameObject.SetActive(showGameHUD);
+            if(showGameHUD) scoreText.text = "Score: " + score; 
         }
         if (livesText != null) 
         {
-            livesText.gameObject.SetActive(gameState == GameState.Active);
-            if(gameState == GameState.Active) UpdateLivesDisplay(); 
+            livesText.gameObject.SetActive(showGameHUD);
+            if(showGameHUD) UpdateLivesDisplay(); 
         }
+
+        if (nextUpgradeText != null)
+        {
+            nextUpgradeText.gameObject.SetActive(showGameHUD);
+        }
+        if (upgradeTimerText != null)
+        {
+            // The timer text's content is updated every frame in Update(),
+            // but its visibility should be tied to the Active game state.
+            // If the game is not active, ensure it's hidden.
+            if (!showGameHUD)
+            {
+                upgradeTimerText.gameObject.SetActive(false);
+            }
+        }
+
+        if (playerInformationText != null) playerInformationText.gameObject.SetActive(showGameHUD);
+       
         
-        if (gameOverText != null) 
-        {
-            gameOverText.gameObject.SetActive(gameState == GameState.GameOver);
-        }
-        if (restartButton != null) 
-        {
-            restartButton.gameObject.SetActive(gameState == GameState.GameOver);
-        }
-
-        if (playInstructionText != null)
-        {
-            playInstructionText.gameObject.SetActive(gameState == GameState.GameOver);
-        }
-    }
-
+    }    
+                               
+                                                                        
+                                                                        
+                
     // --- Game Lifecycle Methods ---
     //public void StartGame(float difficultySpawnInterval) 
     public void StartGame(int difficultyLevel) 
@@ -293,6 +329,7 @@ public class GameManager2D : MonoBehaviour
         ResetInternalGameState(); 
         UpdateAllUIDisplays();    
         PlayActiveMusic();
+        UpdateNextUpgradeUI();
 
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); 
         if (spawnManager != null)
@@ -381,6 +418,7 @@ public class GameManager2D : MonoBehaviour
         if (scoreText != null && gameState == GameState.Active) scoreText.text = "Score: " + score;
 
         OnScoreChanged?.Invoke(score);
+        UpdateNextUpgradeUI();
     }
 
     // --- Lives functions ---
@@ -427,5 +465,74 @@ public class GameManager2D : MonoBehaviour
     {
         if (!(gameState == GameState.Active)) return;
         GameOver();
+    }
+
+    void UpdateNextUpgradeUI()
+    {
+        if (upgradeManager == null || nextUpgradeText == null) return;
+
+        int nextScoreGoal = upgradeManager.GetNextUpgradeScore();
+        if (nextScoreGoal != -1)
+        {
+            nextUpgradeText.gameObject.SetActive(true);
+            nextUpgradeText.text = "Next Upgrade: " + nextScoreGoal;
+        }
+        else
+        {
+            // All upgrades collected, hide the text
+            nextUpgradeText.gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateUpgradeTimerUI()
+    {
+        // Find the player's upgrade manager if we don't have it yet
+        if (playerUpgradeManager == null)
+        {
+            playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
+        }
+
+        if (playerUpgradeManager != null && upgradeTimerText != null)
+        {
+            float timeLeft = playerUpgradeManager.GetMaxTimeLeft();
+            if (timeLeft > 0)
+            {
+                upgradeTimerText.gameObject.SetActive(true);
+                upgradeTimerText.text = "Power-Up: " + timeLeft.ToString("F1") + "s";
+            }
+            else
+            {
+                upgradeTimerText.gameObject.SetActive(false);
+            }
+        }
+        else if (upgradeTimerText != null)
+        {
+            // Hide the timer if there's no player
+            upgradeTimerText.gameObject.SetActive(false);
+        }
+    }
+
+    public void UpdatePlayerStatsUI()
+    {
+        // The GameManager is responsible for finding the player controller
+        if (playerController == null)
+        {
+            // We use FindObjectOfType because the player is instantiated at runtime.
+            playerController = FindObjectOfType<PlayerController2D>();
+            if (playerController == null)
+            {
+                // If there's still no player, we can't update the UI, so we exit.
+                return;
+            }
+        }
+        
+        // Now that we have a reference, update the text fields.
+        if (playerInformationText != null)
+            playerInformationText.text = 
+            "H-Speed: " + playerController.horizontalSpeed.ToString("F1") +
+            " V-Speed: " + playerController.verticalSpeed.ToString("F1") +
+            " Fire Rate per minute: " + playerController.roundsPerMinute.ToString("F0")
+            ;
+            
     }
 }

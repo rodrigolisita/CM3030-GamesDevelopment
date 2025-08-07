@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3454706774014118111}
   - component: {fileID: 6718860501600200289}
   - component: {fileID: 36775055451942071}
+  - component: {fileID: 6602407072688753088}
   m_Layer: 0
   m_Name: PlayerPlane
   m_TagString: Player
@@ -343,6 +344,18 @@ MonoBehaviour:
   flashDuration: 0.1
   smokeTrail: {fileID: 6121874567867957778}
   fireTrail: {fileID: 2119855792679202010}
+--- !u!114 &6602407072688753088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508186655575751765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974919bd6b4ec534bb646e60722e570a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &885990561917860408
 PrefabInstance:
   m_ObjectHideFlags: 0
