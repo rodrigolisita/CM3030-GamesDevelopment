@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public enum GameState
 {
@@ -55,7 +56,9 @@ public class GameManager2D : MonoBehaviour
     public AudioClip startScreenMusic;
     public AudioClip activeGameMusic;
     public AudioClip gameOverMusic;
-    
+
+    // -- Event to announce score changes to any listening scripts.
+    public static Action<int> OnScoreChanged;
 
     void Awake()
     {
@@ -376,6 +379,8 @@ public class GameManager2D : MonoBehaviour
         if (!(gameState == GameState.Active) && scoreToAdd > 0) return;
         score += scoreToAdd;
         if (scoreText != null && gameState == GameState.Active) scoreText.text = "Score: " + score;
+
+        OnScoreChanged?.Invoke(score);
     }
 
     // --- Lives functions ---

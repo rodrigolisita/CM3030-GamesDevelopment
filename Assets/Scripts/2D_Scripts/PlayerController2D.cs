@@ -232,5 +232,27 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    // Public method receives an UpgradeData asset and applies its values.
+    public void ApplyUpgrade(UpgradeData upgrade)
+    {
+        if (upgrade == null) return;
+    
+        // The upgrade asset itself contains all the logic for how to apply it.
+        upgrade.Apply(this.gameObject);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
     
 }
