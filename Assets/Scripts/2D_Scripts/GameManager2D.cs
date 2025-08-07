@@ -146,9 +146,13 @@ public class GameManager2D : MonoBehaviour
         // This runs every time a scene finishes loading, INCLUDING THE FIRST SCENE.
         Debug.Log("GameManager2D OnSceneLoaded: Scene '" + scene.name + "' loaded. Current gameState (from persistent instance): " + gameState);
 
+
+        // Re-find references to scene objects here, as old ones were destroyed.
+        upgradeManager = FindObjectOfType<UpgradeManager>();
+        playerUpgradeManager = null; // We'll find this when the player is active
+        playerController = null;
+
         SpawnNewPlayer();
-
-
         FindUIElements();       // Re-find UI elements in the newly loaded scene
         UpdateAllUIDisplays();  // Update their visibility based on current game state
 
@@ -330,6 +334,7 @@ public class GameManager2D : MonoBehaviour
         UpdateAllUIDisplays();    
         PlayActiveMusic();
         UpdateNextUpgradeUI();
+        UpdatePlayerStatsUI();
 
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>(); 
         if (spawnManager != null)
