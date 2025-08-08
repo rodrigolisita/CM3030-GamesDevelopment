@@ -13,6 +13,9 @@ public class EnemyShoot : MonoBehaviour
     [Tooltip("Time in seconds between each shot.")]
     [SerializeField] private float fireRate = 1f;
 
+    [Tooltip("The size of the arc (in degrees) the bullets may be randomly fired in.")]
+    [SerializeField] private float firingArc = 10f;
+
     // used to check if this enemy is actually active
     private Collider2D enemyCollider;
 
@@ -52,6 +55,7 @@ public class EnemyShoot : MonoBehaviour
         }
 
         // Create a new bullet at the firePoint's position and rotation
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        GameObject projectileInstance = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        projectileInstance.transform.Rotate(new Vector3(0, 0, Random.Range(-0.5f*firingArc, 0.5f*firingArc)));
     }
 }

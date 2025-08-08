@@ -59,6 +59,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyPlane Right
       objectReference: {fileID: 0}
+    - target: {fileID: 6033983929233245055, guid: 902692cad341b1142be3646c854bcedb, type: 3}
+      propertyPath: speed
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 9068731522416907637, guid: 902692cad341b1142be3646c854bcedb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.307
@@ -132,6 +136,10 @@ PrefabInstance:
     - target: {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
       propertyPath: m_Name
       value: EnemyPlane Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033983929233245055, guid: 902692cad341b1142be3646c854bcedb, type: 3}
+      propertyPath: speed
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9068731522416907637, guid: 902692cad341b1142be3646c854bcedb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -209,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6033983929233245055, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
       propertyPath: speed
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9068731522416907637, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -284,6 +292,10 @@ PrefabInstance:
     - target: {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
       propertyPath: m_Name
       value: EnemyPlane Center
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033983929233245055, guid: 902692cad341b1142be3646c854bcedb, type: 3}
+      propertyPath: speed
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9068731522416907637, guid: 902692cad341b1142be3646c854bcedb, type: 3}
       propertyPath: m_LocalPosition.x
