@@ -6,13 +6,13 @@ public class WeaponTypeUpgradeData : UpgradeData
     [Tooltip("The new projectile prefab to assign to the player.")]
     public GameObject newProjectilePrefab;
 
-    // The Apply method changes the weapon to the new one.
+    // The Apply method changes the weapon to use the new projectile.
     public override void Apply(GameObject target)
     {
         PlayerController2D player = target.GetComponent<PlayerController2D>();
         if (player != null)
         {
-            player.projectilePrefab = newProjectilePrefab;
+            player.ModifyWeapon(newProjectilePrefab);
         }
     }
 
@@ -22,7 +22,7 @@ public class WeaponTypeUpgradeData : UpgradeData
         PlayerController2D player = target.GetComponent<PlayerController2D>();
         if (player != null)
         {
-            player.RevertToDefaultWeapon();
+            player.RevertToDefaultProjectile();
         }
     }
 }

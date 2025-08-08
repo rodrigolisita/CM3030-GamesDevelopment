@@ -26,8 +26,6 @@ public class Projectile : MonoBehaviour
         {
             Debug.LogError("Projectile is missing a Rigidbody2D component!", this.gameObject);
         }
-        Debug.Log("Projectile Awake");
-        Debug.Log(rb);
     }
 
     public void Start()
@@ -39,7 +37,6 @@ public class Projectile : MonoBehaviour
         }
 
         Destroy(gameObject, lifetime);
-        Debug.Log("Projectile Start");
     }
 
     // --- The Update() method is not needed for this script. ---

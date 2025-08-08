@@ -536,7 +536,7 @@ public class GameManager2D : MonoBehaviour
             playerInformationText.text = 
             "H-Speed: " + playerController.horizontalSpeed.ToString("F1") +
             " V-Speed: " + playerController.verticalSpeed.ToString("F1") +
-            " Fire Rate per minute: " + playerController.roundsPerMinute.ToString("F0")
+            " Fire Rate per minute: " + playerController.GetCurrentFireRate().ToString("F0")
             ;
             
     }

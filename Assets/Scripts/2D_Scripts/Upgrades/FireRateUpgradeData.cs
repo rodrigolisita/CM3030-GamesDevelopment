@@ -11,7 +11,7 @@ public class FireRateUpgradeData : UpgradeData
         PlayerController2D player = target.GetComponent<PlayerController2D>();
         if (player != null)
         {
-            player.roundsPerMinute *= fireRateMultiplier;
+            player.ModifyWeapon(fireRateMultiplier);
         }
     }
 
@@ -22,7 +22,7 @@ public class FireRateUpgradeData : UpgradeData
         if (player != null)
         {
             // To revert, we divide by the same amount we multiplied by.
-            player.roundsPerMinute /= fireRateMultiplier;
+            player.ModifyWeapon(1 / fireRateMultiplier);
         }
     }
 }

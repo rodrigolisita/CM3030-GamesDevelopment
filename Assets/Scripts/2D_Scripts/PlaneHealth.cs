@@ -211,11 +211,8 @@ public class PlaneHealth : MonoBehaviour
     public void PlaySmokeEffects(Color color)
     {
         ParticleSystem.MainModule enemySmokeTrailMain = smokeTrail.main;
-        Debug.Log(enemySmokeTrailMain, smokeTrail);
         ParticleSystem.MinMaxGradient newColor = new ParticleSystem.MinMaxGradient(color);
-        Debug.Log(newColor);
         enemySmokeTrailMain.startColor = newColor;
-        Debug.Log(enemySmokeTrailMain.startColor);
         PlaySmokeEffects();
     }
 

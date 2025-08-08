@@ -9,45 +9,30 @@ public class PlayerController2D : MonoBehaviour
     [Tooltip("The speed of the player's horizontal movement.")]
     public float horizontalSpeed = 5.0f;
     [Tooltip("The speed of the player's vertical movement.")]
-    public float verticalSpeed = 2.0f;  
-            
+    public float verticalSpeed = 2.0f;
+
     [Header("Combat")]
-    [Tooltip("The projectile prefab that the player will fire.")]
-    public GameObject projectilePrefab;
-    private GameObject originalProjectilePrefab;
-    [Tooltip("The number of shots the player can fire per minute.")]
-    public float roundsPerMinute = 800;
-    [Tooltip("The prefab for the secondary weapon that the player will fire.")]
-    public GameObject secondaryPrefab;
-    [Tooltip("The number of secondary shots the player can fire per minute.")]
-    public float secondaryRoundsPerMinute = 30;
-    [Tooltip("The max ammo count for the secondary weapon")]
-    public int maxAmmo;
+    [Tooltip("The player's primary weapon.")]
+    public GameObject primaryWeapon;
+    private Weapon primaryWeaponScript;
+    [Tooltip("The player's secondary weapon.")]
+    public GameObject secondaryWeapon;
+    private Weapon secondaryWeaponScript;
+
+    
 
     [Header("Effects & Audio")]
-    [Tooltip("The sound effect that plays when the player shoots.")]
-    public AudioClip shootingSound; // Public variable to assign your shooting sound effect
-    [Tooltip("The sound effect that plays when the player fires the secondary weapon.")]
-    public AudioClip secondaryShootingSound; // Public variable to assign your secondary weapon sound effect
     [Tooltip("The particle system that plays when the player is hit or destroyed.")]
     public ParticleSystem explosionParticle;
 
-    [Header("Component References")]
+    /*[Header("Component References")]
     [Tooltip("The Animator component that controls the plane's animations.")]
     [SerializeField]
-    private Animator planeAnimController;
+    private Animator planeAnimController;*/
 
     // Private variables for internal logic
     private AudioSource playerAudioSource; // Private variable to hold the AudioSource component
-    private bool firing = false;
-    private float burstStartTime = 0;
-    private int shotsFiredThisBurst = 0;
-    private float lastShotTime = 0;
-
-    private bool secondaryFiring = false;
-    private float secondaryBurstStartTime = 0;
-    private int secondaryShotsFiredThisBurst = 0;
-    private float secondaryLastShotTime = 0;
+    
 
 
     // Game Manager
@@ -77,13 +62,6 @@ public class PlayerController2D : MonoBehaviour
             Debug.LogError("Player AudioSource component not found on " + gameObject.name + ". Please add one.", gameObject);
         }
 
-        // Check if a shooting sound has been assigned in the Inspector
-        // This warning is still useful to ensure a clip is available for shooting.
-        if (shootingSound == null && (playerAudioSource != null && playerAudioSource.clip == null)) // Only warn if no clip is set anywhere for shooting
-        {
-            Debug.LogWarning("Shooting sound not assigned in the Inspector for " + gameObject.name +
-                             ", and no default clip on AudioSource. Please ensure a sound is set if you want shooting sounds.", gameObject);
-        }
 
         //// Check if the explosion particle system has been assigned
         //if (explosionParticle == null)
@@ -101,9 +79,21 @@ public class PlayerController2D : MonoBehaviour
         // Game Manager
         gameManager2D = GameObject.Find("GameManager2D").GetComponent<GameManager2D>();
 
-        originalProjectilePrefab = projectilePrefab;
-
         playerUpgradeManager = GetComponent<PlayerUpgradeManager>();
+
+        
+        
+        if (primaryWeapon != null)
+        {
+            primaryWeaponScript = primaryWeapon.GetComponent<Weapon>();
+        }
+        
+
+        if (secondaryWeapon != null)
+        {
+            secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+        }
+        
     }
 
     // Update is called once per frame
@@ -141,101 +131,23 @@ public class PlayerController2D : MonoBehaviour
             transform.position = currentPosition;
             
 
-            // Instantiate the projectile and play sound
+            //Handle primary fire
             if (Input.GetKey(KeyCode.Space))
             {
-                float curTime = Time.time;
-                //Check if the weapon can fire another shot yet
-                //Debug.Log("Time.time = " + Time.time + "\nlastShotTime = " + lastShotTime + "\n burstStartTime = " + burstStartTime + "\n shotsFiredThisBurst = " + shotsFiredThisBurst);
-                if (((!firing) && ((curTime - lastShotTime) > (60 / roundsPerMinute))) || firing && (shotsFiredThisBurst < (roundsPerMinute / 60) * (curTime - burstStartTime)))
-                {
-                    //update the info on the shot
-                    lastShotTime = curTime;
-
-                    if (firing)
-                    {
-                        shotsFiredThisBurst += 1;
-                    } else
-                    {
-                        firing = true;
-                        burstStartTime = curTime;
-                        shotsFiredThisBurst = 1;
-                    }
-
-                    // Launch a projectile from the player
-                    Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
-
-                    // Play the shooting sound
-                    if (playerAudioSource != null && shootingSound != null)
-                    {
-                        playerAudioSource.PlayOneShot(shootingSound);
-                    }
-                    // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
-                    else if (playerAudioSource != null && playerAudioSource.clip != null)
-                    {
-                        Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
-                        playerAudioSource.PlayOneShot(playerAudioSource.clip);
-                    }
-                    else if (playerAudioSource != null) // No clip assigned anywhere
-                    {
-                        Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
-                    }
-
-                    // Play the shooting animation
-                    planeAnimController.SetTrigger("isFiring");
-                }
+                primaryWeaponScript.PullTrigger();
             } else
             {
-                firing = false; // Stop the current burst if space bar is not pressed
+                primaryWeaponScript.CeaseFire();
             }
 
             //Handle secondary fire
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                float curTime = Time.time;
-                //Check if the weapon can fire another shot yet
-                if (((!secondaryFiring) && ((curTime - secondaryLastShotTime) > (60 / secondaryRoundsPerMinute))) || secondaryFiring && (secondaryShotsFiredThisBurst < (secondaryRoundsPerMinute / 60) * (curTime - secondaryBurstStartTime)))
-                {
-                    //update the info on the shot
-                    secondaryLastShotTime = curTime;
-
-                    if (secondaryFiring)
-                    {
-                        secondaryShotsFiredThisBurst += 1;
-                    }
-                    else
-                    {
-                        secondaryFiring = true;
-                        secondaryBurstStartTime = curTime;
-                        secondaryShotsFiredThisBurst = 1;
-                    }
-
-                    // Launch a projectile from the player
-                    Instantiate(secondaryPrefab, transform.position, secondaryPrefab.transform.rotation);
-
-                    // Play the shooting sound
-                    if (playerAudioSource != null && secondaryShootingSound != null)
-                    {
-                        playerAudioSource.PlayOneShot(secondaryShootingSound);
-                    }
-                    // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
-                    else if (playerAudioSource != null && playerAudioSource.clip != null)
-                    {
-                        Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
-                        playerAudioSource.PlayOneShot(playerAudioSource.clip);
-                    }
-                    else if (playerAudioSource != null) // No clip assigned anywhere
-                    {
-                        Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
-                    }
-
-                    // Play the shooting animation
-                    planeAnimController.SetTrigger("isFiringSecondary");
-                }
+                secondaryWeaponScript.PullTrigger();
             }
             else
             {
-                secondaryFiring = false; // Stop the current burst if space bar is not pressed
+                secondaryWeaponScript.CeaseFire();
             }
         }
     }
@@ -263,12 +175,85 @@ public class PlayerController2D : MonoBehaviour
         }
     }
     
-    
-    public void RevertToDefaultWeapon()
+    /// <summary>
+    /// Swaps to an entirely new Weapon game object
+    /// </summary>
+    /// <param name="newWeapon"></param>
+    /// <param name="weaponKey"></param>
+    public void SwapWeapon(GameObject newWeapon, int weaponKey = 1)
     {
-        // Set the current projectile back to the one we saved at the start.
-        projectilePrefab = originalProjectilePrefab;
-        Debug.Log("Weapon reverted to default.");
+        if (weaponKey == 1)
+        {
+            primaryWeapon = newWeapon;
+            primaryWeaponScript = primaryWeapon.GetComponent<Weapon>();
+        } else if (weaponKey == 2)
+        {
+            secondaryWeapon = newWeapon;
+            secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+        }
+    }
+
+    /// <summary>
+    /// Modifies different fields of the current weapon without changing it out entirely.
+    /// </summary>
+    /// <param name="fireRateMultiplier"></param>
+    /// <param name="newProjectile"></param>
+    /// <param name="weaponKey"></param>
+    public void ModifyWeapon(float fireRateMultiplier, GameObject newProjectile, int weaponKey = 1)
+    {
+        ModifyWeapon(fireRateMultiplier, weaponKey);
+        ModifyWeapon(newProjectile, weaponKey);
+    }
+
+    public void ModifyWeapon(float fireRateMultiplier, int weaponKey = 1)
+    {
+        if (weaponKey == 1)
+        {
+            primaryWeaponScript.MultiplyFireRate(fireRateMultiplier);
+        } else if (weaponKey == 2)
+        {
+            secondaryWeaponScript.MultiplyFireRate(fireRateMultiplier);
+        }
+        // After modifying fire rate, tell the GameManager to update the stats UI.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerStatsUI();
+        }
+    }
+
+    public void ModifyWeapon(GameObject newProjectilePrefab, int weaponKey = 1)
+    {
+        if (weaponKey == 1)
+        {
+            primaryWeaponScript.changeProjectile(newProjectilePrefab);
+        }
+        else if (weaponKey == 2)
+        {
+            secondaryWeaponScript.changeProjectile(newProjectilePrefab);
+        }
+    }
+    
+    public void RevertToDefaultProjectile(int weaponKey = 1)
+    {
+        if (weaponKey == 1)
+        {
+            primaryWeaponScript.revertProjectile();
+        } else if (weaponKey == 2)
+        {
+            secondaryWeaponScript.revertProjectile();
+        }
+    }
+
+    public float GetCurrentFireRate(int weaponKey = 1)
+    {
+        if (weaponKey == 1)
+        {
+            return primaryWeaponScript.GetFireRate();
+        } else if (weaponKey == 2)
+        {
+            return secondaryWeaponScript.GetFireRate();
+        }
+        return 0;
     }
     
     
