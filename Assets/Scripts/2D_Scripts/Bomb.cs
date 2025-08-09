@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Bomb : Projectile
 {
-    public int blastRadius = 10;
+    public float blastRadius = 10;
     public AudioClip explosionSound;
     public GameObject explosionSprite;
 
@@ -23,9 +23,9 @@ public class Bomb : Projectile
 
         if (explosionSprite != null)
         {
-            GameObject explosionInstance = Instantiate(explosionSprite, transform);
-            explosionInstance.transform.SetParent(transform);
-            explosionInstance.transform.localScale = explosionInstance.transform.localScale * blastRadius * 2;
+            GameObject explosionInstance = Instantiate(explosionSprite, transform.position, transform.rotation);
+            //explosionInstance.transform.SetParent(transform);
+            explosionInstance.transform.localScale = explosionInstance.transform.localScale * blastRadius * .1f;
         }
 
         // --- NEW: Play the hit sound ---

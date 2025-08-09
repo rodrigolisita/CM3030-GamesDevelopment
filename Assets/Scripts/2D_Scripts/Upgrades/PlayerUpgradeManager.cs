@@ -17,6 +17,7 @@ public class ActiveUpgrade
 public class PlayerUpgradeManager : MonoBehaviour
 {
     private List<ActiveUpgrade> activeUpgrades = new List<ActiveUpgrade>();
+    private List<UpgradeData> permanentUpgrades = new List<UpgradeData>();
 
     void Update()
     {
@@ -47,6 +48,25 @@ public class PlayerUpgradeManager : MonoBehaviour
         if (upgradeData.duration > 0)
         {
             activeUpgrades.Add(new ActiveUpgrade(upgradeData));
+        }
+    }
+
+    
+
+    // Used when changing to a new weapon. Applies all the other upgrades to the new weapon.
+    public void ApplyAllToNewWeapon()
+    {
+        for (int i = activeUpgrades.Count - 1; i >= 0; i--)
+        {
+            UpgradeData upgrade = activeUpgrades[i].upgrade;
+            if (upgrade is WeaponSwapUpgradeData) continue;
+            upgrade.Apply(this.gameObject);
+        }
+        for (int i = permanentUpgrades.Count - 1; i >= 0; i--)
+        {
+            UpgradeData upgrade = permanentUpgrades[i];
+            if (upgrade is WeaponSwapUpgradeData) continue;
+            upgrade.Apply(this.gameObject);
         }
     }
 

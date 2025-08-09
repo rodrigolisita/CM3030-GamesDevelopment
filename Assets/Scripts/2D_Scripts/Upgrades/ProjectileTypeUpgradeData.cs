@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Weapon Type Upgrade", menuName = "Skyfire/Upgrades/Weapon Type")]
-public class WeaponTypeUpgradeData : UpgradeData
+[CreateAssetMenu(fileName = "New Projectile Type Upgrade", menuName = "Skyfire/Upgrades/Projectile Type")]
+public class ProjectileTypeUpgradeData : UpgradeData
 {
     [Tooltip("The new projectile prefab to assign to the player.")]
     public GameObject newProjectilePrefab;

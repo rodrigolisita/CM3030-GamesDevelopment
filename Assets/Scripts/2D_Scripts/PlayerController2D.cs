@@ -12,14 +12,16 @@ public class PlayerController2D : MonoBehaviour
     public float verticalSpeed = 2.0f;
 
     [Header("Combat")]
-    [Tooltip("The player's primary weapon.")]
-    public GameObject primaryWeapon;
+    [Tooltip("The prefab for the player's primary weapon.")]
+    public GameObject primaryWeaponPrefab;
+    private GameObject primaryWeapon;
     private Weapon primaryWeaponScript;
-    [Tooltip("The player's secondary weapon.")]
-    public GameObject secondaryWeapon;
+    [Tooltip("The prefab for the player's secondary weapon.")]
+    public GameObject secondaryWeaponPrefab;
+    private GameObject secondaryWeapon;
     private Weapon secondaryWeaponScript;
 
-    
+
 
     [Header("Effects & Audio")]
     [Tooltip("The particle system that plays when the player is hit or destroyed.")]
@@ -86,18 +88,26 @@ public class PlayerController2D : MonoBehaviour
         playerUpgradeManager = GetComponent<PlayerUpgradeManager>();
 
         
-        
-        if (primaryWeapon != null)
+        if (primaryWeaponPrefab != null)
         {
-            primaryWeaponScript = primaryWeapon.GetComponent<Weapon>();
+            primaryWeapon = Instantiate(primaryWeaponPrefab, transform);
+            if (primaryWeapon != null)
+            {
+                primaryWeaponScript = primaryWeapon.GetComponent<Weapon>();
+            }
         }
-        
 
-        if (secondaryWeapon != null)
+
+
+        if (secondaryWeaponPrefab != null)
         {
-            secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+            secondaryWeapon = Instantiate(secondaryWeaponPrefab, transform);
+            if (secondaryWeapon != null)
+            {
+                secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+            }
         }
-        
+
     }
 
     // Update is called once per frame
@@ -184,8 +194,9 @@ public class PlayerController2D : MonoBehaviour
     /// </summary>
     /// <param name="newWeapon"></param>
     /// <param name="weaponKey"></param>
-    public void SwapWeapon(GameObject newWeapon, int weaponKey = 1)
+    public void SwapWeapon(GameObject newWeaponPrefab, int weaponKey = 1)
     {
+        GameObject newWeapon = Instantiate(newWeaponPrefab, transform);
         if (weaponKey == 1)
         {
             primaryWeapon = newWeapon;
@@ -194,6 +205,32 @@ public class PlayerController2D : MonoBehaviour
         {
             secondaryWeapon = newWeapon;
             secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+        }
+        playerUpgradeManager.ApplyAllToNewWeapon();
+        // After swapping weapons, tell the GameManager to update the stats UI.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerStatsUI();
+        }
+    }
+
+    public void RevertToDefaultWeapon(int weaponKey = 1)
+    {
+        if (weaponKey == 1)
+        {
+            primaryWeapon = Instantiate(primaryWeaponPrefab, transform);
+            primaryWeaponScript = primaryWeapon.GetComponent<Weapon>();
+        }
+        else if (weaponKey == 2)
+        {
+            secondaryWeapon = Instantiate(secondaryWeaponPrefab, transform);
+            secondaryWeaponScript = secondaryWeapon.GetComponent<Weapon>();
+        }
+        playerUpgradeManager.ApplyAllToNewWeapon();
+        // After swapping weapons, tell the GameManager to update the stats UI.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerStatsUI();
         }
     }
 
