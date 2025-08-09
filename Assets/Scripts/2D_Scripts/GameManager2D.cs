@@ -27,7 +27,7 @@ public class GameManager2D : MonoBehaviour
     private TextMeshProUGUI playerInformationText;
     private Button restartButton;
     private Button easyButton; 
-    private Button mediumButton; // Added reference for Medium Button
+    private Button mediumButton;  
 
     // --- Names of UI GameObjects in the Scene ---
     // IMPORTANT: These GameObjects MUST BE ACTIVE in your scene by default for FindUIElements to locate them.
@@ -364,15 +364,24 @@ public class GameManager2D : MonoBehaviour
     public void RestartGame()
     {
         Debug.Log("GameManager2D: RestartGame() called. Setting isGameActive to false for title screen return.");
-        gameState = GameState.PreGame;
-        ResetInternalGameState(); 
+        //gameState = GameState.PreGame;
+        //ResetInternalGameState(); 
         
-        SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
-        if (spawnManager != null)
-        {
-            spawnManager.StopSpawningEnemies();
-        }
-        Debug.Log("GameManager2D: State before loading scene in RestartGame - gameState: " + gameState);
+        //SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
+        //if (spawnManager != null)
+        //{
+        //    spawnManager.StopSpawningEnemies();
+        //}
+        //Debug.Log("GameManager2D: State before loading scene in RestartGame - gameState: " + gameState);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+
+        // 1. Set the game state back to PreGame. This ensures that when the
+        //    scene reloads, the title screen will be displayed.
+        gameState = GameState.PreGame;
+
+        // 2. Reload the current scene. This is the most reliable way to reset
+        //    all game objects (enemies, projectiles, player) to their initial state.
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

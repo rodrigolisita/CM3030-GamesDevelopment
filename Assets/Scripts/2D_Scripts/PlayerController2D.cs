@@ -44,7 +44,11 @@ public class PlayerController2D : MonoBehaviour
     //public ParticleSystem explosionParticle;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    //void Start()
+    // Use awake to ensure that the PlayerController finds and assigns its primaryWeaponScript
+    // the instant it is instantiated. 
+    // This avoids NullReferenceException
+    void Awake()
     {
         // Get the AudioSource component attached to this GameObject
         playerAudioSource = GetComponent<AudioSource>();
