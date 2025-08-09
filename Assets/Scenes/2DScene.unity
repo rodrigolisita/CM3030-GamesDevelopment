@@ -290,6 +290,7 @@ Transform:
   - {fileID: 1883093300}
   - {fileID: 1336106858}
   - {fileID: 869577190}
+  - {fileID: 1481106464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &142882865
@@ -2320,6 +2321,68 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -8}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1481106463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1481106464}
+  - component: {fileID: 1481106465}
+  m_Layer: 0
+  m_Name: IslandSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1481106464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481106463}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.7110684, y: 0.34831077, z: -0.8061249}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 53717557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1481106465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481106463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52640ba382dc4549b92178d21fd2c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  islandPrefabs:
+  - {fileID: 8397226498885586958, guid: 6f8cf2368ee35ec4eb3acbaf1a95b9e4, type: 3}
+  - {fileID: 6804190089768882263, guid: 097d4e15258d4e34fa4e9c6dcbef54cf, type: 3}
+  - {fileID: 3368853386209223282, guid: 829ef5e74f718214384ef23ca4ffaa10, type: 3}
+  - {fileID: 6516411739037579642, guid: cecce6f1ddfaccc4dadd84e6c6aa3d32, type: 3}
+  - {fileID: 7083234331030859056, guid: f1db891c2d501c44f8655b52849d0a6f, type: 3}
+  initialPoolSize: 12
+  spawnInterval: 15
+  spawnIntervalJitter: {x: -0.6, y: 0.6}
+  baseSpeed: 0.1
+  speedVariance: {x: 0.9, y: 1.15}
+  horizontalDrift: 0.25
+  scaleRange: {x: 0.8, y: 1.4}
+  randomRotation: 1
+  rotationRange: {x: -7, y: 7}
+  topOffset: 0.6
+  recycleMargin: 2.5
+  edgePadding: 0.3
 --- !u!1 &1516719263
 GameObject:
   m_ObjectHideFlags: 0
