@@ -17,42 +17,29 @@ public class GameManager2D : MonoBehaviour
     public static GameManager2D Instance { get; private set; }
 
     // --- UI Element References ---
-    private GameObject titleScreen; 
-    private TextMeshProUGUI scoreText;
-    private TextMeshProUGUI livesText;
-    private TextMeshProUGUI gameOverText;
-    private TextMeshProUGUI playInstructionText;
-    private TextMeshProUGUI nextUpgradeText; 
-    private TextMeshProUGUI upgradeTimerText;
-    private TextMeshProUGUI playerInformationText;
-    private Button restartButton;
-    private Button easyButton; 
-    private Button mediumButton;  
-
-    // --- Names of UI GameObjects in the Scene ---
-    // IMPORTANT: These GameObjects MUST BE ACTIVE in your scene by default for FindUIElements to locate them.
     [Header("UI Object Names")]
-    public string titleScreenName = "TitleScreen"; 
-    public string scoreTextName = "ScoreText"; 
-    public string livesTextName = "LivesText";
-    public string gameOverTextName = "GameOverText";
-    public string playInstructionTextName = "PlayInstruction";
-    public string restartButtonName = "RestartButton";
-    public string easyButtonName = "EasyButton"; 
-    public string mediumButtonName = "MediumButton"; 
-    public string nextUpgradeTextName = "NextUpgradeText"; 
-    public string upgradeTimerTextName = "UpgradeTimerText"; 
-    public string playerInformationTextName = "playerInformationText"; 
-
+    [SerializeField] private GameObject startScreen; 
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI gameOverText;
+    [SerializeField] private TextMeshProUGUI playInstructionText;
+    [SerializeField] private TextMeshProUGUI nextUpgradeText; 
+    [SerializeField] private TextMeshProUGUI upgradeTimerText;
+    [SerializeField] private TextMeshProUGUI playerInformationText;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button easyButton;
+    [SerializeField] private Button mediumButton;
+    [SerializeField] private Button hardButton;
+                                                                        
     // --- Game State & other private variables ---
     private int score;
-    // currentLives is deprecated, do not use
-    private int currentLives = 0;
     private GameObject playerPlane;
+    [Header("Player Plane")]
     public GameObject playerPlanePrefab;
     public GameObject playerSpawnPoint;
 
-    private UpgradeManager upgradeManager;
+    //private UpgradeManager upgradeManager;
+    [SerializeField] private UpgradeManager upgradeManager;
     private PlayerUpgradeManager playerUpgradeManager;
     private PlayerController2D playerController;
 
@@ -75,7 +62,7 @@ public class GameManager2D : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject.transform.root.gameObject);
+            //DontDestroyOnLoad(gameObject.transform.root.gameObject);
 
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
@@ -90,8 +77,8 @@ public class GameManager2D : MonoBehaviour
 
             // Set initial internal game state for the very first launch
             gameState = GameState.PreGame;
-            //currentLives = initialLives; 
-            Debug.Log("GameManager2D Awake(): Initial internal state set. gameSate: " + gameState + ", currentLives: " + currentLives);
+
+            Debug.Log("GameManager2D Awake(): Initial internal state set. gameSate: " + gameState);
         }
         else if (Instance != this)
         {
@@ -102,10 +89,6 @@ public class GameManager2D : MonoBehaviour
 
     void Start()
     {
-        // Start() is called once for the persistent object.
-        // UI setup is now fully handled by OnSceneLoaded, which will be called for the initial scene load.
-        upgradeManager = FindObjectOfType<UpgradeManager>();
-        Debug.Log("GameManager2D Start() called. Initial UI setup is handled by OnSceneLoaded.");
 
         PlayerController2D playerController = playerPlane.GetComponent<PlayerController2D>();
 
@@ -148,15 +131,12 @@ public class GameManager2D : MonoBehaviour
 
 
         // Re-find references to scene objects here, as old ones were destroyed.
-        upgradeManager = FindObjectOfType<UpgradeManager>();
+        //upgradeManager = FindObjectOfType<UpgradeManager>();
         playerUpgradeManager = null; // We'll find this when the player is active
         playerController = null;
 
         SpawnNewPlayer();
-        FindUIElements();       // Re-find UI elements in the newly loaded scene
         UpdateAllUIDisplays();  // Update their visibility based on current game state
-
-        
 
         if (gameState == GameState.Active)
         {
@@ -167,100 +147,6 @@ public class GameManager2D : MonoBehaviour
              // If you have menu music and game is not active 
             PlayStartScreenMusic();
         }
-    }
-
-    void FindUIElements()
-    {
-        Debug.Log("GameManager2D FindUIElements: Attempting to find UI elements by name. Ensure they are ACTIVE in the scene by default to be found.");
-
-        GameObject titleScreenGO_temp = GameObject.Find(titleScreenName); 
-        if (titleScreenGO_temp != null) 
-        {
-            titleScreen = titleScreenGO_temp;
-            Debug.Log("GameManager2D: Found TitleScreen GameObject named: '" + titleScreenName + "'.");
-            
-            Transform easyButtonTransform = titleScreen.transform.Find(easyButtonName);
-            if (easyButtonTransform != null)
-            {
-                easyButton = easyButtonTransform.GetComponent<Button>();
-                if (easyButton == null) Debug.LogError("GameManager2D: Found EasyButton GameObject as child of TitleScreen but it's missing a Button component.", easyButtonTransform.gameObject);
-                else Debug.Log("GameManager2D: Found EasyButton as child of TitleScreen.");
-            }
-            else 
-            {
-                GameObject easyButtonGO_global = GameObject.Find(easyButtonName);
-                if (easyButtonGO_global != null) easyButton = easyButtonGO_global.GetComponent<Button>();
-                else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
-            }
-
-            Transform mediumButtonTransform = titleScreen.transform.Find(mediumButtonName);
-            if (mediumButtonTransform != null)
-            {
-                mediumButton = mediumButtonTransform.GetComponent<Button>();
-                if (mediumButton == null) Debug.LogError("GameManager2D: Found MediumButton GameObject as child of TitleScreen but it's missing a Button component.", mediumButtonTransform.gameObject);
-                else Debug.Log("GameManager2D: Found MediumButton as child of TitleScreen.");
-            }
-            else
-            {
-                GameObject mediumButtonGO_global = GameObject.Find(mediumButtonName);
-                if (mediumButtonGO_global != null) mediumButton = mediumButtonGO_global.GetComponent<Button>();
-                else Debug.LogWarning("GameManager2D: Could not find MediumButton GameObject named: '" + mediumButtonName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
-            }
-        }
-        else 
-        {
-            Debug.LogError("GameManager2D: Could not find TitleScreen GameObject named: '" + titleScreenName + "'. UI will not display correctly. Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
-            titleScreen = null; 
-            
-            GameObject easyButtonGO_global_fallback = GameObject.Find(easyButtonName);
-            if (easyButtonGO_global_fallback != null) easyButton = easyButtonGO_global_fallback.GetComponent<Button>();
-            else Debug.LogError("GameManager2D: Could not find Start/EasyButton GameObject named: '" + easyButtonName + "' (TitleScreen also not found).", this.gameObject);
-            
-            GameObject mediumButtonGO_global_fallback = GameObject.Find(mediumButtonName);
-            if (mediumButtonGO_global_fallback != null) mediumButton = mediumButtonGO_global_fallback.GetComponent<Button>();
-            else Debug.LogWarning("GameManager2D: Could not find MediumButton GameObject named: '" + mediumButtonName + "' (TitleScreen also not found).", this.gameObject);
-        }
-        
-        GameObject scoreTextGO = GameObject.Find(scoreTextName);
-        if (scoreTextGO != null) scoreText = scoreTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogError("GameManager2D: Could not find ScoreText GameObject named: '" + scoreTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
-
-        GameObject livesTextGO = GameObject.Find(livesTextName);
-        if (livesTextGO != null) livesText = livesTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogError("GameManager2D: Could not find LivesText GameObject named: '" + livesTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
-        
-        GameObject gameOverTextGO = GameObject.Find(gameOverTextName);
-        if (gameOverTextGO != null) gameOverText = gameOverTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogError("GameManager2D: Could not find GameOverText GameObject named: '" + gameOverTextName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
-
-        GameObject playInstructionTextGO = GameObject.Find(playInstructionTextName);
-        if (playInstructionTextGO != null) playInstructionText = playInstructionTextGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogWarning("GameManager2D: Could not find PlayInstruction Text GameObject named: '" + playInstructionTextName + "' (neither as child of TitleScreen nor globally). Ensure it exists and is ACTIVE in the scene by default.", this.gameObject);
-
-        GameObject restartButtonGO = GameObject.Find(restartButtonName);
-        if (restartButtonGO != null) restartButton = restartButtonGO.GetComponent<Button>();
-        else Debug.LogError("GameManager2D: Could not find RestartButton GameObject named: '" + restartButtonName + "'. Ensure it is ACTIVE in the scene by default.", this.gameObject);
-
-        if (restartButton != null)
-        {
-            restartButton.onClick.RemoveAllListeners(); 
-            restartButton.onClick.AddListener(RestartGame);
-        }
-
-        GameObject nextUpgradeGO = GameObject.Find(nextUpgradeTextName);
-        if (nextUpgradeGO != null) nextUpgradeText = nextUpgradeGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogWarning("GameManager2D: Could not find NextUpgradeText GameObject named: " + nextUpgradeTextName);
-
-        GameObject upgradeTimerGO = GameObject.Find(upgradeTimerTextName);
-        if (upgradeTimerGO != null) upgradeTimerText = upgradeTimerGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogWarning("GameManager2D: Could not find UpgradeTimerText GameObject named: " + upgradeTimerTextName);
-
-        GameObject playerInformationGO = GameObject.Find(playerInformationTextName);
-        if (playerInformationGO != null) playerInformationText = playerInformationGO.GetComponent<TextMeshProUGUI>();
-        else Debug.LogWarning("GameManager2D: Could not find playerInformationText GameObject named: " + playerInformationTextName);
-
-        
-  
     }
 
     void ResetInternalGameState()
@@ -275,15 +161,16 @@ public class GameManager2D : MonoBehaviour
         Debug.Log("GameManager2D UpdateAllUIDisplays: gameState = " + gameState);
 
         // Determine which UI sets should be active
-        bool showTitleScreenUI = (gameState == GameState.PreGame);
+        bool showStartScreenUI = (gameState == GameState.PreGame);
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
 
-        // --- Title Screen Elements ---
-        if (titleScreen != null) titleScreen.SetActive(showTitleScreenUI);
-        if (easyButton != null) easyButton.gameObject.SetActive(showTitleScreenUI);
-        if (mediumButton != null) mediumButton.gameObject.SetActive(showTitleScreenUI);
-        if (playInstructionText != null) playInstructionText.gameObject.SetActive(showTitleScreenUI);
+        // --- Start Screen Elements ---
+        if (startScreen != null) startScreen.SetActive(showStartScreenUI);
+        if (easyButton != null) easyButton.gameObject.SetActive(showStartScreenUI);
+        if (mediumButton != null) mediumButton.gameObject.SetActive(showStartScreenUI);
+        if (hardButton != null) hardButton.gameObject.SetActive(showStartScreenUI);
+        if (playInstructionText != null) playInstructionText.gameObject.SetActive(showStartScreenUI);
 
         // --- Game Over Screen Elements ---
         if (gameOverText != null) gameOverText.gameObject.SetActive(showGameOverUI);
@@ -321,9 +208,6 @@ public class GameManager2D : MonoBehaviour
         
     }    
                                
-                                                                        
-                                                                        
-                
     // --- Game Lifecycle Methods ---
     //public void StartGame(float difficultySpawnInterval) 
     public void StartGame(int difficultyLevel) 
@@ -364,17 +248,6 @@ public class GameManager2D : MonoBehaviour
     public void RestartGame()
     {
         Debug.Log("GameManager2D: RestartGame() called. Setting isGameActive to false for title screen return.");
-        //gameState = GameState.PreGame;
-        //ResetInternalGameState(); 
-        
-        //SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
-        //if (spawnManager != null)
-        //{
-        //    spawnManager.StopSpawningEnemies();
-        //}
-        //Debug.Log("GameManager2D: State before loading scene in RestartGame - gameState: " + gameState);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
 
         // 1. Set the game state back to PreGame. This ensures that when the
         //    scene reloads, the title screen will be displayed.
@@ -435,20 +308,6 @@ public class GameManager2D : MonoBehaviour
         UpdateNextUpgradeUI();
     }
 
-    // --- Lives functions ---
-    /*public void LoseLife()
-    {
-        if (!(gameState == GameState.Active)) return; 
-        if (currentLives > 0)
-        {
-            currentLives--;
-            Debug.Log("Player lost a life. Lives remaining: " + currentLives);
-            if (livesText != null && (gameState == GameState.Active)) UpdateLivesDisplay(); 
-            if (currentLives <= 0) GameOver();
-        }
-    }
-
-    public int GetCurrentLives() { return currentLives; }*/
 
     public void UpdateLivesDisplay()
     {
@@ -468,12 +327,6 @@ public class GameManager2D : MonoBehaviour
             Debug.LogError("livesText " + livesText + " or playerPlane " + playerPlane + " is null");
         }
     }     
-
-    /*public void UpdateHealth(int healthRemaining)
-    {
-        if (livesText != null) livesText.text = "Lives: " + healthRemaining;
-        currentLives = healthRemaining;
-    }*/
 
     public void HandlePlayerDefeat()
     {
