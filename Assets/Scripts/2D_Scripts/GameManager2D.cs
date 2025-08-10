@@ -21,6 +21,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private GameObject startScreen; 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private Image healthBarFill;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private TextMeshProUGUI playInstructionText;
     [SerializeField] private TextMeshProUGUI nextUpgradeText; 
@@ -187,6 +188,7 @@ public class GameManager2D : MonoBehaviour
             livesText.gameObject.SetActive(showGameHUD);
             if(showGameHUD) UpdateLivesDisplay(); 
         }
+        if (healthBarFill != null) healthBarFill.transform.parent.gameObject.SetActive(showGameHUD);
 
         if (nextUpgradeText != null)
         {
@@ -316,7 +318,15 @@ public class GameManager2D : MonoBehaviour
             PlaneHealth playerHealth = playerPlane.GetComponent<PlaneHealth>();
             if (playerHealth != null)
             {
-                livesText.text = "Lives: " + playerHealth.GetCurrentHealth();
+                int currentHealth = playerHealth.GetCurrentHealth();
+                int maxHealth = playerHealth.GetMaxHealth();
+                float healthAmount = (float)currentHealth / maxHealth;
+                
+                livesText.text = healthAmount*100 + "%";
+
+
+                // Calculate the fill amount (a value from 0.0 to 1.0).
+                healthBarFill.fillAmount = healthAmount;
             }
             else
             {
@@ -327,6 +337,15 @@ public class GameManager2D : MonoBehaviour
             Debug.LogError("livesText " + livesText + " or playerPlane " + playerPlane + " is null");
         }
     }     
+
+    public void UpdateHealthBar(int currentHealth, int maxHealth)
+    {
+        if (healthBarFill != null)
+        {
+            // Calculate the fill amount as a value between 0 and 1
+            healthBarFill.fillAmount = (float)currentHealth / maxHealth;
+        }
+    }
 
     public void HandlePlayerDefeat()
     {
