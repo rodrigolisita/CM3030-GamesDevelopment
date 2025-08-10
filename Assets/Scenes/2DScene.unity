@@ -603,7 +603,7 @@ MonoBehaviour:
     upgradeToAward: {fileID: 11400000, guid: 21e38a7908c86144086732ab38a20acd, type: 2}
     awarded: 0
   - scoreThreshold: 200
-    upgradeToAward: {fileID: 11400000, guid: 52ddee2c6ea350d4ab51c54adf62fb5b, type: 2}
+    upgradeToAward: {fileID: 11400000, guid: cbaed5d7d64b60740bab466f765b4359, type: 2}
     awarded: 0
   - scoreThreshold: 250
     upgradeToAward: {fileID: 11400000, guid: 71b53d6242faf2843b8ad2da49b94a00, type: 2}
