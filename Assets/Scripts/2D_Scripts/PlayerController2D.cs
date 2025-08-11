@@ -334,6 +334,11 @@ public class PlayerController2D : MonoBehaviour
         {
             secondaryWeaponScript.AddAmmo(amount);
         }
+        // After adding ammo, tell the GameManager to update the ammo UI.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdatePlayerAmmoUI();
+        }
     }
     
     
