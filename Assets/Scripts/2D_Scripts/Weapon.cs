@@ -58,11 +58,15 @@ public class Weapon : MonoBehaviour
         originalProjectilePrefab = projectilePrefab;
     }
 
-    public void PullTrigger()
+    /// <summary>
+    /// Returns true if the weapon fired.
+    /// </summary>
+    /// <returns></returns>
+    public bool PullTrigger()
     {
         if (ammoLimited && curAmmo <= 0)
         {
-            return;
+            return false;
         }
 
         float curTime = Time.time;
@@ -105,7 +109,10 @@ public class Weapon : MonoBehaviour
                 Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
             }
 
+            return true;
         }
+
+        return false;
     }
 
 
@@ -152,5 +159,36 @@ public class Weapon : MonoBehaviour
     public float GetFireRate()
     {
         return roundsPerMinute;
+    }
+
+    /// <summary>
+    /// Returns the max ammo count, unless it's unlimited (then -1)
+    /// </summary>
+    /// <returns></returns>
+    public int GetMaxAmmo()
+    {
+        if (!ammoLimited)
+        {
+            return -1;
+        }
+        return maxAmmo;
+    }
+    
+    /// <summary>
+    /// Returns the amount of ammo remaining, unless it's unlimited (then -1)
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurAmmo()
+    {
+        if (!ammoLimited)
+        {
+            return -1;
+        }
+        return curAmmo;
+    }
+
+    public void AddAmmo(int amount)
+    {
+        curAmmo = Mathf.Clamp(curAmmo + amount, 0, maxAmmo);
     }
 }

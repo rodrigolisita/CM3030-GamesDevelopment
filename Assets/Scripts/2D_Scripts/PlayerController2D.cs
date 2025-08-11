@@ -157,7 +157,11 @@ public class PlayerController2D : MonoBehaviour
             //Handle secondary fire
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                secondaryWeaponScript.PullTrigger();
+                if (secondaryWeaponScript.PullTrigger()) // if a shot was fired, update ammo
+                {
+                    GameManager2D.Instance.UpdatePlayerAmmoUI();
+                }
+
             }
             else
             {
@@ -296,8 +300,41 @@ public class PlayerController2D : MonoBehaviour
         }
         return 0;
     }
+
+    /// <summary>
+    /// Gets the current amount of ammo in the selected weapon. DEFAULTS TO SECONDARY WEAPON.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="weaponKey"></param>
+    public int GetCurrentAmmo(int weaponKey = 2)
+    {
+        if (weaponKey == 1)
+        {
+            return primaryWeaponScript.GetCurAmmo();
+        }
+        else if (weaponKey == 2)
+        {
+            return secondaryWeaponScript.GetCurAmmo();
+        }
+        return 0;
+    }
     
-    
+    /// <summary>
+    /// Grants an amount of ammo to the selected weapon. DEFAULTS TO SECONDARY WEAPON.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="weaponKey"></param>
+    public void AddAmmo(int amount, int weaponKey = 2)
+    {
+        if (weaponKey == 1)
+        {
+            primaryWeaponScript.AddAmmo(amount);
+        }
+        else if (weaponKey == 2)
+        {
+            secondaryWeaponScript.AddAmmo(amount);
+        }
+    }
     
     
     

@@ -21,6 +21,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private GameObject startScreen; 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI ammoText;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private TextMeshProUGUI playInstructionText;
@@ -190,6 +191,13 @@ public class GameManager2D : MonoBehaviour
         }
         if (healthBarFill != null) healthBarFill.transform.parent.gameObject.SetActive(showGameHUD);
 
+        if (ammoText != null)
+        {
+            ammoText.gameObject.SetActive(showGameHUD);
+            if (showGameHUD) UpdatePlayerAmmoUI();
+        }
+
+
         if (nextUpgradeText != null)
         {
             nextUpgradeText.gameObject.SetActive(showGameHUD);
@@ -337,6 +345,33 @@ public class GameManager2D : MonoBehaviour
             Debug.LogError("livesText " + livesText + " or playerPlane " + playerPlane + " is null");
         }
     }     
+
+    public void UpdatePlayerAmmoUI()
+    {
+        if (ammoText != null && playerPlane != null)
+        {
+            PlayerController2D playerController = playerPlane.GetComponent<PlayerController2D>();
+            if (playerController != null)
+            {
+                int ammo = playerController.GetCurrentAmmo(2); // 2 is the key for the secondary weapon
+                if (ammo == -1)
+                {
+                    ammoText.text = "Secondary Ammo: Unlimited";
+                }
+                else
+                {
+                    ammoText.text = "Secondary Ammo: " + ammo;
+                }
+            } else
+            {
+                Debug.LogError("playerController null");
+            }
+        }
+        else
+        {
+            Debug.LogError("ammoText " + ammoText + " or playerPlane " + playerPlane + " is null");
+        }
+    }
 
     public void UpdateHealthBar(int currentHealth, int maxHealth)
     {
