@@ -135,6 +135,22 @@ public class PlaneHealth : MonoBehaviour
         }
     }
 
+    public void AddHealth(int amount)
+    {
+        // Increase health, but clamp it so it doesn't go over the maximum.
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        Debug.Log("Player gained health! Current health: " + currentHealth);
+
+        // Tell the GameManager to update the health bar/lives display.
+        if (GameManager2D.Instance != null)
+        {
+            GameManager2D.Instance.UpdateLivesDisplay();
+        }
+
+        // Update the sprite to reflect the new, damaged health state.
+        UpdateSprite();
+    }
+
     /// <summary>
     /// Updates the enemy's sprite to the correct damaged state.
     /// </summary>

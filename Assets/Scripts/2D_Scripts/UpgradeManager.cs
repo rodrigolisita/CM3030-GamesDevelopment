@@ -21,6 +21,10 @@ public class UpgradeManager : MonoBehaviour
     [Tooltip("Add all the score-based upgrades for the game here. You can add multiple levels.")]
     public UpgradeLevel[] upgradeLevels;
 
+    [Header("Effects")]
+    [Tooltip("The sound effect to play when any upgrade is awarded.")]
+    [SerializeField] private AudioClip upgradeSound;
+
     // When this object is enabled (e.g., at the start of the game),
     // it subscribes to the GameManager's score change announcement.
     private void OnEnable()
@@ -55,6 +59,12 @@ public class UpgradeManager : MonoBehaviour
                     // Get the specific upgrade asset for this level and tell the player to apply it.
                     player.ApplyUpgrade(upgradeLevels[i].upgradeToAward);
                     Debug.Log("UPGRADE AWARDED: " + upgradeLevels[i].upgradeToAward.name + " at " + newScore + " points!");
+
+                    // Play the upgrade sound effect via the GameManager.
+                    if (upgradeSound != null)
+                    {
+                        GameManager2D.Instance.PlaySoundEffect(upgradeSound);
+                    }
                 }
             }
         }

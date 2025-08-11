@@ -13,6 +13,13 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     public GameObject explosionSprite;
     public float explosionSize = 1;
 
+    [Header("Item Drop Settings")]
+    [Tooltip("The LifeBonus prefab this enemy can drop on defeat.")]
+    [SerializeField] private GameObject lifeBonusPrefab;
+    [Tooltip("The chance (from 0 to 100) that this enemy will drop the bonus.")]
+    [Range(0, 100)] [SerializeField] private float dropChance = 100f; // This creates a 10% chance
+
+
 
     // Private component references
     private AudioSource audioSource;
@@ -106,6 +113,14 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         //enemySmokeTrail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         //Destroy(enemySmokeTrail);
 
+        // --- NEW LOGIC ---
+        // Check if we should spawn a life bonus.
+        if (lifeBonusPrefab != null && Random.Range(0f, 100f) <= dropChance)
+        {
+            // Create the life bonus prefab at the enemy's current position.
+            Instantiate(lifeBonusPrefab, transform.position, Quaternion.identity);
+        }
+
         // Play final destruction sound and particle effects
         PlayHitEffects();
 
@@ -120,7 +135,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         float soundLength = (collisionSound != null) ? collisionSound.length : 0.5f;
         float particleDuration = (enemyDestroyedExplosion != null) ? enemyDestroyedExplosion.main.duration : 0f;
         float destructionDelay = Mathf.Max(soundLength, particleDuration);
-        
+
         // Destroy this enemy GameObject after the delay
         Destroy(gameObject, destructionDelay);
     }

@@ -326,6 +326,7 @@ MonoBehaviour:
   flashColor: {r: 0.9716981, g: 0.050418302, b: 0.050418302, a: 1}
   flashDuration: 0.05
   smokeTrail: {fileID: 4233887947551978917}
+  fireTrail: {fileID: 0}
 --- !u!114 &-5775442092267387112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +360,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5596652749312473574, guid: fff9cb89f66c52c43825614cb559c656, type: 3}
   firePoint: {fileID: 4555806101881914651}
   fireRate: 2
+  firingArc: 10
 --- !u!114 &-2489953628979663748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,7 +378,8 @@ MonoBehaviour:
   pointsAwarded: 10
   explosionSprite: {fileID: 2897330427778015961, guid: e1e54ff293eee98458a955fc6db59091, type: 3}
   explosionSize: 1
-  enemySmokeTrail: {fileID: 4233887947551978917}
+  lifeBonusPrefab: {fileID: 1681471875230303450, guid: 2d9307e4bade79c4a9d338905d181024, type: 3}
+  dropChance: 20
 --- !u!1 &4901077714402604115
 GameObject:
   m_ObjectHideFlags: 0

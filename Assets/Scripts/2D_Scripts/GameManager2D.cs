@@ -421,4 +421,13 @@ public class GameManager2D : MonoBehaviour
             ;
             
     }
+
+    public void PlaySoundEffect(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            // Use PlayOneShot to play a sound without interrupting the background music.
+            audioSource.PlayOneShot(clip);
+        }
+    }
 }
