@@ -207,11 +207,17 @@ public class PlaneHealth : MonoBehaviour
                 if (newVisual.smoking)
                 {
                     PlaySmokeEffects(newVisual.smokeColor);
-                }
+                } else
+                    {
+                        StopSmokeEffects();
+                    }
                 if (newVisual.onFire)
                 {
                     PlayFireEffects();
-                }
+                } else
+                    {
+                        StopFireEffects();
+                    }
 
                 // Exit the method since we've found and applied the correct state.
                 return;
@@ -239,6 +245,14 @@ public class PlaneHealth : MonoBehaviour
         PlaySmokeEffects();
     }
 
+    public void StopSmokeEffects()
+    {
+        if (smokeTrail.isPlaying)
+        {
+            smokeTrail.Stop();
+        }
+    }
+
     public void PlayFireEffects()
     {
         if (fireTrail != null)
@@ -246,6 +260,17 @@ public class PlaneHealth : MonoBehaviour
             if (!fireTrail.isPlaying)
             {
                 fireTrail.Play();
+            }
+        }
+    }
+
+    public void StopFireEffects()
+    {
+        if (fireTrail != null)
+        {
+            if (fireTrail.isPlaying)
+            {
+                fireTrail.Stop();
             }
         }
     }
