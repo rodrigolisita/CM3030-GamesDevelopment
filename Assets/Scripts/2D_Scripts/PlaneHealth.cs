@@ -44,6 +44,7 @@ public class PlaneHealth : MonoBehaviour
     private PlaneCollisionHandler collisionHandler;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+     private Sprite originalSprite;
 
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class PlaneHealth : MonoBehaviour
         {
             // Store the sprite's original color to return to after flashing.
             originalColor = spriteRenderer.color;
+            originalSprite = spriteRenderer.sprite;
         }
 
         
@@ -152,68 +154,73 @@ public class PlaneHealth : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the enemy's sprite to the correct damaged state.
+    /// Updates the plane's sprite to the correct damaged state.
     /// </summary>
+
     private void UpdateSprite()
     {
-        // Don't try to change the sprite if health is full (it uses its default sprite)
-        // or if it's already defeated.
-        if (currentHealth >= maxHealth || currentHealth <= 0)
+        if (spriteRenderer == null) return;
+
+        // 'damageVisuals' array must be sorted from highest % to lowest % in the Inspector
+
+        // If health is full, revert to the original sprite and stop all damage effects.
+        if (currentHealth >= maxHealth)
+        {
+            spriteRenderer.sprite = originalSprite;
+
+            if (smokeTrail != null && smokeTrail.isPlaying)
+            {
+                smokeTrail.Stop();
+            }
+            if (fireTrail != null && fireTrail.isPlaying)
+            {
+                fireTrail.Stop();
+            }
+
+            return;
+        }
+
+        // If health is zero or less, do nothing.
+        if (currentHealth <= 0)
         {
             return;
         }
-        
-        if (spriteRenderer == null || damageVisuals == null || damageVisuals.Length == 0)
-        {
-            return; // Exit if we don't have the necessary components/assets.
-        }
 
-        float damagePercent = currentHealth * 100f / maxHealth;
-        int newVisualIndex = 0;
-        while (newVisualIndex + 1 < damageVisuals.Length)
+        if (damageVisuals != null && damageVisuals.Length > 0)
+    {
+        float healthPercent = (float)currentHealth / maxHealth * 100f;
+
+        // Loop from the highest health tier (100%) to the lowest.
+        for (int i = 0; i < damageVisuals.Length; i++)
         {
-            if (damageVisuals[newVisualIndex + 1].activationPercent >= damagePercent)
+            // Find the first tier that our current health is greater than or equal to.
+            if (healthPercent >= damageVisuals[i].activationPercent)
             {
-                newVisualIndex += 1;
-            } else
-            {
-                break;
+                DamageVisual newVisual = damageVisuals[i];
+
+                // Apply the sprite and visual effects for this tier.
+                if (newVisual.damageSprite != null)
+                {
+                    spriteRenderer.sprite = newVisual.damageSprite;
+                }
+              
+                if (newVisual.smoking)
+                {
+                    PlaySmokeEffects(newVisual.smokeColor);
+                }
+                if (newVisual.onFire)
+                {
+                    PlayFireEffects();
+                }
+
+                // Exit the method since we've found and applied the correct state.
+                return;
             }
         }
-        DamageVisual newVisual = damageVisuals[newVisualIndex];
+    }
 
-        if (newVisual.damageSprite != null)
-        {
-            spriteRenderer.sprite = newVisual.damageSprite;
-        }
         
-        if (newVisual.smoking && newVisual.smokeColor != null)
-        {
-            PlaySmokeEffects(newVisual.smokeColor);
-        }
 
-        if (newVisual.onFire)
-        {
-            PlayFireEffects();
-        }
-
-
-
-        /*// This logic maps the remaining health to the correct damaged sprite.
-        // The sprites are ordered from lightest damage to heaviest damage.
-        // Example (maxHealth = 3, array size = 2):
-        // - currentHealth = 2 -> index = 3 - 2 - 1 = 0 (first damaged sprite)
-        // - currentHealth = 1 -> index = 3 - 1 - 1 = 1 (second damaged sprite)
-        int spriteIndex = maxHealth - currentHealth - 1;
-
-        // Clamp the index to be safe and apply the new sprite.
-        if (spriteIndex >= 0 && spriteIndex < damageStateSprites.Length)
-        {
-            if (damageStateSprites[spriteIndex] != null)
-            {
-                spriteRenderer.sprite = damageStateSprites[spriteIndex];
-            }
-        }*/
     }
 
     public void PlaySmokeEffects()

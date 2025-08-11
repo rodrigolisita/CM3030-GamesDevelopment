@@ -322,17 +322,17 @@ MonoBehaviour:
     smokeColor: {r: 0, g: 0, b: 0, a: 1}
     smoking: 0
     onFire: 0
-  - activationPercent: 99
+  - activationPercent: 75
     damageSprite: {fileID: 21300000, guid: cfb2d0ab77dafce45919d420049ed2e0, type: 3}
     smokeColor: {r: 1, g: 1, b: 1, a: 1}
     smoking: 1
     onFire: 0
-  - activationPercent: 74
+  - activationPercent: 50
     damageSprite: {fileID: 21300000, guid: f7575cb844f55534c8f9e5a3cd7950f6, type: 3}
     smokeColor: {r: 0.5396226, g: 0.5396226, b: 0.5396226, a: 1}
     smoking: 1
     onFire: 0
-  - activationPercent: 49
+  - activationPercent: 25
     damageSprite: {fileID: 21300000, guid: 316b2f370f59a56428d0afea0218fcba, type: 3}
     smokeColor: {r: 0.18490559, g: 0.18490559, b: 0.18490559, a: 1}
     smoking: 1
