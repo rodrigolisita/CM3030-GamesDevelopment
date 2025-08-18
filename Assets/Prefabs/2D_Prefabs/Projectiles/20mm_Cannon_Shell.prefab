@@ -135,8 +135,8 @@ MonoBehaviour:
   speed: 2
   lifetime: 5
   hitSound: {fileID: 8300000, guid: 4e6f6ce59ee85cd439fc7130efba1e39, type: 3}
-  damage: 3
-  blastRadius: 0.1
+  damage: 7
+  blastRadius: 0.2
   explosionSound: {fileID: 8300000, guid: fcc7e1f927af11e4f9d6dd4ea35d1009, type: 3}
   explosionSprite: {fileID: 8882308571217540311, guid: 18e0c7bf9fe4bcf47ac19b1bcdae2e59, type: 3}
 --- !u!114 &3569774116100080120

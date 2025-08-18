@@ -306,19 +306,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 6
+  maxHealth: 11
   damageVisuals:
   - activationPercent: 100
     damageSprite: {fileID: 21300000, guid: 14bbdbe23570dbb4483cfcebb6e446b4, type: 3}
     smokeColor: {r: 1, g: 1, b: 1, a: 1}
     smoking: 0
     onFire: 0
-  - activationPercent: 60
+  - activationPercent: 80
     damageSprite: {fileID: 21300000, guid: 2936a7f75ab66bf45a8ad0193b57f0d9, type: 3}
     smokeColor: {r: 1, g: 1, b: 1, a: 1}
     smoking: 1
     onFire: 0
-  - activationPercent: 30
+  - activationPercent: 40
     damageSprite: {fileID: 21300000, guid: 21c9f855a1761e549854acc5ee8cfe41, type: 3}
     smokeColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 1}
     smoking: 1

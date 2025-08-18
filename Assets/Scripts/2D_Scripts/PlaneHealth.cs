@@ -190,11 +190,11 @@ public class PlaneHealth : MonoBehaviour
     {
         float healthPercent = (float)currentHealth / maxHealth * 100f;
 
-        // Loop from the highest health tier (100%) to the lowest.
-        for (int i = 0; i < damageVisuals.Length; i++)
+        // Loop from the lowest health tier (0%) to the highest.
+        for (int i = damageVisuals.Length - 1; i >= 0; i--)
         {
-            // Find the first tier that our current health is greater than or equal to.
-            if (healthPercent >= damageVisuals[i].activationPercent)
+            // Find the first tier that our current health is less than or equal to.
+            if (healthPercent <= damageVisuals[i].activationPercent)
             {
                 DamageVisual newVisual = damageVisuals[i];
 

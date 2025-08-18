@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Weapon : MonoBehaviour
 {
     [Header("Combat")]
@@ -10,12 +11,17 @@ public class Weapon : MonoBehaviour
     public float roundsPerMinute = 800;
     public bool ammoLimited = false;
     public int maxAmmo = 3;
+    public Transform[] firePoints;
+    public bool sequential = false;
+    public float firingArc = 0;
 
-    
+
+
 
     [Header("Effects & Audio")]
     [Tooltip("The sound effect that plays when the weapon fires.")]
-    public AudioClip shootingSound; // Public variable to assign your shooting sound effect
+    public AudioClip[] shootingSounds; // Public variable to assign your shooting sound effect
+    
 
     private AudioSource weaponAudioSource;
     private bool firing = false;
@@ -23,6 +29,8 @@ public class Weapon : MonoBehaviour
     private int shotsFiredThisBurst = 0;
     private float lastShotTime = 0;
     private int curAmmo;
+    private int nextFirePointIndex = 0;
+    private int nextShootingSoundIndex = 0;
 
     private void Awake()
     {
@@ -49,15 +57,20 @@ public class Weapon : MonoBehaviour
 
         // Check if a shooting sound has been assigned in the Inspector
         // This warning is still useful to ensure a clip is available for shooting.
-        if (shootingSound == null && (weaponAudioSource != null && weaponAudioSource.clip == null)) // Only warn if no clip is set anywhere for shooting
+        if (shootingSounds == null && (weaponAudioSource != null && weaponAudioSource.clip == null)) // Only warn if no clip is set anywhere for shooting
         {
             Debug.LogWarning("Shooting sound not assigned in the Inspector for " + gameObject.name +
                              ", and no default clip on AudioSource. Please ensure a sound is set if you want shooting sounds.", gameObject);
         }
 
         originalProjectilePrefab = projectilePrefab;
-    }
 
+        if (firePoints.Length <= 0)
+        {
+            Debug.LogError("no fire points on " + gameObject.name, gameObject);
+        }
+    }
+     
     /// <summary>
     /// Returns true if the weapon fired.
     /// </summary>
@@ -93,26 +106,38 @@ public class Weapon : MonoBehaviour
             // Launch a projectile from the weapon (can be overridden by weapons that fire multiple projectiles or feature other behavior)
             FireProjectile();
 
-            // Play the shooting sound
-            if (weaponAudioSource != null && shootingSound != null)
-            {
-                weaponAudioSource.PlayOneShot(shootingSound);
-            }
-            // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
-            else if (weaponAudioSource != null && weaponAudioSource.clip != null)
-            {
-                Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
-                weaponAudioSource.PlayOneShot(weaponAudioSource.clip);
-            }
-            else if (weaponAudioSource != null) // No clip assigned anywhere
-            {
-                Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip is assigned to the script's 'shootingSound' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
-            }
+            PlayShootingSound();
 
             return true;
         }
 
         return false;
+    }
+
+    public void PlayShootingSound()
+    {
+
+
+        // Play the next shooting sound
+        if (weaponAudioSource != null && shootingSounds.Length >= 0)
+        {
+            if (nextShootingSoundIndex >= shootingSounds.Length)
+            {
+                nextShootingSoundIndex = 0;
+            }
+            weaponAudioSource.PlayOneShot(shootingSounds[nextShootingSoundIndex]);
+            nextShootingSoundIndex += 1;
+        }
+        // Fallback to play clip directly on AudioSource if shootingSound (script variable) isn't set
+        else if (weaponAudioSource != null && weaponAudioSource.clip != null)
+        {
+            Debug.LogWarning("Playing default clip from Player's AudioSource as 'shootingSound' was not set in script for " + gameObject.name + ". Consider setting the public 'shootingSound' variable.", gameObject);
+            weaponAudioSource.PlayOneShot(weaponAudioSource.clip);
+        }
+        else if (weaponAudioSource != null) // No clip assigned anywhere
+        {
+            Debug.LogWarning("Player AudioSource found on " + gameObject.name + " but no AudioClip s are assigned to the script's 'shootingSounds' field or the AudioSource's 'AudioClip' field. No sound will play.", gameObject);
+        }
     }
 
 
@@ -153,7 +178,29 @@ public class Weapon : MonoBehaviour
     /// </summary>
     public virtual void FireProjectile()
     {
-        Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+        if (sequential)
+        {
+            if (nextFirePointIndex >= firePoints.Length)
+            {
+                nextFirePointIndex = 0;
+            }
+            FireProjectile(firePoints[nextFirePointIndex]);
+            nextFirePointIndex += 1;
+        }
+        else
+        {
+            foreach (Transform fireTransform in firePoints)
+            {
+                FireProjectile(fireTransform);
+            }
+        }
+        
+        
+    }
+
+    public virtual void FireProjectile(Transform fireTransform)
+    {
+        Instantiate(projectilePrefab, fireTransform.position, fireTransform.rotation);
     }
 
     public float GetFireRate()
