@@ -1,117 +1,128 @@
 using UnityEngine;
+using System.Collections;
 
 public class SpawnManager2D : MonoBehaviour
 {
+    public static SpawnManager2D Instance { get; private set; } // Singleton
+
     [Header("Assets")]
-    [Tooltip("An array of enemy prefabs to be spawned.")]
     public GameObject[] enemyPrefabs;
 
-    [Header("Difficulty Settings")]
-    [Tooltip("The initial time between spawns for difficulty level 1.")]
-    [SerializeField] private float initialSpawnInterval = 1.5f;
-    [Tooltip("The fastest possible spawn interval, no matter the score.")]
-    [SerializeField] private float minimumSpawnInterval = 0.3f;
-    [Tooltip("How much to reduce the interval by each time the difficulty increases.")]
-    [SerializeField] private float spawnIntervalReduction = 0.01f;
-    [Tooltip("The score required to trigger a speed increase.")]
-    [SerializeField] private int scoreStepForSpeedUp = 20;
-
-    [Tooltip("The delay before the first enemy spawns.")]
+    [Header("Wave Settings")]
+    [Tooltip("The initial number of enemies per wave.")]
+    [SerializeField] private int initialWaveSize = 1;
+    [Tooltip("The maximum number of enemies per wave.")]
+    [SerializeField] private int maxWaveSize = 5;
+    [Tooltip("The score required to add another enemy to the wave.")]
+    [SerializeField] private int scoreStepForWaveIncrease = 200;
+    
+    [Header("Timing Settings")]
+    [Tooltip("The delay before the first wave spawns.")]
+    [Header("Timing Settings")]
     [SerializeField] private float startDelay = 2.0f;
+    [SerializeField] private float initialWaveInterval = 3.0f; // Start with a 3s delay between waves
+    [SerializeField] private float minimumWaveInterval = 1.0f; // The fastest delay between waves
+    [SerializeField] private float intervalReductionPerStep = 0.1f; // How much to reduce the delay
+    [SerializeField] private int scoreStepForSpeedUp = 100; // Score needed to speed up
+    [SerializeField] private float spawnInterval = 0.5f; // Time between each enemy *within* a wave
+
+
+
+
+
+
+
+
+
 
     private bool isSpawningActive = false;
-    private float currentSpawnInterval;
+    private int currentWaveSize;
+    private float currentWaveInterval;
+    private int enemiesRemaining;
     private int initialDifficulty = 1;
 
-    // Subscribe to score updates when the spawner becomes active.
+    void Awake()
+    {
+        if (Instance == null) { Instance = this; } else { Destroy(gameObject); }
+    }
+
     private void OnEnable()
     {
         GameManager2D.OnScoreChanged += UpdateDifficulty;
     }
 
-    // Unsubscribe when the spawner is disabled to prevent errors.
     private void OnDisable()
     {
         GameManager2D.OnScoreChanged -= UpdateDifficulty;
     }
 
-    void Start()
-    {
-        currentSpawnInterval = initialSpawnInterval;
-        Debug.Log("SpawnManager2D Start(): Waiting for GameManager2D to initiate spawning.");
-    }
-
-    /// <summary>
-    /// This public method is called by the GameManager to begin spawning enemies.
-    /// </summary>
-    public void BeginSpawningEnemies(int difficulty)
+public void BeginSpawningEnemies(int difficulty)
     {
         initialDifficulty = difficulty;
-        currentSpawnInterval = initialSpawnInterval / initialDifficulty;
-        isSpawningActive = true;
+        currentWaveSize = initialWaveSize * initialDifficulty;
+        currentWaveInterval = initialWaveInterval / initialDifficulty; // Set initial interval
 
-        // Start calling the SpawnRandomEnemy method repeatedly.
-        CancelInvoke("SpawnRandomEnemy"); // Ensure no previous invokes are running
-        InvokeRepeating("SpawnRandomEnemy", startDelay, currentSpawnInterval);
-        Debug.Log("SpawnManager2D: Began spawning enemies with interval: " + currentSpawnInterval);
+        isSpawningActive = true;
+        StartCoroutine(SpawnWaveRoutine());
     }
 
-    /// <summary>
-    /// This public method is called by the GameManager to stop spawning enemies.
-    /// </summary>
     public void StopSpawningEnemies()
     {
         isSpawningActive = false;
-        CancelInvoke("SpawnRandomEnemy");
-        Debug.Log("SpawnManager2D: Stopped spawning enemies.");
+        StopAllCoroutines();
     }
 
-    // This method is called automatically by the GameManager whenever the score changes.
+
+    public void OnEnemyDestroyed()
+    {
+        enemiesRemaining--;
+    }
+
+    // This method now handles both wave size and speed increases.
     private void UpdateDifficulty(int newScore)
     {
         if (!isSpawningActive) return;
 
-        // Calculate how many times the difficulty should have increased based on score.
+        // --- Wave Size Logic ---
+        int waveIncreaseSteps = newScore / scoreStepForWaveIncrease;
+        int newWaveSize = initialWaveSize * initialDifficulty + waveIncreaseSteps;
+        currentWaveSize = Mathf.Min(newWaveSize, maxWaveSize * initialDifficulty);
+
+        // --- Spawn Speed Logic ---
         int speedUpSteps = newScore / scoreStepForSpeedUp;
+        float newInterval = (initialWaveInterval / initialDifficulty) - (speedUpSteps * intervalReductionPerStep);
+        currentWaveInterval = Mathf.Max(newInterval, minimumWaveInterval);
+    }
 
-        // Calculate the new target interval.
-        float newInterval = (initialSpawnInterval / initialDifficulty) - (speedUpSteps * spawnIntervalReduction);
+    private IEnumerator SpawnWaveRoutine()
+    {
+        yield return new WaitForSeconds(startDelay);
 
-        // Ensure the interval never goes below the minimum limit.
-        newInterval = Mathf.Max(newInterval, minimumSpawnInterval);
-
-        // If the calculated interval is faster than our current one, update it.
-        if (newInterval < currentSpawnInterval)
+        while (isSpawningActive)
         {
-            currentSpawnInterval = newInterval;
-            CancelInvoke("SpawnRandomEnemy");
-            InvokeRepeating("SpawnRandomEnemy", currentSpawnInterval, currentSpawnInterval);
-            Debug.Log("DIFFICULTY INCREASED! New spawn interval: " + currentSpawnInterval);
+            enemiesRemaining = currentWaveSize;
+            for (int i = 0; i < currentWaveSize; i++)
+            {
+                SpawnRandomEnemy();
+                yield return new WaitForSeconds(spawnInterval);
+            }
+            
+            yield return new WaitUntil(() => enemiesRemaining <= 0);
+            
+            Debug.Log("Wave cleared! Next wave in " + currentWaveInterval + " seconds.");
+            yield return new WaitForSeconds(currentWaveInterval); // Use the dynamic interval
         }
     }
 
-    /// <summary>
-    /// Spawns a single random enemy at a position just off the top of the screen.
-    /// </summary>
     void SpawnRandomEnemy()
     {
-        if (isSpawningActive)
-        {
-            // Check if the array is empty before trying to access it.
-            if (enemyPrefabs == null || enemyPrefabs.Length == 0)
-            {
-                Debug.LogError("SpawnManager2D: Enemy prefabs array has not been assigned in the Inspector!");
-                isSpawningActive = false; // Stop trying to spawn to prevent more errors
-                return;
-            }
-            
-            // This spawning logic remains exactly the same.
-            float randomX = Random.Range(BoundaryManager.Instance.MinX, BoundaryManager.Instance.MaxX);
-            float spawnY = BoundaryManager.Instance.PaddedMaxY;
-            Vector3 spawnPos = new Vector3(randomX, spawnY, 0);
-            
-            int enemyIndex = Random.Range(0, enemyPrefabs.Length);
-            Instantiate(enemyPrefabs[enemyIndex], spawnPos, enemyPrefabs[enemyIndex].transform.rotation);
-        }
+        if (enemyPrefabs == null || enemyPrefabs.Length == 0) return;
+
+        float randomX = Random.Range(BoundaryManager.Instance.PaddedMinX, BoundaryManager.Instance.PaddedMaxX);
+        float spawnY = BoundaryManager.Instance.PaddedMaxY;
+        Vector3 spawnPos = new Vector3(randomX, spawnY, 0);
+
+        int enemyIndex = Random.Range(0, enemyPrefabs.Length);
+        Instantiate(enemyPrefabs[enemyIndex], spawnPos, enemyPrefabs[enemyIndex].transform.rotation);
     }
 }

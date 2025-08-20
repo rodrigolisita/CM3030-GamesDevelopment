@@ -108,6 +108,7 @@ public class GameManager2D : MonoBehaviour
         {
             UpdateUpgradeTimerUI();
         }
+
     }
 
     void OnDestroy()

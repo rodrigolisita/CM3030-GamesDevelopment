@@ -797,11 +797,15 @@ MonoBehaviour:
   - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
   - {fileID: 7052341489394061000, guid: fab6c031284d76647ac8b3e39a6ebd08, type: 3}
   - {fileID: 7052341489394061000, guid: 55f0e68e732b79d4eae7875c1d4644ff, type: 3}
-  initialSpawnInterval: 1.5
-  minimumSpawnInterval: 0.3
-  spawnIntervalReduction: 0.05
-  scoreStepForSpeedUp: 30
+  initialWaveSize: 2
+  maxWaveSize: 10
+  scoreStepForWaveIncrease: 100
   startDelay: 2
+  initialWaveInterval: 3
+  minimumWaveInterval: 1
+  intervalReductionPerStep: 0.1
+  scoreStepForSpeedUp: 100
+  spawnInterval: 0.5
 --- !u!4 &536829683
 Transform:
   m_ObjectHideFlags: 0

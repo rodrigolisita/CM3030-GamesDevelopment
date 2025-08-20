@@ -20,5 +20,10 @@ public class DestroyOutOfBounds2D : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if(transform.position.x > BoundaryManager.Instance.PaddedMaxX || transform.position.x < BoundaryManager.Instance.PaddedMinX)
+        {
+            Destroy(gameObject);
+        }
     }
 }

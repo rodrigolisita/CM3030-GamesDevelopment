@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System;
+
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(PlaneHealth))] // This enemy now requires an PlaneHealth script
@@ -19,7 +21,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     [Tooltip("The chance (from 0 to 100) that this enemy will drop the bonus.")]
     [Range(0, 100)] [SerializeField] private float dropChance = 100f; // This creates a 10% chance
 
-
+    public static event Action<GameObject> OnAnyEnemyDefeated;
 
     // Private component references
     private AudioSource audioSource;
@@ -115,7 +117,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
 
         // --- NEW LOGIC ---
         // Check if we should spawn a life bonus.
-        if (lifeBonusPrefab != null && Random.Range(0f, 100f) <= dropChance)
+        if (lifeBonusPrefab != null && UnityEngine.Random.Range(0f, 100f) <= dropChance)
         {
             // Create the life bonus prefab at the enemy's current position.
             Instantiate(lifeBonusPrefab, transform.position, Quaternion.identity);
@@ -136,6 +138,10 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         float particleDuration = (enemyDestroyedExplosion != null) ? enemyDestroyedExplosion.main.duration : 0f;
         float destructionDelay = Mathf.Max(soundLength, particleDuration);
 
+
+        // Notify the SpawnManager that an enemy has been destroyed.
+        SpawnManager2D.Instance.OnEnemyDestroyed();
+        
         // Destroy this enemy GameObject after the delay
         Destroy(gameObject, destructionDelay);
     }

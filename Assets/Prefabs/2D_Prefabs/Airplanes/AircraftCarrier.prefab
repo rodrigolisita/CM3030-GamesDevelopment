@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: -5775442092267387112}
   - component: {fileID: -5498825735942429039}
   - component: {fileID: -2489953628979663748}
+  - component: {fileID: -5283282305667893485}
   m_Layer: 0
   m_Name: AircraftCarrier
   m_TagString: Enemy
@@ -122,7 +123,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2506428594068861399}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f2e62630356b214998690ee83799fda, type: 3}
   m_Name: 
@@ -383,6 +384,18 @@ MonoBehaviour:
   explosionSize: 1
   lifeBonusPrefab: {fileID: 1681471875230303450, guid: 2d9307e4bade79c4a9d338905d181024, type: 3}
   dropChance: 20
+--- !u!114 &-5283282305667893485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc411e908e423a4a9d0cd3388efef48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4901077714402604115
 GameObject:
   m_ObjectHideFlags: 0
