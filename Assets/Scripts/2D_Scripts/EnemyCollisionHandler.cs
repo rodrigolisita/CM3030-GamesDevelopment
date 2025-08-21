@@ -21,6 +21,11 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     [Tooltip("The chance (from 0 to 100) that this enemy will drop the bonus.")]
     [Range(0, 100)] [SerializeField] private float dropChance = 100f; // This creates a 10% chance
 
+    [Header("Behavior Type")]
+    [Tooltip("Check this box if this enemy should be treated as a boss.")]
+    [SerializeField] public bool isBoss = false;
+
+
     public static event Action<GameObject> OnAnyEnemyDefeated;
 
     // Private component references
@@ -86,7 +91,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
             Debug.Log("Enemy collided with Player. Destroying self.");
             HandleDefeat(); 
         }
-        /*else if (other.CompareTag(ProjectileTag))
+        else if (other.CompareTag(ProjectileTag))
         {
             // --- Projectile Collision Logic ---
             Debug.Log(gameObject.name + " collided with a player projectile.");
@@ -95,7 +100,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
             {
                 enemyHealth.TakeDamage(1);
             }
-        }*/
+        }
     }
 
     /// <summary>
@@ -105,10 +110,20 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     {
         Debug.Log(gameObject.name + " has been defeated.");
 
-        // Update score
         if (GameManager2D.Instance != null)
         {
-            GameManager2D.Instance.UpdateScore(pointsAwarded);
+            if (isBoss)
+            {
+                GameManager2D.Instance.OnBossDefeated();
+            }
+            // Otherwise, just award points like a normal enemy.
+            else
+            {
+                GameManager2D.Instance.UpdateScore(pointsAwarded);
+            }
+            // Update score
+            //GameManager2D.Instance.UpdateScore(pointsAwarded);
+
         }
 
         // Stop smoke trail
@@ -142,6 +157,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         // Notify the SpawnManager that an enemy has been destroyed.
         SpawnManager2D.Instance.OnEnemyDestroyed();
         
+
         // Destroy this enemy GameObject after the delay
         Destroy(gameObject, destructionDelay);
     }

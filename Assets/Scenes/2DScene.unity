@@ -3334,6 +3334,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1784873312}
   m_CullTransparentMesh: 1
+--- !u!1 &1814688369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1814688370}
+  m_Layer: 0
+  m_Name: BossSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1814688370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1814688369}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.98, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1901104072}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819767718
 GameObject:
   m_ObjectHideFlags: 0
@@ -3799,6 +3830,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1042611035}
+  - {fileID: 1814688370}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1901104073
@@ -3834,6 +3866,11 @@ MonoBehaviour:
   startScreenMusic: {fileID: 8300000, guid: 39d40557c022e9441b83874cdcb1b50e, type: 3}
   activeGameMusic: {fileID: 8300000, guid: e302709325de49546992473a8a8939fc, type: 3}
   gameOverMusic: {fileID: 8300000, guid: 97f5a65dda474424587cc414c6de95e3, type: 3}
+  bossPrefab: {fileID: 2506428594068861399, guid: 1062d6870c0da50409b208720542a6ea, type: 3}
+  bossSpawnPoint: {fileID: 1814688370}
+  scoreToTriggerBoss: 20
+  bossFightMusic: {fileID: 8300000, guid: f905b2e0cde208848b9175d5fb96d12b, type: 3}
+  victoryFanfare: {fileID: 8300000, guid: 0abd1b46f559d534b9ecf345dc1b3e94, type: 3}
 --- !u!82 &1901104074
 AudioSource:
   m_ObjectHideFlags: 0

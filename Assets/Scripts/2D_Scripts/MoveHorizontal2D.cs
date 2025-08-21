@@ -6,6 +6,9 @@ public class MoveHorizontal2D : MonoBehaviour
     [SerializeField] float minSpeed = -0.10f;
     [SerializeField] float maxSpeed = 0.10f;
 
+    [Tooltip("If checked, this object will reverse direction when it hits the screen edges.")]
+    [SerializeField] private bool clampToScreen = false;
+
     [Header("Rotation Settings")]
     [Tooltip("The base angle of the enemy. Set to 180 if your sprite needs to face down.")]
     [SerializeField] float baseAngle = 180f;
@@ -44,6 +47,24 @@ public class MoveHorizontal2D : MonoBehaviour
 
         // This part handles the logic for changing the movement over time.
         HandleMovementChange();
+
+        if (clampToScreen)
+        {
+            // Check if we have gone past the right boundary AND are moving right.
+            if (transform.position.x > BoundaryManager.Instance.MaxX && currentSpeed > 0)
+            {
+                // Reverse direction to move left.
+                currentSpeed *= -1;
+            }
+            // Check if we have gone past the left boundary AND are moving left.
+            else if (transform.position.x < BoundaryManager.Instance.MinX && currentSpeed < 0)
+            {
+                // Reverse direction to move right.
+                currentSpeed *= -1;
+            }
+        }
+
+
     }
 
     void ChangeMovement()
