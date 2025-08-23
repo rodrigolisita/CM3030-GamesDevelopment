@@ -8,7 +8,7 @@ public class EnemyShoot : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
 
     [Tooltip("The point from where the bullet will be spawned.")]
-    [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform[] firePoints;
 
     [Tooltip("Time in seconds between each shot.")]
     [SerializeField] private float fireRate = 1f;
@@ -48,14 +48,20 @@ public class EnemyShoot : MonoBehaviour
     private void Shoot()
     {
         // Check if the projectile prefab or fire point has been set to avoid errors
-        if (projectilePrefab == null || firePoint == null)
+        if (projectilePrefab == null || firePoints.Length == 0)
         {
             Debug.LogError(gameObject.name + ": Projectile Prefab or Fire Point is not set.");
             return;
         }
 
-        // Create a new bullet at the firePoint's position and rotation
-        GameObject projectileInstance = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        projectileInstance.transform.Rotate(new Vector3(0, 0, Random.Range(-0.5f*firingArc, 0.5f*firingArc)));
+        foreach (Transform firePoint in firePoints)
+        {
+            // Create a new bullet at the firePoint's position and rotation
+            GameObject projectileInstance = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            projectileInstance.transform.Rotate(new Vector3(0, 0, Random.Range(-0.5f * firingArc, 0.5f * firingArc)));
+        }
+        
+
+        
     }
 }

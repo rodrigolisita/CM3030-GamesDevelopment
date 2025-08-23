@@ -329,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: -0.3
   maxSpeed: 0.3
+  clampToScreen: 0
   baseAngle: 180
   tiltAngle: 5
   tiltSpeed: 5
@@ -346,7 +347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 5596652749312473574, guid: fff9cb89f66c52c43825614cb559c656, type: 3}
-  firePoint: {fileID: 4555806101881914651}
+  firePoints:
+  - {fileID: 4555806101881914651}
   fireRate: 2
   firingArc: 10
 --- !u!114 &-2489953628979663748
@@ -368,6 +370,7 @@ MonoBehaviour:
   explosionSize: 1
   lifeBonusPrefab: {fileID: 1681471875230303450, guid: 2d9307e4bade79c4a9d338905d181024, type: 3}
   dropChance: 20
+  isBoss: 0
 --- !u!114 &-4460389724309576513
 MonoBehaviour:
   m_ObjectHideFlags: 0
