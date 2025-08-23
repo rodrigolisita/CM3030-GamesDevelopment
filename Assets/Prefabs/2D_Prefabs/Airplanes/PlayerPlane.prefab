@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd877563afdd54741bebef403425bf45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalSpeed: 3
-  verticalSpeed: 2
+  horizontalSpeed: 2
+  verticalSpeed: 1.5
   primaryWeaponPrefab: {fileID: 3099830003953416050}
   secondaryWeaponPrefab: {fileID: 618611630180153004}
   explosionParticle: {fileID: 1048112138092031468}
