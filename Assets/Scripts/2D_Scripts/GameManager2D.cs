@@ -7,10 +7,20 @@ using System.Collections;
 
 public enum GameState
 {
-    PreGame,
+    ModeSelect,
+    DifficultySelect,
     Active,
     BossFight,
     GameOver
+}
+
+
+
+public enum Difficulty
+{
+    Easy,
+    Medium,
+    Hard
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -34,10 +44,13 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private Button easyButton;
     [SerializeField] private Button mediumButton;
     [SerializeField] private Button hardButton;
+    [SerializeField] private Button arcadeButton;
+    [SerializeField] private Button campaignButton;
 
     // --- Game State & other private variables ---
     private int score;
     private int initialDifficulty;
+    private GameMode gameMode;
     private GameObject playerPlane;
     [Header("Player Plane")]
     public GameObject playerPlanePrefab;
@@ -49,7 +62,7 @@ public class GameManager2D : MonoBehaviour
     private PlayerController2D playerController;
 
     [Header("Gameplay Settings")]
-    public GameState gameState = GameState.PreGame; // Game starts as PreGame
+    public GameState gameState = GameState.DifficultySelect; // Game starts as PreGame
 
 
     // --- Audio Management ---
@@ -95,7 +108,7 @@ public class GameManager2D : MonoBehaviour
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             // Set initial internal game state for the very first launch
-            gameState = GameState.PreGame;
+            gameState = GameState.ModeSelect;
 
             Debug.Log("GameManager2D Awake(): Initial internal state set. gameSate: " + gameState);
         }
@@ -182,15 +195,19 @@ public class GameManager2D : MonoBehaviour
         Debug.Log("GameManager2D UpdateAllUIDisplays: gameState = " + gameState);
 
         // Determine which UI sets should be active
-        bool showStartScreenUI = (gameState == GameState.PreGame);
+        bool showStartScreenUI = (gameState == GameState.DifficultySelect || gameState == GameState.ModeSelect);
+        bool showModeSelectUI = (gameState == GameState.ModeSelect);
+        bool showDifficultySelectUI = (gameState == GameState.DifficultySelect);
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
 
         // --- Start Screen Elements ---
         if (startScreen != null) startScreen.SetActive(showStartScreenUI);
-        if (easyButton != null) easyButton.gameObject.SetActive(showStartScreenUI);
-        if (mediumButton != null) mediumButton.gameObject.SetActive(showStartScreenUI);
-        if (hardButton != null) hardButton.gameObject.SetActive(showStartScreenUI);
+        if (arcadeButton != null) arcadeButton.gameObject.SetActive(showModeSelectUI);
+        if (campaignButton != null) campaignButton.gameObject.SetActive(showModeSelectUI);
+        if (easyButton != null) easyButton.gameObject.SetActive(showDifficultySelectUI);
+        if (mediumButton != null) mediumButton.gameObject.SetActive(showDifficultySelectUI);
+        if (hardButton != null) hardButton.gameObject.SetActive(showDifficultySelectUI);
         if (playInstructionText != null) playInstructionText.gameObject.SetActive(showStartScreenUI);
 
         // --- Game Over Screen Elements ---
@@ -261,6 +278,13 @@ public class GameManager2D : MonoBehaviour
         }
     }
 
+    public void SelectGameMode(GameModeHolder newMode)
+    {
+        gameMode = newMode.gameMode;
+        gameState = GameState.DifficultySelect;
+        UpdateAllUIDisplays();
+    }
+
     public void GameOver()
     {
         Debug.Log("GameManager2D: GameOver() called.");
@@ -281,7 +305,7 @@ public class GameManager2D : MonoBehaviour
 
         // 1. Set the game state back to PreGame. This ensures that when the
         //    scene reloads, the title screen will be displayed.
-        gameState = GameState.PreGame;
+        gameState = GameState.DifficultySelect;
 
         // 2. Reload the current scene. This is the most reliable way to reset
         //    all game objects (enemies, projectiles, player) to their initial state.
