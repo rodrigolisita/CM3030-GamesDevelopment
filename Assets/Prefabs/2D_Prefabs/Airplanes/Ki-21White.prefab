@@ -342,7 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: -0.4
   maxSpeed: 0.4
-  clampToScreen: 0
+  clampToScreen: 1
   baseAngle: 180
   tiltAngle: 5
   tiltSpeed: 5

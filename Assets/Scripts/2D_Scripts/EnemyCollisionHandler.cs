@@ -12,6 +12,8 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     public ParticleSystem enemyDestroyedExplosion;
     public int pointsAwarded = 10;
 
+    public bool IsDefeated { get; private set; } = false;
+
     public GameObject explosionSprite;
     public float explosionSize = 1;
 
@@ -108,6 +110,10 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     /// </summary>
     public void HandleDefeat()
     {
+        // If this enemy is already defeated, do nothing.
+        if (IsDefeated) return;
+        IsDefeated = true; // Set the flag to true
+
         Debug.Log(gameObject.name + " has been defeated.");
 
         if (GameManager2D.Instance != null)
@@ -130,7 +136,6 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         //enemySmokeTrail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         //Destroy(enemySmokeTrail);
 
-        // --- NEW LOGIC ---
         // Check if we should spawn a life bonus.
         if (lifeBonusPrefab != null && UnityEngine.Random.Range(0f, 100f) <= dropChance)
         {

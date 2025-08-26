@@ -11,6 +11,8 @@ public class EnemyOutOfBoundsHandler : MonoBehaviour
     // Extra padding to ensure the enemy is fully off-screen before destruction.   
     private float horizontalPadding = 1f;
 
+    private EnemyCollisionHandler collisionHandler;
+
     void Start()
     {
         // Get all the boundary values from the manager once at the start.
@@ -22,6 +24,8 @@ public class EnemyOutOfBoundsHandler : MonoBehaviour
             rightBoundX = BoundaryManager.Instance.MaxX;
             
         }
+
+        collisionHandler = GetComponent<EnemyCollisionHandler>();
     }
 
     void Update()
@@ -40,10 +44,15 @@ public class EnemyOutOfBoundsHandler : MonoBehaviour
         // If the enemy goes off the left or right sides of the screen...
         if (transform.position.x < leftBoundX - horizontalPadding || transform.position.x > rightBoundX + horizontalPadding)
         {
-            if (SpawnManager2D.Instance != null)
+            // Only update the counter if the enemy is not already defeated.
+            if (collisionHandler != null && !collisionHandler.IsDefeated)
             {
-                SpawnManager2D.Instance.OnEnemyDestroyed();
+                if (SpawnManager2D.Instance != null)
+                {
+                    SpawnManager2D.Instance.OnEnemyDestroyed();
+                }
             }
+            // Always destroy the object if it goes out of bounds.
             Destroy(gameObject);
         }
 

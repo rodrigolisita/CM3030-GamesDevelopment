@@ -19,7 +19,7 @@ public class BoundaryManager : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Padding from the screen edges in world units.")]
     [SerializeField] private float horizontalPadding = 0.5f;
-    [SerializeField] private float verticalPadding = 1.0f;
+    [SerializeField] private float verticalPadding = 2.5f;
 
     void Awake()
     {
