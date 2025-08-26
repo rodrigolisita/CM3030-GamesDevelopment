@@ -25,6 +25,8 @@ public class PlaneHealth : MonoBehaviour
     // Set the maximum health for this enemy type in the Inspector.
     public int maxHealth = 2;
     private int currentHealth;
+    [Tooltip("Check this if this health component belongs to a boss.")]
+    [SerializeField] private bool isBossHealth = false;
 
     [Header("Damage Visuals")]
     /*// Assign sprites for the damaged states. The array size should be (maxHealth - 1).
@@ -74,6 +76,12 @@ public class PlaneHealth : MonoBehaviour
             originalSprite = spriteRenderer.sprite;
         }
 
+        // If this is a boss, update its specific health bar
+        if (isBossHealth)
+        {
+            GameManager2D.Instance.UpdateBossHealthBar(currentHealth, maxHealth);
+        }
+
         
 
         /*// Check that the number of damage sprites matches the number of damage states.
@@ -107,6 +115,12 @@ public class PlaneHealth : MonoBehaviour
 
         currentHealth -= damageAmount;
         Debug.Log(gameObject.name + " took " + damageAmount + " damage. Current health: " + currentHealth + "/" + maxHealth);
+
+        // If this is a boss, update its specific health bar
+        if (isBossHealth)
+        {
+            GameManager2D.Instance.UpdateBossHealthBar(currentHealth, maxHealth);
+        }
 
         // Update the sprite to reflect the new, damaged health state.
         UpdateSprite();

@@ -33,8 +33,10 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private GameObject startScreen;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI bosslivesText;
     [SerializeField] private TextMeshProUGUI ammoText;
     [SerializeField] private Image healthBarFill;
+    [SerializeField] private Image bossHealthBarFill;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private TextMeshProUGUI playInstructionText;
     [SerializeField] private TextMeshProUGUI nextUpgradeText;
@@ -84,11 +86,7 @@ public class GameManager2D : MonoBehaviour
 
     
     private bool bossHasBeenTriggered = false;
-    
-    
-    
-    
-    
+       
     void Awake()
     {
         if (Instance == null)
@@ -200,6 +198,7 @@ public class GameManager2D : MonoBehaviour
         bool showDifficultySelectUI = (gameState == GameState.DifficultySelect);
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
+        bool showBossHUD = (gameState == GameState.BossFight);
 
         // --- Start Screen Elements ---
         if (startScreen != null) startScreen.SetActive(showStartScreenUI);
@@ -217,7 +216,7 @@ public class GameManager2D : MonoBehaviour
         // --- In-Game HUD Elements ---
         if (scoreText != null)
         {
-            scoreText.gameObject.SetActive(showGameHUD);
+            scoreText.gameObject.SetActive(showGameHUD || showBossHUD);
             if (showGameHUD) scoreText.text = "Score: " + score;
         }
         if (livesText != null)
@@ -250,6 +249,12 @@ public class GameManager2D : MonoBehaviour
         }
 
         if (playerInformationText != null) playerInformationText.gameObject.SetActive(showGameHUD);
+
+        // The boss health bar should ONLY be visible during the BossFight state.
+        if (bossHealthBarFill != null)
+        {
+            bossHealthBarFill.transform.parent.gameObject.SetActive(showBossHUD);
+        }
 
 
     }
@@ -440,6 +445,27 @@ public class GameManager2D : MonoBehaviour
         }
     }
 
+    public void UpdateBossHealthBar(int currentHealth, int maxHealth)
+    {
+        if (bossHealthBarFill != null)
+        {
+            // Make sure the bar's parent object is active
+            bossHealthBarFill.transform.parent.gameObject.SetActive(true);
+
+            // Calculate and set the fill amount
+            bossHealthBarFill.fillAmount = (float)currentHealth / maxHealth;
+        }
+
+        // Update the text display
+        if (bosslivesText != null)
+        {
+            //bosslivesText.gameObject.SetActive(true);
+            float healthAmount = (float)currentHealth / maxHealth;
+            //bosslivesText.text = healthAmount * 100 + "%";
+            bosslivesText.text = (healthAmount * 100).ToString("F0") + "%";
+        }
+    }
+
     public void HandlePlayerDefeat()
     {
         if (!(gameState == GameState.Active)) return;
@@ -535,7 +561,9 @@ public class GameManager2D : MonoBehaviour
         // 2. Change to the boss music.
         PlayMusic(bossFightMusic);
 
-        // --- THIS IS THE FIX ---
+        // Show the boss health bar (it will be empty at first)
+        if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(true);
+
         // 3. Wait for a few seconds for dramatic effect.
         // You can make this delay a public variable to change it in the Inspector.
         yield return new WaitForSeconds(3.0f); 
@@ -550,24 +578,6 @@ public class GameManager2D : MonoBehaviour
             Debug.LogError("Boss Prefab or Boss Spawn Point is not assigned in the GameManager!");
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 
     public void OnBossDefeated()
@@ -592,39 +602,9 @@ public class GameManager2D : MonoBehaviour
         // For now, we can just stop the game.
         gameState = GameState.GameOver; // Or a new "LevelComplete" state
         UpdateAllUIDisplays();
+        if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(false);
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
     private void PlayMusic(AudioClip clip)
@@ -637,14 +617,5 @@ public class GameManager2D : MonoBehaviour
             audioSource.Play();
         }
     }
-    
-    
-    
-    
-        
-    
-    
-        
-    
     
 }

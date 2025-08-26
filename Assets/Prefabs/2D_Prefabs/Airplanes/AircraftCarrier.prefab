@@ -313,6 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 300
+  isBossHealth: 1
   damageVisuals:
   - activationPercent: 100
     damageSprite: {fileID: 21300000, guid: 95df193e16f0f6a47882c0502f984f4f, type: 3}
