@@ -43,6 +43,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI upgradeTimerText;
     [SerializeField] private TextMeshProUGUI playerInformationText;
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button backButton;
     [SerializeField] private Button easyButton;
     [SerializeField] private Button mediumButton;
     [SerializeField] private Button hardButton;
@@ -199,6 +200,7 @@ public class GameManager2D : MonoBehaviour
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
         bool showBossHUD = (gameState == GameState.BossFight);
+        bool showBackButton = (gameState == GameState.DifficultySelect);
 
         // --- Start Screen Elements ---
         if (startScreen != null) startScreen.SetActive(showStartScreenUI);
@@ -208,6 +210,8 @@ public class GameManager2D : MonoBehaviour
         if (mediumButton != null) mediumButton.gameObject.SetActive(showDifficultySelectUI);
         if (hardButton != null) hardButton.gameObject.SetActive(showDifficultySelectUI);
         if (playInstructionText != null) playInstructionText.gameObject.SetActive(showStartScreenUI);
+
+        if (backButton != null) backButton.gameObject.SetActive(showBackButton);
 
         // --- Game Over Screen Elements ---
         if (gameOverText != null) gameOverText.gameObject.SetActive(showGameOverUI);
@@ -288,6 +292,23 @@ public class GameManager2D : MonoBehaviour
         gameMode = newMode.gameMode;
         gameState = GameState.DifficultySelect;
         UpdateAllUIDisplays();
+    }
+
+    public void Back()
+    {
+        switch (gameState) {
+            case GameState.DifficultySelect:
+                gameState = GameState.ModeSelect;
+                Debug.Log("going back to mode select");
+                break;
+            // this case currently unnecessary bc game restarts completely with restart button
+            /*case GameState.GameOver:
+                //RestartGame(); 
+                break;*/
+        }
+
+        UpdateAllUIDisplays();
+
     }
 
     public void GameOver()
