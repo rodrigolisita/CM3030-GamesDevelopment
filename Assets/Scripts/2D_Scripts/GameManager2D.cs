@@ -9,6 +9,9 @@ public enum GameState
 {
     ModeSelect,
     DifficultySelect,
+    BattleSelect,
+    MissionSelect,
+    Intro,
     Active,
     BossFight,
     GameOver
@@ -49,6 +52,9 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private Button hardButton;
     [SerializeField] private Button arcadeButton;
     [SerializeField] private Button campaignButton;
+    [SerializeField] private GameObject campaignIntroScreen;
+    [SerializeField] private GameObject campaignBattleSelectScreen;
+    [SerializeField] private GameObject campaignMissionSelectScreen;
 
     // --- Game State & other private variables ---
     private int score;
@@ -200,7 +206,10 @@ public class GameManager2D : MonoBehaviour
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
         bool showBossHUD = (gameState == GameState.BossFight);
-        bool showBackButton = (gameState == GameState.DifficultySelect);
+        bool showBackButton = (gameState == GameState.DifficultySelect || gameState == GameState.BattleSelect || gameState == GameState.MissionSelect);
+        bool showCampaignMissionSelect = (gameMode == GameMode.Campaign && gameState == GameState.MissionSelect);
+        bool showCampaignIntroScreen = (gameMode == GameMode.Campaign && gameState == GameState.Intro);
+        bool showCampaignBattleSelect = (gameMode == GameMode.Campaign && gameState == GameState.BattleSelect);
 
         // --- Start Screen Elements ---
         if (startScreen != null) startScreen.SetActive(showStartScreenUI);
@@ -210,6 +219,10 @@ public class GameManager2D : MonoBehaviour
         if (mediumButton != null) mediumButton.gameObject.SetActive(showDifficultySelectUI);
         if (hardButton != null) hardButton.gameObject.SetActive(showDifficultySelectUI);
         if (playInstructionText != null) playInstructionText.gameObject.SetActive(showStartScreenUI);
+
+        if (campaignBattleSelectScreen != null) campaignBattleSelectScreen.SetActive(showCampaignBattleSelect);
+        if (campaignMissionSelectScreen != null) campaignMissionSelectScreen.SetActive(showCampaignMissionSelect);
+        if (campaignIntroScreen != null) campaignIntroScreen.SetActive(showCampaignIntroScreen);
 
         if (backButton != null) backButton.gameObject.SetActive(showBackButton);
 
@@ -267,6 +280,14 @@ public class GameManager2D : MonoBehaviour
     //public void StartGame(float difficultySpawnInterval) 
     public void StartGame(int difficultyLevel)
     {
+        if (gameMode == GameMode.Campaign && gameState == GameState.DifficultySelect)
+        {
+            gameState = GameState.Intro;
+            initialDifficulty = difficultyLevel;
+            UpdateAllUIDisplays();
+            return;
+        }
+
         Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultyLevel);
         gameState = GameState.Active;
         initialDifficulty = difficultyLevel;
@@ -290,16 +311,57 @@ public class GameManager2D : MonoBehaviour
     public void SelectGameMode(GameModeHolder newMode)
     {
         gameMode = newMode.gameMode;
+        if (gameMode == GameMode.Arcade)
+        {
+            gameState = GameState.DifficultySelect;
+        } else if (gameMode == GameMode.Campaign)
+        {
+            gameState = GameState.BattleSelect;
+        }
+        
+        UpdateAllUIDisplays();
+    }
+
+    // Main functionality TBD, only 1 battle right now
+    public void SelectBattle()
+    {
+        gameState = GameState.MissionSelect;
+        UpdateAllUIDisplays();
+    }
+
+    //TBD
+    public void SelectMission()
+    {
         gameState = GameState.DifficultySelect;
         UpdateAllUIDisplays();
+    }
+
+    public void IntroContinue()
+    {
+        StartGame(initialDifficulty);
     }
 
     public void Back()
     {
         switch (gameState) {
             case GameState.DifficultySelect:
+                if (gameMode == GameMode.Campaign)
+                {
+                    gameState = GameState.MissionSelect;
+                    Debug.Log("going back to mission select");
+                } else
+                {
+                    gameState = GameState.ModeSelect;
+                    Debug.Log("going back to mode select");
+                }
+                break;
+            case GameState.BattleSelect:
                 gameState = GameState.ModeSelect;
                 Debug.Log("going back to mode select");
+                break;
+            case GameState.MissionSelect:
+                gameState = GameState.BattleSelect;
+                Debug.Log("going back to battle select");
                 break;
             // this case currently unnecessary bc game restarts completely with restart button
             /*case GameState.GameOver:
