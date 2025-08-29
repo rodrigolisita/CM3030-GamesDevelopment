@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0e11f4fe0faf34d8505414277a52f6, type: 3}
   m_Name: Hiryu
   m_EditorClassIdentifier: 
+  missionName: Hiryu
   introScreens:
   - {fileID: 11400000, guid: aa4811daf3bb4674584a9d3f212b6049, type: 2}
-  waves: 5
+  waveDefinition: {fileID: 11400000, guid: 7aeb06424a57b67418e9cf288a4b9e02, type: 2}
   bossPrefab: {fileID: 2506428594068861399, guid: dd0acab7888e0ed41a63371caf9a61c6, type: 3}

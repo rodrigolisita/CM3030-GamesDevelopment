@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e0e11f4fe0faf34d8505414277a52f6, type: 3}
-  m_Name: Kaga
+  m_Name: Akagi2
   m_EditorClassIdentifier: 
-  missionName: Kaga
+  missionName: Akagi
   introScreens:
-  - {fileID: 11400000, guid: 2bc7d6fb652850440be046cac5b67f65, type: 2}
-  - {fileID: 11400000, guid: 01c50eff5d48b1e40944bfa39143c63f, type: 2}
-  waveDefinition: {fileID: 11400000, guid: 02cd453e01a15d54a917888455ef8f62, type: 2}
-  bossPrefab: {fileID: 2506428594068861399, guid: 7d10bfa85b89b664aa5c04c6da6860f8, type: 3}
+  - {fileID: 11400000, guid: 5f7cf5376ddab074e98894175f1a9e8a, type: 2}
+  waves: []
+  bossPrefab: {fileID: 2506428594068861399, guid: 5e7b4e8b2e6a1a942a6f0425f8c21e0d, type: 3}

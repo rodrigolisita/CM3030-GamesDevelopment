@@ -295,7 +295,9 @@ public class GameManager2D : MonoBehaviour
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
         if (spawnManager != null)
         {
-            spawnManager.BeginSpawningEnemies(initialDifficulty);
+            //spawnManager.BeginSpawningEnemies(initialDifficulty);
+            spawnManager.BeginSpawningEnemies(gameMode, initialDifficulty, mission);
+
         }
         else
         {
@@ -662,7 +664,7 @@ public class GameManager2D : MonoBehaviour
     }
 
     
-    private IEnumerator TriggerBossEncounter()
+    public IEnumerator TriggerBossEncounter()
     {
         Debug.Log("BOSS ENCOUNTER TRIGGERED!");
 

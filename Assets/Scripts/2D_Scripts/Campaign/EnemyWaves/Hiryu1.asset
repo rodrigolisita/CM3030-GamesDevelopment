@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 787c5f9f8713e0049af7531dc444a637, type: 3}
+  m_Name: Hiryu1
+  m_EditorClassIdentifier: 
+  enemyPrefabs:
+  - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
+  initialWaveSize: 2
+  maxWaveSize: 15
+  scoreStepForWaveIncrease: 100
+  initialWaveInterval: 3
+  minimumWaveInterval: 1
+  intervalReductionPerStep: 0.1
+  scoreStepForSpeedUp: 100
+  spawnInterval: 1

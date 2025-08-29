@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0e11f4fe0faf34d8505414277a52f6, type: 3}
   m_Name: Soryu
   m_EditorClassIdentifier: 
+  missionName: Soryu
   introScreens:
   - {fileID: 11400000, guid: 94ed29275172c144b80245d60d40e1db, type: 2}
-  waves: 5
+  waveDefinition: {fileID: 11400000, guid: 02cd453e01a15d54a917888455ef8f62, type: 2}
   bossPrefab: {fileID: 2506428594068861399, guid: 6080bc37b60e81d45915ba45391e697d, type: 3}
