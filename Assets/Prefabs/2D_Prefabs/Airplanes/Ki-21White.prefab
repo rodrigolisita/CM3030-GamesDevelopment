@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 4133627927552780088}
   - component: {fileID: 978783134301729296}
   - component: {fileID: 6288439221380932478}
+  - component: {fileID: -2026391658688712765}
   m_Layer: 0
   m_Name: Ki-21White
   m_TagString: Enemy
@@ -308,6 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 16
+  isBossHealth: 0
   damageVisuals:
   - activationPercent: 100
     damageSprite: {fileID: 21300000, guid: f350a9894ec1daf49a7f9810710037d4, type: 3}
@@ -394,6 +396,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc411e908e423a4a9d0cd3388efef48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2026391658688712765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f181ddb5cac3b846bd73c4db1a34b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2991513765805597446

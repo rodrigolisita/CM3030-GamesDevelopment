@@ -139,6 +139,17 @@ public class SpawnManager2D : MonoBehaviour
         Vector3 spawnPos = new Vector3(randomX, spawnY, 0);
         GameObject newEnemyGroup = Instantiate(enemyGroupPrefab, spawnPos, enemyGroupPrefab.transform.rotation);
 
+        if (activeWaveDef != null && activeWaveDef.overrideEnemyColor)
+        {
+            // Find all EnemyColorizer scripts on the spawned enemies.
+            EnemyColorizer[] colorizers = newEnemyGroup.GetComponentsInChildren<EnemyColorizer>();
+            foreach (EnemyColorizer colorizer in colorizers)
+            {
+                // Apply the tint color from the WaveSO.
+                colorizer.ApplyColor(activeWaveDef.enemyTintColor);
+            }
+        }
+
         foreach (EnemyCollisionHandler enemy in newEnemyGroup.GetComponentsInChildren<EnemyCollisionHandler>())
         {
             spawnedEnemies.Add(enemy.gameObject);

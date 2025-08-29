@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 139359735281188888}
   - component: {fileID: -8720817454051008169}
   - component: {fileID: -4381283080629531130}
+  - component: {fileID: -4154873374328997598}
   m_Layer: 0
   m_Name: EnemyPlane2
   m_TagString: Enemy
@@ -308,6 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
+  isBossHealth: 0
   damageVisuals: []
   flashColor: {r: 0.9528302, g: 0.05842829, b: 0.05842829, a: 1}
   flashDuration: 0.05
@@ -379,6 +381,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cc411e908e423a4a9d0cd3388efef48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-4154873374328997598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506428594068861399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f181ddb5cac3b846bd73c4db1a34b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4021877707005958211

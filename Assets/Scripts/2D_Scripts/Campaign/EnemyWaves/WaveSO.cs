@@ -29,4 +29,11 @@ public class WaveSO : ScriptableObject
     [Header("Intra-Wave Spawning")]
     [Tooltip("The time in seconds between each enemy group spawn within this wave.")]
     public float spawnInterval = 0.5f;
+
+    // VISUAL OVERRIDE FIELDS
+    [Header("Visual Overrides")]
+    [Tooltip("Check this box to apply a custom color tint to all enemies in this wave.")]
+    public bool overrideEnemyColor = false;
+    [Tooltip("The color to apply to the enemies' sprites.")]
+    public Color enemyTintColor = Color.white;
 }
