@@ -449,17 +449,41 @@ public class GameManager2D : MonoBehaviour
             Debug.LogWarning("GameManager2D: Cannot play start screen music - AudioSource or AudioClip missing.");
         }
     }
+    
     void PlayActiveMusic()
     {
-        if (audioSource != null && activeGameMusic != null)
-        {
-            if (audioSource.clip == activeGameMusic && audioSource.isPlaying) return;
-            audioSource.Stop(); audioSource.clip = activeGameMusic; audioSource.loop = true; audioSource.Play();
-            Debug.Log("GameManager2D: Playing active game music.");
-        }
-        else { Debug.LogError("GameManager2D: Cannot play active music - AudioSource or AudioClip missing."); }
-    }
+        // 1. Determine which audio clip to play.
+        AudioClip clipToPlay = activeGameMusic; // Start by assuming we'll use the default music.
 
+        // Check if we are in Campaign mode and a mission is loaded.
+        if (gameMode == GameMode.Campaign && mission != null)
+        {
+            AudioClip customMissionMusic = mission.GetMissionMusic();
+            // If the mission has its own specific music assigned, override the default.
+            if (customMissionMusic != null)
+            {
+                clipToPlay = customMissionMusic;
+            }
+        }
+
+        // 2. Play the selected audio clip using your existing robust logic.
+        if (audioSource != null && clipToPlay != null)
+        {
+            // Don't restart the music if this track is already playing.
+            if (audioSource.clip == clipToPlay && audioSource.isPlaying) return;
+
+            audioSource.Stop();
+            audioSource.clip = clipToPlay; // Use the determined clip
+            audioSource.loop = true;
+            audioSource.Play();
+            Debug.Log("GameManager2D: Playing active game music: " + clipToPlay.name);
+        }
+        else 
+        { 
+            Debug.LogError("GameManager2D: Cannot play active music - AudioSource or AudioClip missing."); 
+        }
+    }
+    
     void PlayGameOverMusic()
     {
         if (audioSource != null && gameOverMusic != null)

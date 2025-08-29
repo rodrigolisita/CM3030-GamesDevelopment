@@ -11,7 +11,15 @@ public class Mission : ScriptableObject
     [Header("Gameplay Definition")]
     [Tooltip("The Wave Definition asset that contains all the rules for this mission.")]
     [SerializeField] private WaveSO waveDefinition;
+    
+    // Audio
+    [Header("Mission Audio")]
+    [Tooltip("Optional: If assigned, this music will play instead of the default active music.")]
+    [SerializeField] private AudioClip missionMusic;
+    
+    [Header("Mission Finale")]
     [SerializeField] private GameObject bossPrefab;
+
 
     public string GetMissionName() { return missionName; }
     public IntroScreen GetIntro(int index)
@@ -20,5 +28,8 @@ public class Mission : ScriptableObject
         return introScreens[index];
     }
     public WaveSO GetWaveDefinition() { return waveDefinition; }
+    
+    // --- NEW GETTER ---
+    public AudioClip GetMissionMusic() { return missionMusic; }
     public GameObject GetBoss() { return bossPrefab; }
 }
