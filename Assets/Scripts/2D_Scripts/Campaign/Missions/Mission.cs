@@ -17,4 +17,14 @@ public class Mission : ScriptableObject
 
         return introScreens[index];
     }
+
+    public int getWaves()
+    {
+        return waves;
+    }
+
+    public GameObject GetBoss()
+    {
+        return bossPrefab;
+    }
 }

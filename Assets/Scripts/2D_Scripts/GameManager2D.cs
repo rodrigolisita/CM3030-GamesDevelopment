@@ -89,7 +89,7 @@ public class GameManager2D : MonoBehaviour
     public static Action<int> OnScoreChanged;
 
     [Header("Boss Settings")]
-    [SerializeField] private GameObject bossPrefab;
+    [SerializeField] private GameObject defaultBossPrefab;
     [SerializeField] private Transform bossSpawnPoint;
     [SerializeField] private int scoreToTriggerBoss = 2000;
     [SerializeField] private AudioClip bossFightMusic;
@@ -677,7 +677,19 @@ public class GameManager2D : MonoBehaviour
 
         // 3. Wait for a few seconds for dramatic effect.
         // You can make this delay a public variable to change it in the Inspector.
-        yield return new WaitForSeconds(3.0f); 
+        yield return new WaitForSeconds(3.0f);
+
+        GameObject bossPrefab = null;
+
+        if (gameMode == GameMode.Campaign)
+        {
+            bossPrefab = mission.GetBoss();
+        }
+
+        if (bossPrefab == null)
+        {
+            bossPrefab = defaultBossPrefab;
+        }
 
         // 4. Spawn the boss prefab.
         if (bossPrefab != null && bossSpawnPoint != null)
