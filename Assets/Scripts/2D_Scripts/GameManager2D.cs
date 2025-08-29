@@ -53,6 +53,8 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private Button arcadeButton;
     [SerializeField] private Button campaignButton;
     [SerializeField] private GameObject campaignIntroScreen;
+    [SerializeField] private TextMeshProUGUI campaignIntroTitle;
+    [SerializeField] private TextMeshProUGUI campaignIntroText;
     [SerializeField] private GameObject campaignBattleSelectScreen;
     [SerializeField] private GameObject campaignMissionSelectScreen;
 
@@ -61,6 +63,8 @@ public class GameManager2D : MonoBehaviour
     private int initialDifficulty;
     private GameMode gameMode;
     private GameObject playerPlane;
+    private Mission mission;
+    private int nextIntroIndex = 0;
     [Header("Player Plane")]
     public GameObject playerPlanePrefab;
     public GameObject playerSpawnPoint;
@@ -278,19 +282,10 @@ public class GameManager2D : MonoBehaviour
 
     // --- Game Lifecycle Methods ---
     //public void StartGame(float difficultySpawnInterval) 
-    public void StartGame(int difficultyLevel)
+    public void StartGame()
     {
-        if (gameMode == GameMode.Campaign && gameState == GameState.DifficultySelect)
-        {
-            gameState = GameState.Intro;
-            initialDifficulty = difficultyLevel;
-            UpdateAllUIDisplays();
-            return;
-        }
-
-        Debug.Log("GameManager2D: StartGame() called with spawnInterval: " + difficultyLevel);
+        Debug.Log("GameManager2D: StartGame() called");
         gameState = GameState.Active;
-        initialDifficulty = difficultyLevel;
         ResetInternalGameState();
         UpdateAllUIDisplays();
         PlayActiveMusic();
@@ -300,7 +295,7 @@ public class GameManager2D : MonoBehaviour
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
         if (spawnManager != null)
         {
-            spawnManager.BeginSpawningEnemies(difficultyLevel);
+            spawnManager.BeginSpawningEnemies(initialDifficulty);
         }
         else
         {
@@ -330,15 +325,48 @@ public class GameManager2D : MonoBehaviour
     }
 
     //TBD
-    public void SelectMission()
+    public void SelectMission(Mission newMission)
     {
+        mission = newMission;
+        nextIntroIndex = 0;
         gameState = GameState.DifficultySelect;
         UpdateAllUIDisplays();
     }
 
-    public void IntroContinue()
+    public void SelectDifficulty(int difficultyLevel)
     {
-        StartGame(initialDifficulty);
+        initialDifficulty = difficultyLevel;
+
+        if (gameMode == GameMode.Campaign)
+        {
+            TryLoadNextIntro();
+            return;
+        } else
+        {
+            StartGame();
+        }
+    }
+
+    
+
+    public void TryLoadNextIntro()
+    {
+        IntroScreen introScreen = mission.GetIntro(nextIntroIndex);
+        nextIntroIndex += 1;
+
+        if (introScreen == null)
+        {
+            StartGame();
+            return;
+        }
+
+        campaignIntroTitle.text = introScreen.title;
+        campaignIntroText.text = introScreen.text;
+        TypewriterTextAnim anim = campaignIntroText.GetComponent<TypewriterTextAnim>();
+        anim.RestartAnimation();
+
+        gameState = GameState.Intro;
+        UpdateAllUIDisplays();
     }
 
     public void Back()

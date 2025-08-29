@@ -21,4 +21,10 @@ public class TypewriterTextAnim : MonoBehaviour
     {
         textMesh.maxVisibleCharacters = Mathf.RoundToInt(charsPerSecond * (Time.time - startTime));
     }
+
+    public void RestartAnimation()
+    {
+        startTime = Time.time;
+        textMesh.maxVisibleCharacters = 0;
+    }
 }

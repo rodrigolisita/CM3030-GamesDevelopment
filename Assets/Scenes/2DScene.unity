@@ -924,10 +924,10 @@ MonoBehaviour:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
         m_MethodName: SelectMission
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 7d767da460b6b714e98f8b90d62a056b, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Mission, Assembly-CSharp
           m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2166,7 +2166,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
-        m_MethodName: StartGame
+        m_MethodName: SelectDifficulty
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2985,7 +2985,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
-        m_MethodName: StartGame
+        m_MethodName: SelectDifficulty
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3855,10 +3855,10 @@ MonoBehaviour:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
         m_MethodName: SelectMission
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: e0691519560f48d4384478f9ec2d73c1, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Mission, Assembly-CSharp
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4973,10 +4973,10 @@ MonoBehaviour:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
         m_MethodName: SelectMission
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: bee764590f0e9434681e106839e65a2a, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Mission, Assembly-CSharp
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5374,8 +5374,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
-        m_MethodName: StartGame
-        m_Mode: 3
+        m_MethodName: TryLoadNextIntro
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6726,7 +6726,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
-        m_MethodName: StartGame
+        m_MethodName: SelectDifficulty
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6786,7 +6786,7 @@ GameObject:
   - component: {fileID: 1791331837}
   - component: {fileID: 1791331836}
   m_Layer: 5
-  m_Name: TitleScreen
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7699,6 +7699,8 @@ MonoBehaviour:
   arcadeButton: {fileID: 1029513055}
   campaignButton: {fileID: 550510302}
   campaignIntroScreen: {fileID: 1371184511}
+  campaignIntroTitle: {fileID: 1791331836}
+  campaignIntroText: {fileID: 817785421}
   campaignBattleSelectScreen: {fileID: 1819109594}
   campaignMissionSelectScreen: {fileID: 327826481}
   playerPlanePrefab: {fileID: 8508186655575751765, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}
@@ -8122,10 +8124,10 @@ MonoBehaviour:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
         m_MethodName: SelectMission
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: eb512fcf911b7a845a42ed6ca808644a, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Mission, Assembly-CSharp
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
