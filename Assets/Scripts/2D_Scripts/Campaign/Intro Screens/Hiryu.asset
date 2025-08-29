@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Hiryu
   m_EditorClassIdentifier: 
   title: "Attack on the Hiry\u016B"
-  text: '<b>June 1942</b>
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-    ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+  text: "<b>1025</b> While the dive bombers are attacking the other 3 Japanese carriers,
+    the Hiry\u016B is attacked by a squadron of torpedo bombers from the Yorktown,
+    but escapes unscathed.\r\n\r\n<b>1100</b> As the only remaining Japanese carrier
+    with a functional flight deck, the Hiry\u016B launches a counterattack with its
+    own dive bombers.\r\n\r\n<b>1205</b> The Hiry\u016B\u2019s dive bombers reach
+    the Yorktown and score multiple hits.\r\n\r\n<b>1331</b> The Hiry\u016B launches
+    a second attack with its torpedo bombers.\r\n\r\n<b>1430</b> The bombers score
+    two devastating torpedo strikes, immediately crippling the ship and causing it
+    to sink two days later.\r\n\r\n<b>1700</b> A final set of dive bombers launched
+    by the Enterprise attack the Hiry\u016B...\r\n"

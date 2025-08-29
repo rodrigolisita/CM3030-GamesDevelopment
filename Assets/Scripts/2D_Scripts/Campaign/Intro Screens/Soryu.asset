@@ -13,12 +13,7 @@ MonoBehaviour:
   m_Name: Soryu
   m_EditorClassIdentifier: 
   title: "Attack on the S\u014Dry\u016B"
-  text: '<b>June 1942</b>
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-    ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+  text: "<b>1025</b> At the same time that the dive bombers from the Enterprise arrived
+    from the south to attack the Japanese carriers, one squadron of dive bombers
+    from the Yorktown arrived from the north. Lieutenant Max Leslie led this squadron
+    in an attack on the S\u014Dry\u016B..."

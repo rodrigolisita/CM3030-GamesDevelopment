@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: Kaga
   m_EditorClassIdentifier: 
   title: Attack on the Kaga
-  text: '<b>June 1942</b>
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-    ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+  text: "<b>June 4, 1942</b>\r\n\r\n<b>0430</b> The IJN launches the first wave of
+    aircraft to attack the base on Midway. At the same time, American planes begin
+    searching for the Japanese fleet.\r\n\r\n<b>0715</b> Unsatisfied with the results
+    of the first attack on Midway, Vice Admiral Nagumo orders his reserve planes
+    refitted with ground attack weapons for a second attack in violation of Yamamoto\u2019s
+    orders to hold them for anti-ship duties.\r\n\r\n<b>0750</b> USS Enterprise and
+    USS Hornet launch a large force of dive bombers and torpedo bombers to attack
+    the Japanese carriers.\r\n\r\n<b>0906</b> USS Yorktown launches its own aircraft
+    to join the attack.\r\n\r\n<b>0925-1000</b> 3 waves of torpedo bombers attack
+    the Japanese carriers in succession, putting the Japanese fleet off balance despite
+    causing no damage.\r\n\r\n<b>1025</b> The dive bombers finally arrive. Two squadrons
+    of SBD dive bombers from the Enterprise proceed to attack the Kaga\u2026\r"
