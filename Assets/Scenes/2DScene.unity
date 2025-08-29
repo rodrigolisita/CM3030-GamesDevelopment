@@ -2541,9 +2541,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.26666668
     y: 0
-    width: 1
+    width: 0.4666667
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -7707,10 +7707,10 @@ MonoBehaviour:
   playerSpawnPoint: {fileID: 1042611034}
   upgradeManager: {fileID: 190216183}
   gameState: 0
-  startScreenMusic: {fileID: 8300000, guid: 39d40557c022e9441b83874cdcb1b50e, type: 3}
+  startScreenMusic: {fileID: 8300000, guid: 7ef10a95c926a7b43b15f8cd15796f0f, type: 3}
   activeGameMusic: {fileID: 8300000, guid: e302709325de49546992473a8a8939fc, type: 3}
   gameOverMusic: {fileID: 8300000, guid: 97f5a65dda474424587cc414c6de95e3, type: 3}
-  bossPrefab: {fileID: 2506428594068861399, guid: b6b9e82466fea4847b8e76ecfa11bbf3, type: 3}
+  defaultBossPrefab: {fileID: 0}
   bossSpawnPoint: {fileID: 1814688370}
   scoreToTriggerBoss: 20
   bossFightMusic: {fileID: 8300000, guid: f905b2e0cde208848b9175d5fb96d12b, type: 3}
