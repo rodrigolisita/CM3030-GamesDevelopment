@@ -18,7 +18,9 @@ MonoBehaviour:
   maxWaveSize: 15
   scoreStepForWaveIncrease: 100
   initialWaveInterval: 3
-  minimumWaveInterval: 1
+  minimumWaveInterval: 0.1
   intervalReductionPerStep: 0.1
   scoreStepForSpeedUp: 100
-  spawnInterval: 1
+  spawnInterval: 0.5
+  overrideEnemyColor: 0
+  enemyTintColor: {r: 1, g: 1, b: 1, a: 1}

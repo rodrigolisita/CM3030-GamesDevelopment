@@ -85,6 +85,10 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     {
         // This script NO LONGER damages the player. It only handles itself.
 
+        // If the object that hit us is another enemy's projectile,
+        // ignore the collision completely and exit the function immediately.
+        if(other.CompareTag(EnemyProjectileTag)) return;
+        
         if (other.CompareTag(PlayerTag))
         {
             // --- Player Collision Logic ---

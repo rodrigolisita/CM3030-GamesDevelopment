@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 787c5f9f8713e0049af7531dc444a637, type: 3}
-  m_Name: Akagi
+  m_Name: Kaga
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
   - {fileID: 3758289293509855642, guid: d8b3cfec72125c54ab9f8e7ce3548615, type: 3}
   - {fileID: 7052341489394061000, guid: fab6c031284d76647ac8b3e39a6ebd08, type: 3}
-  initialWaveSize: 3
+  initialWaveSize: 4
   maxWaveSize: 15
-  scoreStepForWaveIncrease: 100
+  scoreStepForWaveIncrease: 150
   initialWaveInterval: 3
   minimumWaveInterval: 0.1
   intervalReductionPerStep: 0.2
-  scoreStepForSpeedUp: 20
+  scoreStepForSpeedUp: 30
   spawnInterval: 0.1
   overrideEnemyColor: 1
-  enemyTintColor: {r: 0.9528302, g: 0.06741722, b: 0.7468479, a: 1}
+  enemyTintColor: {r: 0.019579919, g: 0.8301887, b: 0.058616195, a: 1}

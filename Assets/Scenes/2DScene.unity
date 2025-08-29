@@ -7698,7 +7698,7 @@ MonoBehaviour:
   gameOverMusic: {fileID: 8300000, guid: 97f5a65dda474424587cc414c6de95e3, type: 3}
   defaultBossPrefab: {fileID: 2506428594068861399, guid: b6b9e82466fea4847b8e76ecfa11bbf3, type: 3}
   bossSpawnPoint: {fileID: 1814688370}
-  scoreToTriggerBoss: 20
+  scoreToTriggerBoss: 300
   bossFightMusic: {fileID: 8300000, guid: f905b2e0cde208848b9175d5fb96d12b, type: 3}
   victoryFanfare: {fileID: 8300000, guid: 0abd1b46f559d534b9ecf345dc1b3e94, type: 3}
 --- !u!82 &1901104074

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 787c5f9f8713e0049af7531dc444a637, type: 3}
-  m_Name: Hiryu1
+  m_Name: Hiryu
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
@@ -21,4 +21,6 @@ MonoBehaviour:
   minimumWaveInterval: 1
   intervalReductionPerStep: 0.1
   scoreStepForSpeedUp: 100
-  spawnInterval: 1
+  spawnInterval: 0.2
+  overrideEnemyColor: 0
+  enemyTintColor: {r: 1, g: 1, b: 1, a: 1}

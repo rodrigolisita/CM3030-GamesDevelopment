@@ -76,11 +76,9 @@ public class SpawnManager2D : MonoBehaviour
             int speedUpSteps = currentScore / activeWaveDef.scoreStepForSpeedUp;
             float currentWaveInterval = Mathf.Max(activeWaveDef.initialWaveInterval - (speedUpSteps * activeWaveDef.intervalReductionPerStep), activeWaveDef.minimumWaveInterval);
 
-            enemiesRemaining = currentWaveSize;
-            UpdateEnemyIconsUI();
             yield return new WaitForSeconds(currentWaveInterval);
-            
-            // SPAWNING & CULLING LOGIC
+
+            // --- SPAWNING & CULLING LOGIC ---
             List<GameObject> allEnemiesInWave = new List<GameObject>();
             while (allEnemiesInWave.Count < currentWaveSize)
             {
@@ -89,7 +87,7 @@ public class SpawnManager2D : MonoBehaviour
                     Debug.LogError("The Enemy Prefabs list for the active WaveSO is empty!");
                     yield break; 
                 }
-                
+
                 GameObject prefabToSpawn = activeWaveDef.enemyPrefabs[Random.Range(0, activeWaveDef.enemyPrefabs.Count)];
                 allEnemiesInWave.AddRange(SpawnEnemyGroup(prefabToSpawn));
 
@@ -105,13 +103,14 @@ public class SpawnManager2D : MonoBehaviour
                 GameObject enemyToDestroy = allEnemiesInWave[allEnemiesInWave.Count - 1];
                 allEnemiesInWave.RemoveAt(allEnemiesInWave.Count - 1);
                 Destroy(enemyToDestroy);
-                enemiesRemaining--;
             }
-            
+
+            // Set the counter and update the UI only ONCE, after the wave is finalized.
+            enemiesRemaining = allEnemiesInWave.Count;
             UpdateEnemyIconsUI();
-            // --- END OF LOGIC ---
-            
+
             yield return new WaitUntil(() => enemiesRemaining <= 0);
+            Debug.Log("Wave cleared!");
         }
     }
 
