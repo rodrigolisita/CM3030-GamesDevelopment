@@ -68,63 +68,89 @@ public class SpawnManager2D : MonoBehaviour
     }
 
     private IEnumerator UnifiedSpawnRoutine()
+{
+    yield return new WaitForSeconds(startDelay);
+
+    while (isSpawningActive)
     {
-        yield return new WaitForSeconds(startDelay);
+        // 1. Calculate the target size and interval for the upcoming wave.
+        int waveIncreaseSteps = currentScore / activeWaveDef.scoreStepForWaveIncrease;
+        int targetWaveSize = Mathf.Min(activeWaveDef.initialWaveSize + waveIncreaseSteps, activeWaveDef.maxWaveSize);
 
-        while (isSpawningActive)
+        int speedUpSteps = currentScore / activeWaveDef.scoreStepForSpeedUp;
+        float currentWaveInterval = Mathf.Max(activeWaveDef.initialWaveInterval - (speedUpSteps * activeWaveDef.intervalReductionPerStep), activeWaveDef.minimumWaveInterval);
+
+        // --- SPAWNING & CULLING LOGIC ---
+        // This process creates the wave. We do not touch the counter here.
+        List<GameObject> allEnemiesInWave = new List<GameObject>();
+        while (allEnemiesInWave.Count < targetWaveSize)
         {
-            // 1. Calculate current difficulty based on the active WaveSO's rules
-            int waveIncreaseSteps = currentScore / activeWaveDef.scoreStepForWaveIncrease;
-            int currentWaveSize = Mathf.Min(activeWaveDef.initialWaveSize + waveIncreaseSteps, activeWaveDef.maxWaveSize);
-
-            int speedUpSteps = currentScore / activeWaveDef.scoreStepForSpeedUp;
-            float currentWaveInterval = Mathf.Max(activeWaveDef.initialWaveInterval - (speedUpSteps * activeWaveDef.intervalReductionPerStep), activeWaveDef.minimumWaveInterval);
-
-            yield return new WaitForSeconds(currentWaveInterval);
-
-            // --- SPAWNING & CULLING LOGIC ---
-            List<GameObject> allEnemiesInWave = new List<GameObject>();
-            while (allEnemiesInWave.Count < currentWaveSize)
+            if (activeWaveDef.enemyPrefabs == null || activeWaveDef.enemyPrefabs.Count == 0)
             {
-                if (activeWaveDef.enemyPrefabs == null || activeWaveDef.enemyPrefabs.Count == 0)
-                {
-                    Debug.LogError("The Enemy Prefabs list for the active WaveSO is empty!");
-                    yield break; 
-                }
-
-                GameObject prefabToSpawn = activeWaveDef.enemyPrefabs[Random.Range(0, activeWaveDef.enemyPrefabs.Count)];
-                allEnemiesInWave.AddRange(SpawnEnemyGroup(prefabToSpawn));
-
-                if (allEnemiesInWave.Count < currentWaveSize)
-                {
-                    yield return new WaitForSeconds(activeWaveDef.spawnInterval);
-                }
+                Debug.LogError("The Enemy Prefabs list for the active WaveSO is empty!");
+                yield break; 
             }
+            
+            GameObject prefabToSpawn = activeWaveDef.enemyPrefabs[Random.Range(0, activeWaveDef.enemyPrefabs.Count)];
+            allEnemiesInWave.AddRange(SpawnEnemyGroup(prefabToSpawn));
 
-            // Cull excess enemies to match the exact target size
-            while (allEnemiesInWave.Count > currentWaveSize)
+            if (allEnemiesInWave.Count < targetWaveSize)
             {
-                GameObject enemyToDestroy = allEnemiesInWave[allEnemiesInWave.Count - 1];
-                allEnemiesInWave.RemoveAt(allEnemiesInWave.Count - 1);
-                Destroy(enemyToDestroy);
+                yield return new WaitForSeconds(activeWaveDef.spawnInterval);
             }
-
-            // Set the counter and update the UI only ONCE, after the wave is finalized.
-            enemiesRemaining = allEnemiesInWave.Count;
-            UpdateEnemyIconsUI();
-
-            waveCount += 1;
-            UpdateWaveCountUI();
-
-
-            yield return new WaitUntil(() => enemiesRemaining <= 0);
-            Debug.Log("Wave cleared!");
-
-            GameManager2D.Instance.WaveDefeated(waveCount);
         }
+
+        // Cull excess enemies to match the exact target size.
+        while (allEnemiesInWave.Count > targetWaveSize)
+        {
+            GameObject enemyToDestroy = allEnemiesInWave[allEnemiesInWave.Count - 1];
+            allEnemiesInWave.RemoveAt(allEnemiesInWave.Count - 1);
+            Destroy(enemyToDestroy);
+        }
+        
+        // --- THE FAILSAFE FIX ---
+        // 2. Do a final, definitive "headcount" of all actual enemies in the scene.
+        EnemyCollisionHandler[] activeEnemies = FindObjectsOfType<EnemyCollisionHandler>();
+        enemiesRemaining = activeEnemies.Length;
+
+        // 3. Now, update the UI with this 100% accurate count.
+        UpdateEnemyIconsUI();
+        // --- END OF FIX ---
+        
+        // 4. Update the wave count UI.
+        waveCount += 1;
+        UpdateWaveCountUI();
+        
+        // 5. Wait until the wave is cleared.
+        yield return new WaitUntil(() => enemiesRemaining <= 0);
+        Debug.Log("Wave cleared!");
+        
+        // 6. FINALLY, pause for the "breather" time between waves.
+        yield return new WaitForSeconds(currentWaveInterval);
     }
+}
+
 
     // --- HELPER METHODS ---
+    public int GetEnemiesRemaining()
+    {
+        return enemiesRemaining;
+    }
+
+    public void ForceCorrectEnemyCount(int actualCount)
+    {
+        enemiesRemaining = actualCount;
+        UpdateEnemyIconsUI();
+    }
+
+
+
+
+
+
+
+
+
     public void StopSpawningEnemies()
     {
         isSpawningActive = false;

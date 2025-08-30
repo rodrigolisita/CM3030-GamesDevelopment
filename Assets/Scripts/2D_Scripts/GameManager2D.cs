@@ -319,35 +319,25 @@ public class GameManager2D : MonoBehaviour
         //    }
         //}
         if (gameMode == GameMode.Campaign && mission != null)
-{
-    GameObject missionEnvPrefab = mission.GetEnvironmentPrefab();
-    if (missionEnvPrefab != null)
-    {
-        // 1. Deactivate the default environment.
-        if (defaultEnvironment != null)
         {
-            defaultEnvironment.SetActive(false);
-        }
+            GameObject missionEnvPrefab = mission.GetEnvironmentPrefab();
+            if (missionEnvPrefab != null)
+            {
+                // 1. Deactivate the default environment.
+                if (defaultEnvironment != null)
+                {
+                    defaultEnvironment.SetActive(false);
+                }
 
-        // 2. Instantiate the new mission-specific environment.
-        Instantiate(missionEnvPrefab, Vector3.zero, Quaternion.identity);
-    }
-}
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                // 2. Instantiate the new mission-specific environment.
+                Instantiate(missionEnvPrefab, Vector3.zero, Quaternion.identity);
+            }
+        }
         // END BACKGROUND LOGIC
+        
+        // --- START THE FAILSAFE ---
+        StartCoroutine(CounterFailsafeRoutine());
+        // --- END ---
 
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
         if (spawnManager != null)
@@ -840,6 +830,39 @@ public class GameManager2D : MonoBehaviour
             if (audioSource.clip == clip && audioSource.isPlaying) return;
             audioSource.clip = clip;
             audioSource.Play();
+        }
+    }
+
+
+    private IEnumerator CounterFailsafeRoutine()
+    {
+        // Run this check periodically while the game is active.
+        while (gameState == GameState.Active)
+        {
+            // Wait for a few seconds between checks.
+            yield return new WaitForSeconds(2.0f);
+
+            if (SpawnManager2D.Instance != null)
+            {
+                // Ask the SpawnManager what its counter says.
+                int reportedCount = SpawnManager2D.Instance.GetEnemiesRemaining();
+
+                // If the counter thinks there are enemies...
+                if (reportedCount > 0)
+                {
+                    // ...do our own definitive headcount.
+                    EnemyCollisionHandler[] activeEnemies = FindObjectsOfType<EnemyCollisionHandler>();
+                    int actualCount = activeEnemies.Length;
+
+                    // If our headcount is different, we have found a desync!
+                    if (actualCount < reportedCount)
+                    {
+                        Debug.LogWarning("FAILSAFE TRIGGERED: Counter desynchronized! Reported: " + reportedCount + ", Actual: " + actualCount + ". Forcing correction.");
+                        // Force the SpawnManager to update to the correct, lower count.
+                        SpawnManager2D.Instance.ForceCorrectEnemyCount(actualCount);
+                    }
+                }
+            }
         }
     }
     
