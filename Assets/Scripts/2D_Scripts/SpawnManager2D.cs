@@ -16,9 +16,12 @@ public class SpawnManager2D : MonoBehaviour
     [SerializeField] private GameObject enemyIconPrefab;
     [SerializeField] private Transform iconLayoutGroup;
     [SerializeField] private TextMeshProUGUI extraEnemiesText;
+    [SerializeField] private TextMeshProUGUI waveCountDisplay;
     [SerializeField] private int maxIconsToShow = 10;
     
     [SerializeField] private float startDelay = 2.0f;
+
+
 
     // Private state variables
     private bool isSpawningActive = false;
@@ -26,6 +29,7 @@ public class SpawnManager2D : MonoBehaviour
     private int currentScore;
     private WaveSO activeWaveDef; // The ruleset we are currently using
     private List<GameObject> activeIcons = new List<GameObject>();
+    private int waveCount = 0;
 
     void Awake()
     {
@@ -109,8 +113,14 @@ public class SpawnManager2D : MonoBehaviour
             enemiesRemaining = allEnemiesInWave.Count;
             UpdateEnemyIconsUI();
 
+            waveCount += 1;
+            UpdateWaveCountUI();
+
+
             yield return new WaitUntil(() => enemiesRemaining <= 0);
             Debug.Log("Wave cleared!");
+
+            GameManager2D.Instance.WaveDefeated(waveCount);
         }
     }
 
@@ -189,4 +199,23 @@ public class SpawnManager2D : MonoBehaviour
         }
         activeIcons.Clear();
     }
+
+    private void UpdateWaveCountUI()
+    {
+        if (waveCountDisplay != null)
+        {
+            waveCountDisplay.text = "Wave " + waveCount;
+        }
+    }
+
+    public int GetWaveCount()
+    {
+        return waveCount;
+    }
+
+    public void ResetWaveCount()
+    {
+        waveCount = 0;
+    }
+
 }

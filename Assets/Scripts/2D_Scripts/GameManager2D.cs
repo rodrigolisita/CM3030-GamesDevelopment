@@ -45,6 +45,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nextUpgradeText;
     [SerializeField] private TextMeshProUGUI upgradeTimerText;
     [SerializeField] private TextMeshProUGUI playerInformationText;
+    [SerializeField] private TextMeshProUGUI waveCountText;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backButton;
     [SerializeField] private Button easyButton;
@@ -57,6 +58,8 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI campaignIntroText;
     [SerializeField] private GameObject campaignBattleSelectScreen;
     [SerializeField] private GameObject campaignMissionSelectScreen;
+    [SerializeField] private bool spawnBossByWaveCount;
+    [SerializeField] private int bossSpawnWaveCount;
 
     // --- Game State & other private variables ---
     private int score;
@@ -101,16 +104,8 @@ public class GameManager2D : MonoBehaviour
     [Header("Scene Object References")]
     [Tooltip("The default environment object in the scene that will be replaced by mission-specific environments.")]
     [SerializeField] private GameObject defaultEnvironment;
-    
-    
-    
-    
 
     
-    
-    
-    
-        
     private bool bossHasBeenTriggered = false;
        
     void Awake()
@@ -268,6 +263,11 @@ public class GameManager2D : MonoBehaviour
             if (showGameHUD) UpdatePlayerAmmoUI();
         }
 
+        if (waveCountText != null)
+        {
+            waveCountText.gameObject.SetActive(showGameHUD);
+        }
+
 
         if (nextUpgradeText != null)
         {
@@ -364,7 +364,6 @@ public class GameManager2D : MonoBehaviour
         
         
     }
-
 
     public void SelectGameMode(GameModeHolder newMode)
     {
@@ -566,15 +565,24 @@ public class GameManager2D : MonoBehaviour
         OnScoreChanged?.Invoke(score);
         UpdateNextUpgradeUI();
 
-        if (!bossHasBeenTriggered && score >= scoreToTriggerBoss)
+        if (!spawnBossByWaveCount && score >= scoreToTriggerBoss)
+        {
+            TrySpawnBoss();
+        }
+        
+        
+        
+        
+    }
+
+    public void TrySpawnBoss()
+    {
+        if (!bossHasBeenTriggered)
         {
             bossHasBeenTriggered = true; // This ensures it only runs once per game
             //TriggerBossEncounter();
             StartCoroutine(TriggerBossEncounter());
         }
-        
-        
-        
     }
 
 
@@ -748,6 +756,13 @@ public class GameManager2D : MonoBehaviour
         }
     }
 
+    public void WaveDefeated(int wave)
+    {
+        if (spawnBossByWaveCount && (wave % bossSpawnWaveCount) == 0)
+        {
+            TrySpawnBoss();
+        }
+    }
     
     public IEnumerator TriggerBossEncounter()
     {
