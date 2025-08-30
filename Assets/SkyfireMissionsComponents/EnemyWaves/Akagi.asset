@@ -16,13 +16,15 @@ MonoBehaviour:
   - {fileID: 2506428594068861399, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
   - {fileID: 3758289293509855642, guid: d8b3cfec72125c54ab9f8e7ce3548615, type: 3}
   - {fileID: 7052341489394061000, guid: fab6c031284d76647ac8b3e39a6ebd08, type: 3}
+  - {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
+  - {fileID: 7052341489394061000, guid: 55f0e68e732b79d4eae7875c1d4644ff, type: 3}
   initialWaveSize: 3
   maxWaveSize: 15
-  scoreStepForWaveIncrease: 100
-  initialWaveInterval: 3
-  minimumWaveInterval: 0.1
+  scoreStepForWaveIncrease: 75
+  initialWaveInterval: 2.5
+  minimumWaveInterval: 0.75
   intervalReductionPerStep: 0.2
-  scoreStepForSpeedUp: 20
-  spawnInterval: 0.1
-  overrideEnemyColor: 1
+  scoreStepForSpeedUp: 40
+  spawnInterval: 0.2
+  overrideEnemyColor: 0
   enemyTintColor: {r: 0.9528302, g: 0.06741722, b: 0.7468479, a: 1}

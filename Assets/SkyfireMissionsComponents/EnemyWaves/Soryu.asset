@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
-  initialWaveSize: 2
+  - {fileID: 2506428594068861399, guid: a4702e347c992f24d91c983de0304563, type: 3}
+  - {fileID: 4450569533180694651, guid: 5ab31f3cbf9ad854aa14c6f937b893d9, type: 3}
+  initialWaveSize: 4
   maxWaveSize: 15
-  scoreStepForWaveIncrease: 100
-  initialWaveInterval: 3
-  minimumWaveInterval: 1
-  intervalReductionPerStep: 0.1
-  scoreStepForSpeedUp: 100
-  spawnInterval: 0.2
+  scoreStepForWaveIncrease: 50
+  initialWaveInterval: 2
+  minimumWaveInterval: 0.5
+  intervalReductionPerStep: 0.3
+  scoreStepForSpeedUp: 50
+  spawnInterval: 0.1
   overrideEnemyColor: 0
-  enemyTintColor: {r: 1, g: 1, b: 1, a: 1}
+  enemyTintColor: {r: 0.9529412, g: 0.06666667, b: 0.74509805, a: 0.8627451}
