@@ -7,6 +7,8 @@ public class Mission : ScriptableObject
     [Header("Mission Details")]
     [SerializeField] private string missionName;
     [SerializeField] private List<IntroScreen> introScreens;
+    [SerializeField] private List<VictoryScreen> victoryScreens;
+    [SerializeField] private Mission nextMission;
 
     [Header("Gameplay Definition")]
     [Tooltip("The Wave Definition asset that contains all the rules for this mission.")]
@@ -44,6 +46,18 @@ public class Mission : ScriptableObject
         if (index >= introScreens.Count) return null;
         return introScreens[index];
     }
+
+    public bool HasVictoryScreen(int index)
+    {
+        return (index < victoryScreens.Count);
+    }
+
+    public VictoryScreen GetVictoryScreen(int index)
+    {
+        if (index >= victoryScreens.Count) return null;
+        return victoryScreens[index];
+    }
+
     public WaveSO GetWaveDefinition() { return waveDefinition; }
     
     // GETTER functions
@@ -69,6 +83,11 @@ public class Mission : ScriptableObject
     public Color GetAmbientLightColor()
     {
         return ambientLightColor;
+    }
+
+    public Mission GetNextMission()
+    {
+        return nextMission;
     }
     
 }

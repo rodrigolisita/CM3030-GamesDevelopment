@@ -15,7 +15,12 @@ MonoBehaviour:
   missionName: Akagi
   introScreens:
   - {fileID: 11400000, guid: 5f7cf5376ddab074e98894175f1a9e8a, type: 2}
+  victoryScreens:
+  - {fileID: 11400000, guid: 39a41f54b50a5a541bf9334d9418c10d, type: 2}
+  nextMission: {fileID: 11400000, guid: bee764590f0e9434681e106839e65a2a, type: 2}
   waveDefinition: {fileID: 11400000, guid: 02cd453e01a15d54a917888455ef8f62, type: 2}
+  bossPrefab: {fileID: 2506428594068861399, guid: 5e7b4e8b2e6a1a942a6f0425f8c21e0d, type: 3}
   missionMusic: {fileID: 8300000, guid: cba2538823e42d74ba4b921713d27f3d, type: 3}
   environmentPrefab: {fileID: 2126665103720150997, guid: 1667bc57bc4d39b4592662140702f9ae, type: 3}
-  bossPrefab: {fileID: 2506428594068861399, guid: 5e7b4e8b2e6a1a942a6f0425f8c21e0d, type: 3}
+  overrideAmbientLight: 0
+  ambientLightColor: {r: 0, g: 0, b: 0, a: 0}

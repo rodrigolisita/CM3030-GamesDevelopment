@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51fe5d07968a4f84e800970c59f03378, type: 3}
+  m_Name: Soryu
+  m_EditorClassIdentifier: 
+  title: Attack on the Soryu
+  text: "<b>1025</b> At the same time that the dive bombers from the Enterprise arrived
+    from the south to attack the Japanese carriers, one squadron of dive bombers
+    from the Yorktown arrived from the north. Lieutenant Max Leslie led this squadron
+    in an attack on the S\u014Dry\u016B\u2026"

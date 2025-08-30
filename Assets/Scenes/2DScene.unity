@@ -3512,27 +3512,25 @@ MonoBehaviour:
   m_text: '<b>June 1942</b>
 
 
-    Despite inflicting serious damage on the United
-    States Navy at Pearl Harbor, the Imperial Japanese Navy failed to achieve the
-    complete victory that Admiral Yamamoto hoped for.
+    Despite inflicting serious damage on the United States Navy at Pearl Harbor, the
+    Imperial Japanese Navy failed to achieve the complete victory that Admiral Yamamoto
+    hoped for.
 
 
-    Knowing that a protracted
-    war would be highly unfavorable for Japan, Yamamoto now seeks to strike a decisive
-    blow against the USN, hoping that this time he will be able to force the US to
-    the negotiating table.
+    Knowing that a protracted war would be highly unfavorable for Japan, Yamamoto
+    now seeks to strike a decisive blow against the USN, hoping that this time he
+    will be able to force the US to the negotiating table.
 
 
-    Midway, a small atoll in the middle of the Pacific
-    Ocean that serves as a vital strategic resupply station, seems like the perfect
-    battleground. Yamamoto sends a massive fleet, including 4 aircraft carriers,
-    to attack the atoll and bait the American fleet into an open battle.
+    Midway, a small atoll in the middle of the Pacific Ocean that serves as a vital
+    strategic resupply station, seems like the perfect battleground. Yamamoto sends
+    a massive fleet, including 4 aircraft carriers, to attack the atoll and bait the
+    American fleet into an open battle.
 
 
-    But
-    unbeknownst to Yamamoto, the Americans are already waiting for him. Having cracked
-    the Japanese code, they have prepared an ambush, and now aim to secure a decisive
-    victory of their own.'
+    But unbeknownst to Yamamoto, the Americans are already waiting for him. Having
+    cracked the Japanese code, they have prepared an ambush, and now aim to secure
+    a decisive victory of their own.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5043,7 +5041,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1901104073}
         m_TargetAssemblyTypeName: GameManager2D, Assembly-CSharp
-        m_MethodName: RestartGame
+        m_MethodName: TryLoadNextOutro
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8425,6 +8423,10 @@ MonoBehaviour:
   campaignBattleSelectScreen: {fileID: 1819109594}
   campaignMissionSelectScreen: {fileID: 327826481}
   campaignVictoryScreen: {fileID: 315937663}
+  campaignVictoryTitle: {fileID: 2122817928}
+  campaignVictoryText: {fileID: 825227758}
+  campaignVictoryContinue: {fileID: 1120298769}
+  campaignVictoryMainMenu: {fileID: 834716713}
   spawnBossByWaveCount: 1
   bossSpawnWaveCount: 5
   playerPlanePrefab: {fileID: 8508186655575751765, guid: cfa0976c9ebcafd40aff730cce3bfc3e, type: 3}

@@ -10,4 +10,6 @@ public class RespawnPersistence
 
     public static int difficulty;
 
+    public static GameState gameState;
+
 }

@@ -15,6 +15,10 @@ MonoBehaviour:
   missionName: Hiryu
   introScreens:
   - {fileID: 11400000, guid: aa4811daf3bb4674584a9d3f212b6049, type: 2}
+  victoryScreens:
+  - {fileID: 11400000, guid: b10cdbb294e5fd949867d33d7d33bfa6, type: 2}
+  - {fileID: 11400000, guid: 29f01fb4222ca1f45ad99a32e540db55, type: 2}
+  nextMission: {fileID: 0}
   waveDefinition: {fileID: 11400000, guid: 7aeb06424a57b67418e9cf288a4b9e02, type: 2}
   bossPrefab: {fileID: 2506428594068861399, guid: dd0acab7888e0ed41a63371caf9a61c6, type: 3}
   missionMusic: {fileID: 0}

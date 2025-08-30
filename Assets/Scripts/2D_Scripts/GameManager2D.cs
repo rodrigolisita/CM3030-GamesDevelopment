@@ -62,6 +62,10 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private GameObject campaignBattleSelectScreen;
     [SerializeField] private GameObject campaignMissionSelectScreen;
     [SerializeField] private GameObject campaignVictoryScreen;
+    [SerializeField] private TextMeshProUGUI campaignVictoryTitle;
+    [SerializeField] private TextMeshProUGUI campaignVictoryText;
+    [SerializeField] private Button campaignVictoryContinue;
+    [SerializeField] private Button campaignVictoryMainMenu;
     [SerializeField] private bool spawnBossByWaveCount;
     [SerializeField] private int bossSpawnWaveCount;
 
@@ -72,6 +76,7 @@ public class GameManager2D : MonoBehaviour
     private GameObject playerPlane;
     private Mission mission;
     private int nextIntroIndex = 0;
+    private int nextVictoryIndex = 0;
     [Header("Player Plane")]
     public GameObject playerPlanePrefab;
     public GameObject playerSpawnPoint;
@@ -204,7 +209,15 @@ public class GameManager2D : MonoBehaviour
             mission = RespawnPersistence.mission;
             initialDifficulty = RespawnPersistence.difficulty;
 
-            StartGame();
+            if (RespawnPersistence.gameState == GameState.Intro)
+            {
+                TryLoadNextIntro();
+            }
+            else
+            {
+                StartGame();
+            }
+            
         }
 
         UpdateAllUIDisplays();  // Update their visibility based on current game state
@@ -465,6 +478,37 @@ public class GameManager2D : MonoBehaviour
         UpdateAllUIDisplays();
     }
 
+    public void TryLoadNextOutro()
+    {
+        if (mission.HasVictoryScreen(nextVictoryIndex))
+        {
+            VictoryScreen victoryScreen = mission.GetVictoryScreen(nextVictoryIndex);
+            campaignVictoryTitle.text = victoryScreen.title;
+            campaignVictoryText.text = victoryScreen.text;
+
+            nextVictoryIndex += 1;
+            campaignVictoryMainMenu.gameObject.SetActive(!mission.HasVictoryScreen(nextVictoryIndex));
+            campaignVictoryContinue.gameObject.SetActive(mission.HasVictoryScreen(nextVictoryIndex) || mission.GetNextMission() != null);
+        }
+        else
+        {
+            mission = mission.GetNextMission();
+            RestartLevel();
+        }
+    }
+
+    public void StartNewMission(Mission newMission)
+    {
+        // Tells the RespawnPersistence script that we don't want to start over completely, and give it the necessary info
+        RespawnPersistence.persist = true;
+        RespawnPersistence.gameMode = gameMode;
+        RespawnPersistence.gameState = GameState.Intro;
+        RespawnPersistence.mission = newMission;
+        RespawnPersistence.difficulty = initialDifficulty;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void Back()
     {
         switch (gameState) {
@@ -534,6 +578,7 @@ public class GameManager2D : MonoBehaviour
         RespawnPersistence.gameMode = gameMode;
         RespawnPersistence.mission = mission;
         RespawnPersistence.difficulty = initialDifficulty;
+        RespawnPersistence.gameState = GameState.Active;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -887,6 +932,7 @@ public class GameManager2D : MonoBehaviour
         } else
         {
             gameState = GameState.Victory;
+            TryLoadNextOutro();
         }
 
         UpdateAllUIDisplays();

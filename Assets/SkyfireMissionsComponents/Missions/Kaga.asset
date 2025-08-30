@@ -16,6 +16,12 @@ MonoBehaviour:
   introScreens:
   - {fileID: 11400000, guid: 2bc7d6fb652850440be046cac5b67f65, type: 2}
   - {fileID: 11400000, guid: 01c50eff5d48b1e40944bfa39143c63f, type: 2}
+  victoryScreens:
+  - {fileID: 11400000, guid: 42cdc5ebccba85b41942a42cd6baa7bb, type: 2}
+  nextMission: {fileID: 11400000, guid: f324b8781e8662243a47c700203daef5, type: 2}
   waveDefinition: {fileID: 11400000, guid: eb614194f8c9be64a833e144de0c6ee9, type: 2}
-  missionMusic: {fileID: 0}
   bossPrefab: {fileID: 2506428594068861399, guid: 7d10bfa85b89b664aa5c04c6da6860f8, type: 3}
+  missionMusic: {fileID: 0}
+  environmentPrefab: {fileID: 0}
+  overrideAmbientLight: 0
+  ambientLightColor: {r: 0, g: 0, b: 0, a: 0}
