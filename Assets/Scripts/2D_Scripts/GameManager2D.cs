@@ -758,6 +758,8 @@ public class GameManager2D : MonoBehaviour
     {
         Debug.Log("BOSS ENCOUNTER TRIGGERED!");
 
+        waveCountText.text = "BOSS WAVE";
+
         // 1. Stop the regular enemy spawner.
         FindObjectOfType<SpawnManager2D>()?.StopSpawningEnemies();
 
@@ -815,7 +817,17 @@ public class GameManager2D : MonoBehaviour
 
         // 4. After a short delay, you could end the level or restart.
         // For now, we can just stop the game.
-        gameState = GameState.GameOver; // Or a new "LevelComplete" state
+
+        // In arcade mode, continue spawning enemies after the boss.
+        if (gameMode == GameMode.Arcade)
+        {
+            bossHasBeenTriggered = false;
+            FindObjectOfType<SpawnManager2D>()?.ResumeSpawningEnemies();
+        } else
+        {
+            gameState = GameState.GameOver; // Or a new "LevelComplete" state
+        }
+
         UpdateAllUIDisplays();
         if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(false);
 

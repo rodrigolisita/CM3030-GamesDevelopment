@@ -80,6 +80,15 @@ public class SpawnManager2D : MonoBehaviour
         StartCoroutine(UnifiedSpawnRoutine());
     }
 
+    public void ResumeSpawningEnemies()
+    {
+        isSpawningActive = true;
+
+        InitializeIconPool();
+
+        StartCoroutine(UnifiedSpawnRoutine());
+    }
+
     private IEnumerator UnifiedSpawnRoutine()
     {
         yield return new WaitForSeconds(startDelay);
@@ -141,6 +150,7 @@ public class SpawnManager2D : MonoBehaviour
             yield return new WaitUntil(() => enemiesRemaining <= 0);
             Debug.Log("Wave cleared!");
 
+            GameManager2D.Instance.WaveDefeated(waveCount);
         }
     }
     
@@ -275,6 +285,8 @@ public class SpawnManager2D : MonoBehaviour
         }
         activeIcons.Clear();
     }
+
+
 
     private void UpdateWaveCountUI()
     {
