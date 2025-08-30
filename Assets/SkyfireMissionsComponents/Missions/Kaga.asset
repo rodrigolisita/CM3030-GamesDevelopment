@@ -21,7 +21,7 @@ MonoBehaviour:
   nextMission: {fileID: 11400000, guid: f324b8781e8662243a47c700203daef5, type: 2}
   waveDefinition: {fileID: 11400000, guid: eb614194f8c9be64a833e144de0c6ee9, type: 2}
   bossPrefab: {fileID: 2506428594068861399, guid: 7d10bfa85b89b664aa5c04c6da6860f8, type: 3}
-  missionMusic: {fileID: 0}
+  missionMusic: {fileID: 8300000, guid: 90770506cbe244b4892aa112873c7233, type: 3}
   environmentPrefab: {fileID: 0}
   overrideAmbientLight: 0
   ambientLightColor: {r: 0, g: 0, b: 0, a: 0}
