@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb15ba8eaa33ca640a883025a8ac94ff, type: 3}
   m_Name: Soryu
   m_EditorClassIdentifier: 
-  title: Victory
-  text: 
+  title: Mission Complete
+  text: "As with the attacks on the Kaga and the Akagi, the attack on the Sory\u016B
+    by dive bombers from the Yorktown proved devastatingly effective. Multiple direct
+    hits caused major damage, and ignited fuel tanks and stacked weapons, quickly
+    leading to an uncontrollable inferno. The Sory\u016B sank later the same day.\r"

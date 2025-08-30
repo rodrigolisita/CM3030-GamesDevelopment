@@ -492,8 +492,7 @@ public class GameManager2D : MonoBehaviour
         }
         else
         {
-            mission = mission.GetNextMission();
-            RestartLevel();
+            StartNewMission(mission.GetNextMission());
         }
     }
 

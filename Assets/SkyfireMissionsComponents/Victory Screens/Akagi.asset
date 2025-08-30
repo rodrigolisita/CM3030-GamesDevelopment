@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb15ba8eaa33ca640a883025a8ac94ff, type: 3}
   m_Name: Akagi
   m_EditorClassIdentifier: 
-  title: Victory
-  text: 
+  title: Mission Complete
+  text: "The Akagi sustained only one direct hit, from a bomb dropped by Lt. Best,
+    but it nevertheless proved fatal. Due in part to Nagumo\u2019s orders to change
+    the armament of the reserve planes, the decks were covered in bombs, torpedoes,
+    and fully armed and fueled planes.\r\n\r\nA single bomb struck the edge of one
+    of the ship\u2019s elevators and penetrated to the first hangar deck, igniting
+    a chain reaction of ordnance explosions and gasoline fires that instantly enveloped
+    nearly the entire ship, and rapidly grew out of control.\r\n\r\nThe Akagi sank
+    the next day, on June 5.\r"

@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb15ba8eaa33ca640a883025a8ac94ff, type: 3}
   m_Name: Kaga
   m_EditorClassIdentifier: 
-  title: Victory
-  text: 
+  title: Mission Complete
+  text: The attack on the Kaga proved a resounding success. Dive bombers from the
+    Enterprise scored multiple direct hits, causing heavy damage and starting numerous
+    serious fires. These fires continued to worsen and spiral out of control, leading
+    to her abandonment and sinking later that day.

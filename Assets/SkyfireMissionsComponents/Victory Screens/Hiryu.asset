@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb15ba8eaa33ca640a883025a8ac94ff, type: 3}
   m_Name: Hiryu
   m_EditorClassIdentifier: 
-  title: Victory
-  text: 
+  title: Mission Complete
+  text: "Once again, the SBD dive bombers proved incredibly effective. The force
+    sent from the Enterprise successfully scored multiple hits, putting the Hiry\u016B
+    out of commission and causing her to sink the next day, June 5.\r\n\r\nWith the
+    loss of the Hiry\u016B, the IJN had lost all 4 fleet carriers that they had committed
+    to the battle of Midway, and Admiral Yamamoto gave the order to withdraw.\r"
