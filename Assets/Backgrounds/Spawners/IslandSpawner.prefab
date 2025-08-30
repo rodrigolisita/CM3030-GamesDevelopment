@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6809131779974197592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2597916668809930097}
+  - component: {fileID: 9077521085673146190}
+  m_Layer: 0
+  m_Name: IslandSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2597916668809930097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809131779974197592}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.7110684, y: 0.34831077, z: -0.8061249}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9077521085673146190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809131779974197592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52640ba382dc4549b92178d21fd2c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  islandPrefabs:
+  - {fileID: 8397226498885586958, guid: 6f8cf2368ee35ec4eb3acbaf1a95b9e4, type: 3}
+  - {fileID: 6804190089768882263, guid: 097d4e15258d4e34fa4e9c6dcbef54cf, type: 3}
+  - {fileID: 3368853386209223282, guid: 829ef5e74f718214384ef23ca4ffaa10, type: 3}
+  - {fileID: 6516411739037579642, guid: cecce6f1ddfaccc4dadd84e6c6aa3d32, type: 3}
+  - {fileID: 7083234331030859056, guid: f1db891c2d501c44f8655b52849d0a6f, type: 3}
+  initialPoolSize: 12
+  spawnInterval: 15
+  spawnIntervalJitter: {x: -0.6, y: 0.6}
+  baseSpeed: 0.1
+  speedVariance: {x: 0.9, y: 1.15}
+  horizontalDrift: 0.25
+  scaleRange: {x: 0.8, y: 1.4}
+  randomRotation: 1
+  rotationRange: {x: -7, y: 7}
+  topOffset: 0.6
+  recycleMargin: 2.5
+  edgePadding: 0.3

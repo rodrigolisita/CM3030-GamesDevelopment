@@ -95,7 +95,22 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private AudioClip bossFightMusic;
     [SerializeField] private AudioClip victoryFanfare;
 
+    // Background
+    //[Header("Scene Object References")]
+    //[SerializeField] private OceanScroll oceanScroller;
+    [Header("Scene Object References")]
+    [Tooltip("The default environment object in the scene that will be replaced by mission-specific environments.")]
+    [SerializeField] private GameObject defaultEnvironment;
     
+    
+    
+    
+
+    
+    
+    
+    
+        
     private bool bossHasBeenTriggered = false;
        
     void Awake()
@@ -292,6 +307,48 @@ public class GameManager2D : MonoBehaviour
         UpdateNextUpgradeUI();
         UpdatePlayerStatsUI();
 
+
+        // BACKGROUND LOGIC
+        //if (gameMode == GameMode.Campaign && mission != null)
+        //{
+        //    Material missionMaterial = mission.GetBackgroundMaterial();
+        //    if (oceanScroller != null && missionMaterial != null)
+        //    {
+        //        // Tell the existing ocean object to use the new material.
+        //        oceanScroller.UpdateMaterial(missionMaterial);
+        //    }
+        //}
+        if (gameMode == GameMode.Campaign && mission != null)
+{
+    GameObject missionEnvPrefab = mission.GetEnvironmentPrefab();
+    if (missionEnvPrefab != null)
+    {
+        // 1. Deactivate the default environment.
+        if (defaultEnvironment != null)
+        {
+            defaultEnvironment.SetActive(false);
+        }
+
+        // 2. Instantiate the new mission-specific environment.
+        Instantiate(missionEnvPrefab, Vector3.zero, Quaternion.identity);
+    }
+}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        // END BACKGROUND LOGIC
+
         SpawnManager2D spawnManager = FindObjectOfType<SpawnManager2D>();
         if (spawnManager != null)
         {
@@ -303,7 +360,11 @@ public class GameManager2D : MonoBehaviour
         {
             Debug.LogError("GameManager2D: SpawnManager2D instance not found in StartGame(). Cannot start enemy spawning.", this.gameObject);
         }
+
+        
+        
     }
+
 
     public void SelectGameMode(GameModeHolder newMode)
     {

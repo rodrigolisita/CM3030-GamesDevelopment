@@ -26,7 +26,7 @@ public class ParallaxManager : MonoBehaviour
         InitializeParallaxManager();
     }
     
-    void InitializeParallaxManager()
+    public void InitializeParallaxManager()
     {
         // Get game manager
         gameManager = GameManager2D.Instance;
