@@ -84,4 +84,9 @@ public class UpgradeManager : MonoBehaviour
         // Return -1 or another indicator that all upgrades have been awarded
         return -1;
     }
+
+    public void TotalReset()
+    {
+
+    }
 }

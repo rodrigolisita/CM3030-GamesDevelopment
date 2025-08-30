@@ -306,4 +306,11 @@ public class SpawnManager2D : MonoBehaviour
         waveCount = 0;
     }
 
+    public void TotalReset()
+    {
+        ResetWaveCount();
+        StopSpawningEnemies();
+        InitializeIconPool();
+    }
+
 }

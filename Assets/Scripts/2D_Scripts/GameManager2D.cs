@@ -14,7 +14,8 @@ public enum GameState
     Intro,
     Active,
     BossFight,
-    GameOver
+    GameOver,
+    Victory
 }
 
 
@@ -35,6 +36,7 @@ public class GameManager2D : MonoBehaviour
     [Header("UI Object Names")]
     [SerializeField] private GameObject startScreen;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI bosslivesText;
     [SerializeField] private TextMeshProUGUI ammoText;
@@ -47,6 +49,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerInformationText;
     [SerializeField] private TextMeshProUGUI waveCountText;
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button backButton;
     [SerializeField] private Button easyButton;
     [SerializeField] private Button mediumButton;
@@ -58,6 +61,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI campaignIntroText;
     [SerializeField] private GameObject campaignBattleSelectScreen;
     [SerializeField] private GameObject campaignMissionSelectScreen;
+    [SerializeField] private GameObject campaignVictoryScreen;
     [SerializeField] private bool spawnBossByWaveCount;
     [SerializeField] private int bossSpawnWaveCount;
 
@@ -187,7 +191,19 @@ public class GameManager2D : MonoBehaviour
         playerUpgradeManager = null; // We'll find this when the player is active
         playerController = null;
 
+
+
         SpawnNewPlayer();
+
+        if (RespawnPersistence.persist)
+        {
+            gameMode = RespawnPersistence.gameMode;
+            mission = RespawnPersistence.mission;
+            initialDifficulty = RespawnPersistence.difficulty;
+
+            StartGame();
+        }
+
         UpdateAllUIDisplays();  // Update their visibility based on current game state
 
         if (gameState == GameState.Active)
@@ -206,6 +222,7 @@ public class GameManager2D : MonoBehaviour
     {
         score = 0;
         Debug.Log("GameManager2D ResetInternalGameState: Score: " + score + ". (gameState is currently: " + gameState + ")");
+        SpawnManager2D.Instance.TotalReset();
         SpawnNewPlayer();
     }
 
@@ -224,6 +241,7 @@ public class GameManager2D : MonoBehaviour
         bool showCampaignMissionSelect = (gameMode == GameMode.Campaign && gameState == GameState.MissionSelect);
         bool showCampaignIntroScreen = (gameMode == GameMode.Campaign && gameState == GameState.Intro);
         bool showCampaignBattleSelect = (gameMode == GameMode.Campaign && gameState == GameState.BattleSelect);
+        bool showCampaignVictoryScreen = (gameMode == GameMode.Campaign && gameState == GameState.Victory);
 
         // --- Start Screen Elements ---
         if (startScreen != null) startScreen.SetActive(showStartScreenUI);
@@ -243,6 +261,16 @@ public class GameManager2D : MonoBehaviour
         // --- Game Over Screen Elements ---
         if (gameOverText != null) gameOverText.gameObject.SetActive(showGameOverUI);
         if (restartButton != null) restartButton.gameObject.SetActive(showGameOverUI);
+        if (mainMenuButton != null) mainMenuButton.gameObject.SetActive(showGameOverUI);
+        if (gameOverScoreText != null)
+        {
+            gameOverScoreText.gameObject.SetActive(showGameOverUI);
+            if (showGameOverUI) gameOverScoreText.text = "Score: " + score;
+        }
+
+        // --- Victory Screen ---
+
+        if (campaignVictoryScreen != null) campaignVictoryScreen.gameObject.SetActive(showCampaignVictoryScreen);
 
         // --- In-Game HUD Elements ---
         if (scoreText != null)
@@ -475,8 +503,22 @@ public class GameManager2D : MonoBehaviour
         //    scene reloads, the title screen will be displayed.
         gameState = GameState.DifficultySelect;
 
+        // Tells the RespawnPersistence script that we want to start over from scratch.
+        RespawnPersistence.persist = false;
+
         // 2. Reload the current scene. This is the most reliable way to reset
         //    all game objects (enemies, projectiles, player) to their initial state.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void RestartLevel()
+    {
+        // Tells the RespawnPersistence script that we don't want to start over completely, and give it the necessary info
+        RespawnPersistence.persist = true;
+        RespawnPersistence.gameMode = gameMode;
+        RespawnPersistence.mission = mission;
+        RespawnPersistence.difficulty = initialDifficulty;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -809,11 +851,11 @@ public class GameManager2D : MonoBehaviour
 
         // 3. Display a victory message on the screen.
         // We can reuse the gameOverText for this.
-        if (gameOverText != null)
+        /*if (gameOverText != null)
         {
             gameOverText.gameObject.SetActive(true);
             gameOverText.text = "YOU WIN!";
-        }
+        }*/
 
         // make the boss health bar inactive
         if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(false);
@@ -828,7 +870,7 @@ public class GameManager2D : MonoBehaviour
             FindObjectOfType<SpawnManager2D>()?.ResumeSpawningEnemies();
         } else
         {
-            gameState = GameState.GameOver; // Or a new "LevelComplete" state
+            gameState = GameState.Victory;
         }
 
         UpdateAllUIDisplays();
