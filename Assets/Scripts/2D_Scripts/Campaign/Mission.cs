@@ -11,26 +11,32 @@ public class Mission : ScriptableObject
     [Header("Gameplay Definition")]
     [Tooltip("The Wave Definition asset that contains all the rules for this mission.")]
     [SerializeField] private WaveSO waveDefinition;
+
+    [Header("Mission Finale")]
+    [SerializeField] private GameObject bossPrefab;
     
+    [Header("Optional Mission Overrides")]
     // Audio
     [Header("Mission Audio")]
     [Tooltip("Optional: If assigned, this music will play instead of the default active music.")]
     [SerializeField] private AudioClip missionMusic;
 
-    //[Header("Mission Visuals")]
-    //[Tooltip("Optional: The Material to use for the main background in this mission.")]
-    //public Material backgroundMaterial;
-
     [Header("Mission Environment")]
     [Tooltip("The complete environment prefab for this mission (includes background, parallax, spawners, etc.).")]
     public GameObject environmentPrefab;
 
+    [Header("Mission Visuals")]
+    [Tooltip("Check this box to apply a custom ambient light color to the mission.")]
+    public bool overrideAmbientLight = false;
+    [Tooltip("The color tint to apply to the scene (e.g., dark blue for night, orange for evening).")]
+    public Color ambientLightColor = new Color(0, 0, 0, 0); // Default is fully transparent
+
 
     
     
     
-    [Header("Mission Finale")]
-    [SerializeField] private GameObject bossPrefab;
+
+
 
     public string GetMissionName() { return missionName; }
     public IntroScreen GetIntro(int index)
@@ -52,6 +58,17 @@ public class Mission : ScriptableObject
     public GameObject GetEnvironmentPrefab() 
     { 
         return environmentPrefab; 
+    }
+
+    // To play with light
+    public bool ShouldOverrideAmbientLight()
+    {
+        return overrideAmbientLight;
+    }
+
+    public Color GetAmbientLightColor()
+    {
+        return ambientLightColor;
     }
     
 }

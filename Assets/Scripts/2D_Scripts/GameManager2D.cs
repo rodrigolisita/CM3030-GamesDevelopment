@@ -109,6 +109,9 @@ public class GameManager2D : MonoBehaviour
     [Tooltip("The default environment object in the scene that will be replaced by mission-specific environments.")]
     [SerializeField] private GameObject defaultEnvironment;
 
+    [Header("UI Object Names")]
+    [SerializeField] private Image ambientLightFilter;
+
     
     private bool bossHasBeenTriggered = false;
        
@@ -362,6 +365,19 @@ public class GameManager2D : MonoBehaviour
             }
         }
         // END BACKGROUND LOGIC
+        
+        // AMBIENT LIGHT LOGIC
+        if (gameMode == GameMode.Campaign && mission != null)
+        {
+            if (mission.ShouldOverrideAmbientLight())
+            {
+                if (ambientLightFilter != null)
+                {
+                    // Apply the mission-specific ambient light color.
+                    ambientLightFilter.color = mission.GetAmbientLightColor();
+                }
+            }
+        }
         
         // --- START THE FAILSAFE ---
         StartCoroutine(CounterFailsafeRoutine());
