@@ -46,11 +46,16 @@ public class SpawnManager2D : MonoBehaviour
 
     private void OnEnable()
     {
+        // Subscribe to the enemy defeated event
+        EnemyCollisionHandler.OnAnyEnemyDefeated += HandleEnemyDefeated;
+
         GameManager2D.OnScoreChanged += (newScore) => { currentScore = newScore; };
     }
 
     private void OnDisable()
     {
+        EnemyCollisionHandler.OnAnyEnemyDefeated -= HandleEnemyDefeated;
+
         // ensure the delegate has a target before removing
         if (GameManager2D.OnScoreChanged != null)
         {
@@ -85,14 +90,21 @@ public class SpawnManager2D : MonoBehaviour
             int waveIncreaseSteps = currentScore / activeWaveDef.scoreStepForWaveIncrease;
             int targetWaveSize = Mathf.Min(activeWaveDef.initialWaveSize + waveIncreaseSteps, activeWaveDef.maxWaveSize);
 
-            enemiesRemaining = targetWaveSize; 
-            UpdateEnemyIconsUI();
-
             int speedUpSteps = currentScore / activeWaveDef.scoreStepForSpeedUp;
             float currentWaveInterval = Mathf.Max(activeWaveDef.initialWaveInterval - (speedUpSteps * activeWaveDef.intervalReductionPerStep), activeWaveDef.minimumWaveInterval);
 
+            // 2. Set the counter and update the UI immediately to give the player a heads-up.
+            enemiesRemaining = targetWaveSize;
+            UpdateEnemyIconsUI();
+
+            // Update the wave count
+            waveCount += 1;
+            UpdateWaveCountUI();
+
+            // 3. NOW, pause for the "breather" time between waves.
+            yield return new WaitForSeconds(currentWaveInterval);
+
             // --- SPAWNING & CULLING LOGIC ---
-            // This process creates the wave. We do not touch the counter here.
             List<GameObject> allEnemiesInWave = new List<GameObject>();
             while (allEnemiesInWave.Count < targetWaveSize)
             {
@@ -111,7 +123,6 @@ public class SpawnManager2D : MonoBehaviour
                 }
             }
 
-            // Cull excess enemies to match the exact target size.
             while (allEnemiesInWave.Count > targetWaveSize)
             {
                 GameObject enemyToDestroy = allEnemiesInWave[allEnemiesInWave.Count - 1];
@@ -119,40 +130,44 @@ public class SpawnManager2D : MonoBehaviour
                 Destroy(enemyToDestroy);
             }
 
-            // 2. Do a final "headcount" of all actual enemies in the scene.
-            EnemyCollisionHandler[] activeEnemies = FindObjectsOfType<EnemyCollisionHandler>();
-            enemiesRemaining = activeEnemies.Length;
-
-            // 3. Now, update the UI with this count.
+            // --- THE FAILSAFE FIX ---
+            // 4. Silently correct the counter to the ACTUAL number of enemies.
+            //enemiesRemaining = allEnemiesInWave.Count;
+  
+            // We update the UI again in case the count was different (e.g., from culling).
             UpdateEnemyIconsUI();
 
-            // 4. Update the wave count UI.
-            waveCount += 1;
-            UpdateWaveCountUI();
-
-            // 5. Wait until the wave is cleared.
+            // Wait for the wave to be cleared
             yield return new WaitUntil(() => enemiesRemaining <= 0);
             Debug.Log("Wave cleared!");
 
-            // 6. FINALLY, pause for the "breather" time between waves.
-            yield return new WaitForSeconds(currentWaveInterval);
         }
     }
-
-
+    
+    
+                
+        
+    
+    // This is the method that will be called when the event happens
+    private void HandleEnemyDefeated(GameObject enemy)
+    {
+        OnEnemyDestroyed();
+    }               
+    
     // --- HELPER METHODS ---
+    // This is called by the gameManager as a failsafe
+    // force the correct enemiesRemaining, just in case...
     public int GetEnemiesRemaining()
     {
         return enemiesRemaining;
     }
-
     public void ForceCorrectEnemyCount(int actualCount)
     {
         enemiesRemaining = actualCount;
         UpdateEnemyIconsUI();
     }
-
-
+    
+    // ---
     public void StopSpawningEnemies()
     {
         isSpawningActive = false;
@@ -160,6 +175,7 @@ public class SpawnManager2D : MonoBehaviour
         ClearEnemyIcons();
     }
 
+    // Method called by the event when enemy is defeated
     public void OnEnemyDestroyed()
     {
         enemiesRemaining--;
