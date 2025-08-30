@@ -815,6 +815,9 @@ public class GameManager2D : MonoBehaviour
             gameOverText.text = "YOU WIN!";
         }
 
+        // make the boss health bar inactive
+        if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(false);
+
         // 4. After a short delay, you could end the level or restart.
         // For now, we can just stop the game.
 
