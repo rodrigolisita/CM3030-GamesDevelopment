@@ -994,7 +994,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "HOW TO PLAY:\nUP:              \u2191 or W\nDOWN:         \u2193 or S\nLEFT:
+  m_text: "HOW TO PLAY:\nUP:              \u2191 or W\nDOWN:         \u2193 or S\nLEFT:          
     \u2190 or A\nRIGHT:        \u2192 or D\nMAIN FIRE:     SPACE\nSecond  FIRE: SHIFT"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1552,7 +1552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &315937664
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1592,7 +1592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &327826482
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4438,7 +4438,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1046703258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4673,7 +4673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1104409411
 Transform:
   m_ObjectHideFlags: 0
@@ -5513,7 +5513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1371184512
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8444,6 +8444,7 @@ MonoBehaviour:
   scoreToTriggerBoss: 10
   bossFightMusic: {fileID: 8300000, guid: f905b2e0cde208848b9175d5fb96d12b, type: 3}
   victoryFanfare: {fileID: 8300000, guid: 0abd1b46f559d534b9ecf345dc1b3e94, type: 3}
+  timeDelayForBossEncounter: 4
   defaultEnvironment: {fileID: 53717556}
   ambientLightFilter: {fileID: 1569971033}
 --- !u!82 &1901104074
@@ -8558,7 +8559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2036672240
 RectTransform:
   m_ObjectHideFlags: 0
