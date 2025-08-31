@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DestroyOutOfBounds2D : MonoBehaviour
 {
+    private int xPad = 200;
     void Update()
     {
         // Check if the BoundaryManager instance exists before using it
@@ -21,7 +22,7 @@ public class DestroyOutOfBounds2D : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if(transform.position.x > BoundaryManager.Instance.MaxX || transform.position.x < BoundaryManager.Instance.MinX)
+        if(transform.position.x > BoundaryManager.Instance.MaxX + xPad || transform.position.x < BoundaryManager.Instance.MinX - xPad)
         {
             Destroy(gameObject);
         }
