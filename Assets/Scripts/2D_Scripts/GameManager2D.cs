@@ -107,6 +107,8 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private int scoreToTriggerBoss = 2000;
     [SerializeField] private AudioClip bossFightMusic;
     [SerializeField] private AudioClip victoryFanfare;
+    [SerializeField] private float timeDelayForBossEncounter = 4.0f;
+    
 
     // Background
     //[Header("Scene Object References")]
@@ -865,28 +867,28 @@ public class GameManager2D : MonoBehaviour
         Debug.Log("BOSS ENCOUNTER TRIGGERED!");
 
         // --- BACKGROUND SWAP LOGIC FOR BOSS ---
-    if (gameMode == GameMode.Campaign && mission != null && mission.ShouldUseDefaultBackgroundForBoss())
-    {
-        // 1. Destroy the current mission-specific environment using our direct reference.
-        if (currentMissionEnvironment != null)
+        if (gameMode == GameMode.Campaign && mission != null && mission.ShouldUseDefaultBackgroundForBoss())
         {
-            Destroy(currentMissionEnvironment);
-        }
-
-        // 2. Reactivate the default environment.
-        if (defaultEnvironment != null)
-        {
-            defaultEnvironment.SetActive(true);
-
-            // 3. Tell the ParallaxManager to find the newly activated default layers.
-            ParallaxManager parallaxManager = FindObjectOfType<ParallaxManager>();
-            if (parallaxManager != null)
+            // 1. Destroy the current mission-specific environment using our direct reference.
+            if (currentMissionEnvironment != null)
             {
-                parallaxManager.InitializeParallaxManager();
+                Destroy(currentMissionEnvironment);
+            }
+
+            // 2. Reactivate the default environment.
+            if (defaultEnvironment != null)
+            {
+                defaultEnvironment.SetActive(true);
+
+                // 3. Tell the ParallaxManager to find the newly activated default layers.
+                ParallaxManager parallaxManager = FindObjectOfType<ParallaxManager>();
+                if (parallaxManager != null)
+                {
+                    parallaxManager.InitializeParallaxManager();
+                }
             }
         }
-    }
-    // --- END OF LOGIC ---               
+        // --- END OF LOGIC ---               
 
         waveCountText.text = "BOSS WAVE";
 
@@ -900,8 +902,7 @@ public class GameManager2D : MonoBehaviour
         if (bossHealthBarFill != null) bossHealthBarFill.transform.parent.gameObject.SetActive(true);
 
         // 3. Wait for a few seconds for dramatic effect.
-        // You can make this delay a public variable to change it in the Inspector.
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(timeDelayForBossEncounter);
 
         GameObject bossPrefab = null;
 

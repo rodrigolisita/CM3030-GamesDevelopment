@@ -26,5 +26,5 @@ MonoBehaviour:
   intervalReductionPerStep: 0.2
   scoreStepForSpeedUp: 40
   spawnInterval: 0.2
-  overrideEnemyColor: 0
+  overrideEnemyColor: 1
   enemyTintColor: {r: 0.9528302, g: 0.06741722, b: 0.7468479, a: 1}
