@@ -42,6 +42,7 @@ public class GameManager2D : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ammoText;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private Image bossHealthBarFill;
+    [SerializeField] private GameObject bossHealthBarMain;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private TextMeshProUGUI playInstructionText;
     [SerializeField] private TextMeshProUGUI nextUpgradeText;
@@ -252,7 +253,7 @@ public class GameManager2D : MonoBehaviour
         bool showDifficultySelectUI = (gameState == GameState.DifficultySelect);
         bool showGameHUD = (gameState == GameState.Active);
         bool showGameOverUI = (gameState == GameState.GameOver);
-        bool showBossHUD = (gameState == GameState.BossFight);
+        bool showBossHUD = (gameState == GameState.Active && bossHasBeenTriggered == true);
         bool showBackButton = (gameState == GameState.DifficultySelect || gameState == GameState.BattleSelect || gameState == GameState.MissionSelect);
         bool showCampaignMissionSelect = (gameMode == GameMode.Campaign && gameState == GameState.MissionSelect);
         bool showCampaignIntroScreen = (gameMode == GameMode.Campaign && gameState == GameState.Intro);
@@ -331,9 +332,9 @@ public class GameManager2D : MonoBehaviour
         if (playerInformationText != null) playerInformationText.gameObject.SetActive(showGameHUD);
 
         // The boss health bar should ONLY be visible during the BossFight state.
-        if (bossHealthBarFill != null)
+        if (bossHealthBarMain != null)
         {
-            bossHealthBarFill.transform.parent.gameObject.SetActive(showBossHUD);
+            bossHealthBarMain.SetActive(showBossHUD);
         }
 
 
@@ -747,8 +748,9 @@ public class GameManager2D : MonoBehaviour
     {
         if (bossHealthBarFill != null)
         {
+            // caused issues, commented out
             // Make sure the bar's parent object is active
-            bossHealthBarFill.transform.parent.gameObject.SetActive(true);
+            //bossHealthBarFill.transform.parent.gameObject.SetActive(true);
 
             // Calculate and set the fill amount
             bossHealthBarFill.fillAmount = (float)currentHealth / maxHealth;
