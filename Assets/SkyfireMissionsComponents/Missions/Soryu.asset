@@ -22,5 +22,6 @@ MonoBehaviour:
   bossPrefab: {fileID: 2506428594068861399, guid: 6080bc37b60e81d45915ba45391e697d, type: 3}
   missionMusic: {fileID: 8300000, guid: ea0df3c3884da4b47b409b6e1e30d3e9, type: 3}
   environmentPrefab: {fileID: 2126665103720150997, guid: 223ea0ceac866304d8dc4ed7ffdde6c2, type: 3}
+  useDefaultBackgroundForBoss: 1
   overrideAmbientLight: 0
   ambientLightColor: {r: 0, g: 0, b: 0, a: 0}

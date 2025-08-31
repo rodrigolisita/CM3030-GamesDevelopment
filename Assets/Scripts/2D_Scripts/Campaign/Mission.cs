@@ -26,18 +26,14 @@ public class Mission : ScriptableObject
     [Header("Mission Environment")]
     [Tooltip("The complete environment prefab for this mission (includes background, parallax, spawners, etc.).")]
     public GameObject environmentPrefab;
+    [Tooltip("If checked, the background will switch to the default ocean environment for the boss fight.")]
+    public bool useDefaultBackgroundForBoss = false;
 
     [Header("Mission Visuals")]
     [Tooltip("Check this box to apply a custom ambient light color to the mission.")]
     public bool overrideAmbientLight = false;
     [Tooltip("The color tint to apply to the scene (e.g., dark blue for night, orange for evening).")]
     public Color ambientLightColor = new Color(0, 0, 0, 0); // Default is fully transparent
-
-
-    
-    
-    
-
 
 
     public string GetMissionName() { return missionName; }
@@ -88,6 +84,11 @@ public class Mission : ScriptableObject
     public Mission GetNextMission()
     {
         return nextMission;
+    }
+
+    public bool ShouldUseDefaultBackgroundForBoss()
+    {
+        return useDefaultBackgroundForBoss;
     }
     
 }

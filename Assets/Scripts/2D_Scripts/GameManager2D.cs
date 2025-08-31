@@ -118,8 +118,8 @@ public class GameManager2D : MonoBehaviour
     [Header("UI Object Names")]
     [SerializeField] private Image ambientLightFilter;
 
-    
     private bool bossHasBeenTriggered = false;
+    private GameObject currentMissionEnvironment;
        
     void Awake()
     {
@@ -375,7 +375,7 @@ public class GameManager2D : MonoBehaviour
                 }
 
                 // 2. Instantiate the new mission-specific environment.
-                Instantiate(missionEnvPrefab, Vector3.zero, Quaternion.identity);
+                currentMissionEnvironment = Instantiate(missionEnvPrefab, Vector3.zero, Quaternion.identity);
             }
         }
         // END BACKGROUND LOGIC
@@ -863,6 +863,30 @@ public class GameManager2D : MonoBehaviour
     public IEnumerator TriggerBossEncounter()
     {
         Debug.Log("BOSS ENCOUNTER TRIGGERED!");
+
+        // --- BACKGROUND SWAP LOGIC FOR BOSS ---
+    if (gameMode == GameMode.Campaign && mission != null && mission.ShouldUseDefaultBackgroundForBoss())
+    {
+        // 1. Destroy the current mission-specific environment using our direct reference.
+        if (currentMissionEnvironment != null)
+        {
+            Destroy(currentMissionEnvironment);
+        }
+
+        // 2. Reactivate the default environment.
+        if (defaultEnvironment != null)
+        {
+            defaultEnvironment.SetActive(true);
+
+            // 3. Tell the ParallaxManager to find the newly activated default layers.
+            ParallaxManager parallaxManager = FindObjectOfType<ParallaxManager>();
+            if (parallaxManager != null)
+            {
+                parallaxManager.InitializeParallaxManager();
+            }
+        }
+    }
+    // --- END OF LOGIC ---               
 
         waveCountText.text = "BOSS WAVE";
 
