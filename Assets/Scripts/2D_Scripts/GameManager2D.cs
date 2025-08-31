@@ -486,6 +486,8 @@ public class GameManager2D : MonoBehaviour
             VictoryScreen victoryScreen = mission.GetVictoryScreen(nextVictoryIndex);
             campaignVictoryTitle.text = victoryScreen.title;
             campaignVictoryText.text = victoryScreen.text;
+            TypewriterTextAnim anim = campaignVictoryText.GetComponent<TypewriterTextAnim>();
+            anim.RestartAnimation();
 
             nextVictoryIndex += 1;
             campaignVictoryMainMenu.gameObject.SetActive(!mission.HasVictoryScreen(nextVictoryIndex));
