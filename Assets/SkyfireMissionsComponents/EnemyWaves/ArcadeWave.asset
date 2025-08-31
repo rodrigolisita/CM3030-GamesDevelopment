@@ -15,6 +15,18 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
   - {fileID: 2506428594068861399, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
+  - {fileID: 2506428594068861399, guid: a4702e347c992f24d91c983de0304563, type: 3}
+  - {fileID: 2506428594068861399, guid: 8746b02a1c6009b47822149c0549b8dc, type: 3}
+  - {fileID: 7052341489394061000, guid: fab6c031284d76647ac8b3e39a6ebd08, type: 3}
+  - {fileID: 7052341489394061000, guid: 55f0e68e732b79d4eae7875c1d4644ff, type: 3}
+  - {fileID: 3758289293509855642, guid: d8b3cfec72125c54ab9f8e7ce3548615, type: 3}
+  - {fileID: 4450569533180694651, guid: 5ab31f3cbf9ad854aa14c6f937b893d9, type: 3}
+  - {fileID: 7052341489394061000, guid: 0eeeadd1703f16f49a1ff486f1ad05cf, type: 3}
+  - {fileID: 7052341489394061000, guid: 6a573ace73d94a242bb78fc7951c0bd3, type: 3}
+  - {fileID: 7052341489394061000, guid: b15802c74610b644b84635f89be2f8c4, type: 3}
+  - {fileID: 7052341489394061000, guid: c33d98891ec59264385becb7901a26c0, type: 3}
+  - {fileID: 4450569533180694651, guid: 119b372ad2cbbaf448081d066dc2c143, type: 3}
+  - {fileID: 3758289293509855642, guid: ad043ca9ea3a6484e9f46b3e62d333b2, type: 3}
   initialWaveSize: 4
   maxWaveSize: 30
   scoreStepForWaveIncrease: 500
