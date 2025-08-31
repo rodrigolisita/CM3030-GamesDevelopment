@@ -723,7 +723,7 @@ public class GameManager2D : MonoBehaviour
                 }
                 else
                 {
-                    ammoText.text = "Secondary Ammo: " + ammo;
+                    ammoText.text = "Bombs: " + ammo;
                 }
             }
             else

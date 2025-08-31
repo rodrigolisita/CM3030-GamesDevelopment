@@ -15,9 +15,9 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 2506428594068861399, guid: 902692cad341b1142be3646c854bcedb, type: 3}
   - {fileID: 2506428594068861399, guid: c7bbccc3ce3c28c418daf03b35c2ea5d, type: 3}
-  initialWaveSize: 2
-  maxWaveSize: 15
-  scoreStepForWaveIncrease: 100
+  initialWaveSize: 4
+  maxWaveSize: 30
+  scoreStepForWaveIncrease: 500
   initialWaveInterval: 3
   minimumWaveInterval: 0.1
   intervalReductionPerStep: 0.1
