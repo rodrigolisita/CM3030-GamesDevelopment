@@ -39,10 +39,16 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
     private const string EnemyProjectileTag = "EnemyProjectile";
     private const string PlayerTag = "Player";
 
+
+    void Awake()
+    {
+        enemyHealth = GetComponent<PlaneHealth>(); // Get the PlaneHealth script on this object
+    }
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        enemyHealth = GetComponent<PlaneHealth>(); // Get the PlaneHealth script on this object
+        
 
 
         // --- Component and reference checks ---
@@ -97,7 +103,9 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
             Debug.Log("Enemy collided with Player. Destroying self.");
             HandleDefeat(); 
         }
-        else if (other.CompareTag(ProjectileTag))
+
+        // Projectile collisions are handled in the projectile class.
+        /*else if (other.CompareTag(ProjectileTag))
         {
             // --- Projectile Collision Logic ---
             Debug.Log(gameObject.name + " collided with a player projectile.");
@@ -106,7 +114,7 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
             {
                 enemyHealth.TakeDamage(1);
             }
-        }
+        }*/
     }
 
     /// <summary>
@@ -208,6 +216,15 @@ public class EnemyCollisionHandler : MonoBehaviour, PlaneCollisionHandler, Damag
         if (enemyHealth != null)
         {
             enemyHealth.TakeDamage(damage);
+        }
+    }
+
+    // used to modify health based on difficulty
+    public void MultiplyHealth(float multiplier)
+    {
+        if (enemyHealth != null)
+        {
+            enemyHealth.MultiplyHealth(multiplier);
         }
     }
 

@@ -308,7 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3a79b6e113f9f45b5d69cb1c3d2940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 16
+  maxHealth: 10
   isBossHealth: 0
   damageVisuals:
   - activationPercent: 100

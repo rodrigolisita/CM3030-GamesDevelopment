@@ -306,4 +306,12 @@ public class PlaneHealth : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
     }
+
+    public void MultiplyHealth(float multiplier)
+    {
+        Debug.Log("Current Health: " + currentHealth);
+        maxHealth = Mathf.RoundToInt(maxHealth * multiplier);
+        currentHealth = Mathf.RoundToInt(currentHealth * multiplier);
+        Debug.Log("Current Health: " + currentHealth);
+    }
 }

@@ -30,6 +30,7 @@ public class SpawnManager2D : MonoBehaviour
     private WaveSO activeWaveDef; // The ruleset we are currently using
     private List<GameObject> activeIcons = new List<GameObject>();
     private int waveCount = 0;
+    private float currentDifficultyHealthModifier;
 
     void Awake()
     {
@@ -76,6 +77,20 @@ public class SpawnManager2D : MonoBehaviour
         {
             activeWaveDef = arcadeWaveDefinition;
         }
+
+        switch(difficulty)
+        {
+            case 1:
+                currentDifficultyHealthModifier = 1;
+                break;
+            case 2:
+                currentDifficultyHealthModifier = 1.5f;
+                break;
+            case 3:
+                currentDifficultyHealthModifier = 2;
+                break;
+        }
+
 
         StartCoroutine(UnifiedSpawnRoutine());
     }
@@ -215,6 +230,8 @@ public class SpawnManager2D : MonoBehaviour
 
         foreach (EnemyCollisionHandler enemy in newEnemyGroup.GetComponentsInChildren<EnemyCollisionHandler>())
         {
+            Debug.Log("Modifier: " + currentDifficultyHealthModifier);
+            enemy.MultiplyHealth(currentDifficultyHealthModifier);
             spawnedEnemies.Add(enemy.gameObject);
         }
         
