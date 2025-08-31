@@ -932,6 +932,7 @@ public class GameManager2D : MonoBehaviour
         {
             bossHasBeenTriggered = false;
             FindObjectOfType<SpawnManager2D>()?.ResumeSpawningEnemies();
+            PlayActiveMusic();
         } else
         {
             gameState = GameState.Victory;
