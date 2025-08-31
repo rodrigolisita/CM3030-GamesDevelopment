@@ -8405,6 +8405,7 @@ MonoBehaviour:
   ammoText: {fileID: 451855636}
   healthBarFill: {fileID: 1504519771}
   bossHealthBarFill: {fileID: 993155524}
+  bossHealthBarMain: {fileID: 1562016812}
   gameOverText: {fileID: 37267045}
   playInstructionText: {fileID: 182082622}
   nextUpgradeText: {fileID: 1101511295}
